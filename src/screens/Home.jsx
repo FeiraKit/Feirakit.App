@@ -123,7 +123,7 @@ export function Home() {
   }
 
   useEffect(() => {
-    // chamada para a api passando o filtro de região
+    // chamada para a api passando o filtro de região que vai ser criado no backend
   }, [region])
 
   return (
