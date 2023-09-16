@@ -1,5 +1,8 @@
 name: update
-on: push
+on: 
+  push:
+    branches:
+      -main
 
 jobs:
   update:
@@ -32,4 +35,4 @@ jobs:
         run: yarn install
 
       - name: Publish update
-        run: eas update --branch preview --auto
+        run: eas update --branch preview auto
