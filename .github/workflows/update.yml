@@ -1,7 +1,5 @@
 name: update
-on:
-  push:
-    branches: -main
+on: push
 
 jobs:
   update:
