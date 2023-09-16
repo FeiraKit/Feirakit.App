@@ -44,7 +44,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "${{EAS_PROJECT_ID}}"
+        "projectId": "0529f0b0-88c7-4ce3-8366-54014b0e72da"
       }
     }
   }
