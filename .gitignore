@@ -11,8 +11,7 @@ npm-debug.*
 web-build/
 products.txt
 .env
-app.json
-eas.json
+
 # macOS
 .DS_Store
 app.json
