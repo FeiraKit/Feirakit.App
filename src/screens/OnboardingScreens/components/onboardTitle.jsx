@@ -1,7 +1,8 @@
 import React from 'react'
-import { VStack } from 'native-base'
+import { VStack, Heading, useTheme} from 'native-base'
 
-export function OnboardTitle() {
+export function OnboardTitle({ title }) {
+  const {colors} = useTheme()
   return (
     <Heading
       fontSize={25}
@@ -9,7 +10,9 @@ export function OnboardTitle() {
       ml={4}
       color={colors.black[500]}
     >
-      Bem-Vindo ao Feira Kit!
+     {
+      title
+     }
     </Heading>
   )
 }

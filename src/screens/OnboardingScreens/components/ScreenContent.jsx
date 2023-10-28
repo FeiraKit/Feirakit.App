@@ -2,9 +2,9 @@ import React from 'react'
 import { VStack, Image, Text, useTheme, Button, Heading } from 'native-base'
 import { useNavigation } from '@react-navigation/native'
 import { RFValue } from 'react-native-responsive-fontsize'
-import { OnboardTitle } from './components/onboardTitle'
+import { OnboardTitle } from './onboardTitle'
 
-export function Onboarding1() {
+export function ScreenContent({ urlImage, ScreenTitle, BtnText, NextPage, TextDescription }) {
   const navigation = useNavigation()
   const { colors } = useTheme()
   return (
@@ -15,11 +15,11 @@ export function Onboarding1() {
       w='full'
     >
       <Image
-        source={require('./assets/Foto1.png')}
+        source={urlImage}
         resizeMode='contain'
-        alt='Homem Comprando por aplicativo'
+        alt= {TextDescription}
       />
-     <OnboardTitle title = 'Bem-Vindo ao FeiraKit!'/>
+     <OnboardTitle title = { ScreenTitle }/>
       <Text
         fontSize={RFValue(12)}
         mx={'2%'}
@@ -28,11 +28,10 @@ export function Onboarding1() {
         mb={2}
         textAlign='center'
       >
-        Descubra os melhores produtos da sua região, diretamente na palma da sua
-        mão.
+        { TextDescription }
       </Text>
       <Button
-        onPress={() => navigation.navigate('Onboarding2')}
+        onPress={() => navigation.navigate(NextPage)}
         height={50}
         mt={150}
         w='80%'
@@ -44,7 +43,7 @@ export function Onboarding1() {
           color={colors.gray[100]}
           fontWeight='semibold'
         >
-          Continue
+          {BtnText}
         </Text>
       </Button>
     </VStack>
