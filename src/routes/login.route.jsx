@@ -10,10 +10,10 @@ const { Navigator, Screen } = createNativeStackNavigator()
 export function LoginRoutes() {
   return (
     <Navigator screenOptions={{ headerShown: false }}>
-      <Screen
+      {/* <Screen
         name='OnboardingRoutes'
         component={OnboardingRoutes}
-      />
+      /> */}
       <Screen
         name='SignIn'
         component={Login}

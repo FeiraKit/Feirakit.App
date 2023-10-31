@@ -9,8 +9,8 @@ import {
   useTheme,
   HStack,
 } from 'native-base'
-import { MaterialIcons, FontAwesome5 } from '@expo/vector-icons'
-import { Alert, ScrollView, TouchableOpacity } from 'react-native'
+import { FontAwesome5 } from '@expo/vector-icons'
+import { Alert, ScrollView } from 'react-native'
 import { ButtonBack } from '../components/ButtonBack'
 import { useState, useRef } from 'react'
 import { useForm, Controller } from 'react-hook-form'
@@ -21,16 +21,15 @@ import { useNavigation } from '@react-navigation/native'
 import { TextInputMask } from 'react-native-masked-text'
 import { LogoFeira } from '../components/LogoFeira'
 import { User } from '../services/user'
-import { RegisterLabel } from '../components/RegisterLabel'
-import { AcceptCheck } from '../components/AcceptCheck'
+import { RegisterLabel } from '../components/FormComponents/RegisterLabel'
+import { AcceptCheck } from '../components/FormComponents/AcceptCheck'
+import { ControlledInput } from '../components/FormComponents/controlledInput'
 
 export function Register() {
   const user = new User()
-  const [inputType, setInputType] = useState('password')
 
   const cellRef = useRef(null)
   const { colors } = useTheme()
-  const navigation = useNavigation()
   const [isLoading, setIsLoading] = useState(false)
   const [acceptTerms, setAcceptTerms] = useState(false)
   const [acceptPolicy, setAcceptPolicy] = useState(false)
@@ -40,13 +39,6 @@ export function Register() {
   }
   const handleAcceptTerms = () => {
     setAcceptTerms(!acceptTerms)
-  }
-  const handleVisibilityPassword = () => {
-    if (inputType == 'password') {
-      setInputType('text')
-    } else {
-      setInputType('password')
-    }
   }
 
   const userSchema = yup.object({
@@ -167,160 +159,34 @@ export function Register() {
       >
         <ButtonBack />
         <LogoFeira />
+        <RegisterLabel title='Informações do usuário' />
+        <ControlledInput
+          control={control}
+          name={'email'}
+          iconName={'email'}
+          placeholder={'E-mail'}
+          infoText={'Informe um E-mail ativo'}
+          error={errors.email}
+          keyboardType={'email-address'}
+        />
+        <ControlledInput
+          control={control}
+          error={errors.senha}
+          isPassword
+          keyboardType={'password'}
+          name={'senha'}
+          iconName={'lock'}
+          placeholder={'Senha'}
+        />
+        <RegisterLabel title='Dados pessoais' />
+        <ControlledInput
+          control={control}
+          name={'nome'}
+          placeholder={'Nome'}
+          error={errors.nome}
+          iconName={'person'}
+        />
 
-        <RegisterLabel title='Informações Pessoais' />
-        <Controller
-          control={control}
-          name='email'
-          render={({ field: { onChange, value } }) => (
-            <Input
-              mt={4}
-              bgColor={colors.gray[100]}
-              height={54}
-              alignSelf='center'
-              w='94%'
-              keyboardType='email-address'
-              color={errors.email ? colors.purple[500] : colors.blue[900]}
-              leftElement={
-                <Icon
-                  color={errors.email ? colors.purple[500] : colors.blue[900]}
-                  as={<MaterialIcons name='email' />}
-                  size={6}
-                  ml={2}
-                />
-              }
-              placeholder='E-mail'
-              fontFamily={'Montserrat_400Regular'}
-              placeholderTextColor={
-                errors.email ? colors.purple[500] : colors.blue[900]
-              }
-              fontSize={14}
-              borderRadius={8}
-              value={value}
-              onChangeText={onChange}
-            />
-          )}
-        />
-        <Text
-          fontSize='sm'
-          ml='4%'
-        >
-          Informe um E-mail ativo
-        </Text>
-        {errors.email && (
-          <Text
-            alignSelf='flex-start'
-            marginLeft={8}
-            color={colors.purple[500]}
-          >
-            {errors.email.message}
-          </Text>
-        )}
-        <Controller
-          control={control}
-          name='senha'
-          render={({ field: { onChange, value } }) => (
-            <Input
-              mt={4}
-              height={54}
-              alignSelf='center'
-              w='94%'
-              bgColor={colors.gray[100]}
-              color={errors.senha ? colors.purple[500] : colors.blue[900]}
-              leftElement={
-                <Icon
-                  color={errors.senha ? colors.purple[500] : colors.blue[900]}
-                  as={<MaterialIcons name='lock' />}
-                  size={6}
-                  ml={2}
-                />
-              }
-              rightElement={
-                <TouchableOpacity onPress={handleVisibilityPassword}>
-                  <Icon
-                    color={errors.senha ? colors.purple[500] : colors.blue[900]}
-                    as={
-                      <MaterialIcons
-                        name={
-                          inputType == 'text' ? 'visibility-off' : 'visibility'
-                        }
-                      />
-                    }
-                    size={6}
-                    marginRight={2}
-                  />
-                </TouchableOpacity>
-              }
-              type={inputType}
-              placeholder='Senha'
-              fontFamily={'Montserrat_400Regular'}
-              placeholderTextColor={
-                errors.senha ? colors.purple[500] : colors.blue[900]
-              }
-              fontSize={14}
-              borderRadius={8}
-              value={value}
-              onChangeText={onChange}
-            />
-          )}
-        />
-        {errors.senha && (
-          <Text
-            alignSelf='flex-start'
-            marginLeft={8}
-            color={colors.purple[500]}
-          >
-            {errors.senha.message}
-          </Text>
-        )}
-        <Text
-          alignSelf='flex-start'
-          ml={4}
-          mt={4}
-          fontSize='xl'
-        >
-          Dados pessoais
-        </Text>
-        <Controller
-          control={control}
-          name='nome'
-          render={({ field: { onChange, value } }) => (
-            <Input
-              mt={4}
-              bgColor={colors.gray[100]}
-              height={54}
-              alignSelf='center'
-              w='94%'
-              color={errors.nome ? colors.purple[500] : colors.blue[900]}
-              leftElement={
-                <Icon
-                  color={errors.nome ? colors.purple[500] : colors.blue[900]}
-                  as={<MaterialIcons name='person' />}
-                  size={6}
-                  ml={2}
-                />
-              }
-              placeholder='Nome'
-              fontFamily={'Montserrat_400Regular'}
-              placeholderTextColor={
-                errors.nome ? colors.purple[500] : colors.blue[900]
-              }
-              fontSize={14}
-              borderRadius={8}
-              value={value}
-              onChangeText={onChange}
-            />
-          )}
-        />
-        {errors.nome && (
-          <Text
-            alignSelf='flex-start'
-            marginLeft={8}
-            color={colors.purple[500]}
-          >
-            {errors.nome.message}
-          </Text>
-        )}
         <HStack
           alignItems='center'
           mt={4}
@@ -382,6 +248,7 @@ export function Register() {
             {errors.telefone.message}
           </Text>
         )}
+
         <RegisterLabel title='Endereço' />
         <HStack
           alignItems='center'
@@ -433,158 +300,42 @@ export function Register() {
             {errors.cep.message}
           </Text>
         )}
-        <Controller
+
+        <ControlledInput
           control={control}
           name='rua'
-          render={({ field: { onChange, value } }) => (
-            <Input
-              mt={4}
-              bgColor={colors.gray[100]}
-              height={54}
-              alignSelf='center'
-              w='94%'
-              color={colors.blue[900]}
-              placeholder='* Rua'
-              fontFamily={'Montserrat_400Regular'}
-              placeholderTextColor={
-                errors.rua ? colors.purple[500] : colors.blue[800]
-              }
-              fontSize={14}
-              borderRadius={8}
-              value={value}
-              onChangeText={onChange}
-            />
-          )}
+          placeholder='Rua'
+          error={errors.rua}
         />
-        {errors.rua && (
-          <Text
-            alignSelf='flex-start'
-            marginLeft={8}
-            color={colors.purple[500]}
-          >
-            {errors.rua.message}
-          </Text>
-        )}
-        <Controller
+
+        <ControlledInput
           control={control}
           name='numero'
-          render={({ field: { onChange, value } }) => (
-            <Input
-              mt={4}
-              bgColor={colors.gray[100]}
-              height={54}
-              alignSelf='center'
-              w='94%'
-              color={colors.blue[900]}
-              placeholder='* Numero'
-              fontFamily={'Montserrat_400Regular'}
-              placeholderTextColor={
-                errors.numero ? colors.purple[500] : colors.blue[800]
-              }
-              fontSize={14}
-              borderRadius={8}
-              keyboardType='default'
-              value={value}
-              onChangeText={onChange}
-            />
-          )}
+          placeholder='Número'
+          error={errors.numero}
         />
-        {errors.numero && (
-          <Text
-            alignSelf='flex-start'
-            marginLeft={8}
-            color={colors.purple[500]}
-          >
-            {errors.numero.message}
-          </Text>
-        )}
-        <Controller
+
+        <ControlledInput
           control={control}
           name='complemento'
-          render={({ field: { onChange, value } }) => (
-            <Input
-              mt={4}
-              bgColor={colors.gray[100]}
-              height={54}
-              alignSelf='center'
-              w='94%'
-              color={colors.blue[900]}
-              placeholder='*Complemento'
-              fontFamily={'Montserrat_400Regular'}
-              placeholderTextColor={colors.blue[800]}
-              fontSize={14}
-              borderRadius={8}
-              value={value}
-              onChangeText={onChange}
-            />
-          )}
+          placeholder='Complemento'
         />
-        <Controller
+
+        <ControlledInput
           control={control}
           name='bairro'
-          render={({ field: { onChange, value } }) => (
-            <Input
-              mt={4}
-              bgColor={colors.gray[100]}
-              height={54}
-              alignSelf='center'
-              w='94%'
-              color={colors.blue[900]}
-              placeholder='*Bairro'
-              fontFamily={'Montserrat_400Regular'}
-              placeholderTextColor={
-                errors.bairro ? colors.purple[500] : colors.blue[800]
-              }
-              fontSize={14}
-              borderRadius={8}
-              value={value}
-              onChangeText={onChange}
-            />
-          )}
+          error={errors.bairro}
+          placeholder='Bairro'
         />
-        {errors.bairro && (
-          <Text
-            alignSelf='flex-start'
-            marginLeft={8}
-            color={colors.purple[500]}
-          >
-            {errors.bairro.message}
-          </Text>
-        )}
-        <Controller
+
+        <ControlledInput
           control={control}
           name='cidade'
-          render={({ field: { onChange, value } }) => (
-            <Input
-              mt={4}
-              isDisabled
-              bgColor={colors.gray[100]}
-              height={54}
-              alignSelf='center'
-              w='94%'
-              _disabled={{ opacity: 1 }}
-              color={colors.blue[900]}
-              value={value}
-              placeholder='* Cidade'
-              fontFamily={'Montserrat_400Regular'}
-              placeholderTextColor={
-                errors.cidade ? colors.purple[500] : colors.blue[800]
-              }
-              fontSize={14}
-              borderRadius={8}
-              onChangeText={onChange}
-            />
-          )}
+          error={errors.cidade}
+          isDisabled
+          placeholder='Cidade'
         />
-        {errors.cidade && (
-          <Text
-            alignSelf='flex-start'
-            marginLeft={8}
-            color={colors.purple[500]}
-          >
-            {errors.cidade.message}
-          </Text>
-        )}
+
         <Controller
           control={control}
           name='estado'
@@ -725,9 +476,7 @@ export function Register() {
             {errors.estado.message}
           </Text>
         )}
-
         <RegisterLabel title='Política de privacidade' />
-
         <AcceptCheck
           title={'os termos e condições'}
           contentTextType={'termos'}
@@ -738,7 +487,6 @@ export function Register() {
           contentTextType={'política'}
           action={handleAcceptPolicy}
         />
-
         {acceptTerms && acceptPolicy && (
           <Button
             bgColor={colors.blue[600]}
@@ -754,7 +502,6 @@ export function Register() {
             Cadastrar
           </Button>
         )}
-
         {Object.values(errors).length > 0 && (
           <Text
             alignSelf='center'

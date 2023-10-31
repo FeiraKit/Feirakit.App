@@ -10,39 +10,39 @@ export function Onboarding4() {
       flex={1}
       w='full'
     >
-      <Center mt='1/2'>
-        <Image
-          source={require('./assets/Foto4.png')}
-          style={{ width: 328, height: 240 }}
-          resizeMode='contain'
-          alt='Homem Comprando por aplicativo'
-        />
-        <Text
-          fontSize={25}
-          mt={4}
-          ml={4}
-          color={colors.black[500]}
-        ></Text>
+      <Image
+        source={require('./assets/Foto4.png')}
+        style={{ width: 328, height: 240 }}
+        resizeMode='contain'
+        alt='Homem Comprando por aplicativo'
+      />
+      <Text
+        fontSize={25}
+        mt={4}
+        ml={4}
+        color={colors.black[500]}
+      >
         Vamos Começar!
-        <Text
-          fontSize={15}
-          mt={4}
-          ml={4}
-          color={colors.gray[400]}
-          mb={2}
-        >
-          Crie a sua conta e aproveite uma feira livre na palma da sua mão.
-        </Text>
-        <Button
-          onPress={() => navigation.navigate('SignIn')}
-          height={50}
-          mt={150}
-          w='80%'
-          borderRadius={50}
-        >
-          Iniciar
-        </Button>
-      </Center>
+      </Text>
+
+      <Text
+        fontSize={15}
+        mt={4}
+        ml={4}
+        color={colors.gray[400]}
+        mb={2}
+      >
+        Crie a sua conta e aproveite uma feira livre na palma da sua mão.
+      </Text>
+      <Button
+        onPress={() => navigation.navigate('SignIn')}
+        height={50}
+        mt={150}
+        w='80%'
+        borderRadius={50}
+      >
+        Iniciar
+      </Button>
     </VStack>
   )
 }
