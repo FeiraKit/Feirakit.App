@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Text, VStack, Icon, Input, useTheme } from 'native-base'
 import { MaterialIcons } from '@expo/vector-icons'
-import { Image, Alert, TouchableOpacity, Linking } from 'react-native'
+import { Image, Alert, TouchableOpacity } from 'react-native'
 import { User } from '../services/user'
 import { useNavigation } from '@react-navigation/native'
 export function Login() {
