@@ -1,6 +1,4 @@
 import React from 'react'
-import { VStack, Center, Image, Text, Button, useTheme } from 'native-base'
-import { useNavigation } from '@react-navigation/native'
 import { ScreenContent } from './components/ScreenContent'
 
 export function Onboarding2() {
