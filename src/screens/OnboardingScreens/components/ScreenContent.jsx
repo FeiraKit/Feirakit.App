@@ -3,10 +3,17 @@ import { VStack, Image, Text, useTheme, Button, Heading } from 'native-base'
 import { useNavigation } from '@react-navigation/native'
 import { RFValue } from 'react-native-responsive-fontsize'
 import { OnboardTitle } from './onboardTitle'
+import { StepIndicator } from './StepIndicator'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
-export function ScreenContent({ urlImage, ScreenTitle, BtnText, NextPage, TextDescription }) {
+export function ScreenContent({ urlImage, ScreenTitle, BtnText, NextPage, TextDescription, PageActive }) {
   const navigation = useNavigation()
   const { colors } = useTheme()
+
+  const SaveifUserAlreadyUsedTheApp = async () => {
+    await AsyncStorage.setItem ("UserAlreadyUsed","true")
+  }
+
   return (
     <VStack
       flex={1}
@@ -29,15 +36,21 @@ export function ScreenContent({ urlImage, ScreenTitle, BtnText, NextPage, TextDe
         textAlign='center'
       >
         { TextDescription }
-      </Text>
+      </Text> 
+      <StepIndicator active={PageActive}/>
       <Button
-        onPress={() => navigation.navigate(NextPage)}
         height={50}
         mt={150}
         w='80%'
         bgColor={colors.blue[900]}
         _pressed={{ bgColor: colors.blue[700] }}
         borderRadius={50}
+        onPress = {()=>{
+          if (BtnText=="Iniciar") {
+            SaveifUserAlreadyUsedTheApp()
+          } 
+          navigation.navigate(NextPage)
+        }}
       >
         <Text
           color={colors.gray[100]}
