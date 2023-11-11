@@ -5,7 +5,6 @@ import { Onboarding3 } from '../screens/OnboardingScreens/Onboarding3'
 import { Onboarding4 } from '../screens/OnboardingScreens/Onboarding4'
 
 const { Navigator, Screen } = createNativeStackNavigator()
-
 export function OnboardingRoutes() {
   return (
     <Navigator
