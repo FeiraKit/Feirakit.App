@@ -1,51 +1,54 @@
+import { useEffect, useState } from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Login } from '../screens/Login'
+import { Loading } from '../components/Loading'
 import { Register } from '../screens/Register'
 import { PasswordRecovery } from '../screens/PasswordRecovery'
 import { PolicyScreen } from '../screens/PolicyScreen'
 import { OnboardingRoutes } from './onboarding.route'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { useEffect } from 'react'
-import { useState } from 'react'
+import { isUndefined } from 'lodash'
 
 const { Navigator, Screen } = createNativeStackNavigator()
 
 export function LoginRoutes() {
-  const [UserAlreadyUsed, setUserAlreadyUsed] = useState(null)
-
+  const [AlreadyUsed, setAlreadyUsed] = useState()
+  async function VerifyIfUserAlreadyUsedTheApp() {
+    let userAlreadyUsed = await AsyncStorage.getItem('UserAlreadyUsed')
+    setAlreadyUsed(userAlreadyUsed)
+  }
   useEffect(() => {
-    ;async () => {
-      let AlreadyUsed
-      AlreadyUsed = await AsyncStorage.getItem('UserAlreadyUsed')
-      setUserAlreadyUsed(!!AlreadyUsed)
-      console.log(AlreadyUsed)
-    }
+    VerifyIfUserAlreadyUsedTheApp()
   }, [])
-
+  console.log(AlreadyUsed)
   return (
-    <Navigator screenOptions={{ headerShown: false }}>
-      {!UserAlreadyUsed && (
+    <>
+      {isUndefined(AlreadyUsed) && <Loading />}
+      <Navigator screenOptions={{ headerShown: false }}>
+        {!AlreadyUsed && (
+          <Screen
+            name='OnboardingRoutes'
+            component={OnboardingRoutes}
+          />
+        )}
+
         <Screen
-          name='OnboardingRoutes'
-          component={OnboardingRoutes}
+          name='SignIn'
+          component={Login}
         />
-      )}
-      <Screen
-        name='SignIn'
-        component={Login}
-      />
-      <Screen
-        name='Register'
-        component={Register}
-      />
-      <Screen
-        name='PasswordRecovery'
-        component={PasswordRecovery}
-      />
-      <Screen
-        name='PolicyAndTerms'
-        component={PolicyScreen}
-      />
-    </Navigator>
+        <Screen
+          name='Register'
+          component={Register}
+        />
+        <Screen
+          name='PasswordRecovery'
+          component={PasswordRecovery}
+        />
+        <Screen
+          name='PolicyAndTerms'
+          component={PolicyScreen}
+        />
+      </Navigator>
+    </>
   )
 }

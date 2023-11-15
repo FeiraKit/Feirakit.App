@@ -36,7 +36,7 @@ export function MaskedInput({ changeColor, iconName, action, value, ...rest }) {
           }}
           width={!!iconName ? '70%' : '100%'}
           placeholderTextColor={
-            changeColor ? colors.purple[500] : colors.blue[900]
+            changeColor ? colors.purple[500] : colors.blue[800]
           }
           value={value}
           {...rest}

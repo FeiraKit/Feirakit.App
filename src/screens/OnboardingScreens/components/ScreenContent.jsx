@@ -6,12 +6,19 @@ import { OnboardTitle } from './onboardTitle'
 import { StepIndicator } from './StepIndicator'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-export function ScreenContent({ urlImage, ScreenTitle, BtnText, NextPage, TextDescription, PageActive }) {
+export function ScreenContent({
+  urlImage,
+  ScreenTitle,
+  BtnText,
+  NextPage,
+  TextDescription,
+  PageActive,
+}) {
   const navigation = useNavigation()
   const { colors } = useTheme()
 
-  const SaveifUserAlreadyUsedTheApp = async () => {
-    await AsyncStorage.setItem ("UserAlreadyUsed","true")
+  const SaveIfUserAlreadyUsedTheApp = async () => {
+    await AsyncStorage.setItem('UserAlreadyUsed', 'true')
   }
 
   return (
@@ -24,9 +31,9 @@ export function ScreenContent({ urlImage, ScreenTitle, BtnText, NextPage, TextDe
       <Image
         source={urlImage}
         resizeMode='contain'
-        alt= {TextDescription}
+        alt={TextDescription}
       />
-     <OnboardTitle title = { ScreenTitle }/>
+      <OnboardTitle title={ScreenTitle} />
       <Text
         fontSize={RFValue(12)}
         mx={'2%'}
@@ -35,9 +42,9 @@ export function ScreenContent({ urlImage, ScreenTitle, BtnText, NextPage, TextDe
         mb={2}
         textAlign='center'
       >
-        { TextDescription }
-      </Text> 
-      <StepIndicator active={PageActive}/>
+        {TextDescription}
+      </Text>
+      <StepIndicator active={PageActive} />
       <Button
         height={50}
         mt={150}
@@ -45,10 +52,10 @@ export function ScreenContent({ urlImage, ScreenTitle, BtnText, NextPage, TextDe
         bgColor={colors.blue[900]}
         _pressed={{ bgColor: colors.blue[700] }}
         borderRadius={50}
-        onPress = {()=>{
-          if (BtnText=="Iniciar") {
-            SaveifUserAlreadyUsedTheApp()
-          } 
+        onPress={() => {
+          if (BtnText == 'Iniciar') {
+            SaveIfUserAlreadyUsedTheApp()
+          }
           navigation.navigate(NextPage)
         }}
       >

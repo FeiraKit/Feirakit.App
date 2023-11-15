@@ -4,6 +4,7 @@ import { MaterialIcons } from '@expo/vector-icons'
 import { Image, Alert, TouchableOpacity } from 'react-native'
 import { User } from '../services/user'
 import { useNavigation } from '@react-navigation/native'
+
 export function Login() {
   const navigation = useNavigation()
   const user = new User()

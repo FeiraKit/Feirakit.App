@@ -12,10 +12,7 @@ export class User {
       email,
       senha: password,
     }
-    return await apiFeiraKit.post(
-      '/users/check-password',
-      JSON.stringify(credentials)
-    )
+    return await apiFeiraKit.post('/users/login', JSON.stringify(credentials))
   }
 
   async getUserByEmail(email, jwtToken) {

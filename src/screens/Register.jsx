@@ -11,7 +11,7 @@ import { User } from '../services/user'
 import { RegisterLabel } from '../components/FormComponents/RegisterLabel'
 import { AcceptCheck } from '../components/FormComponents/AcceptCheck'
 import { userSchema } from '../validationsSchemes/userValidade'
-import { ControlledInput } from '../components/FormComponents/ControlledInput'
+import { ControlledInput } from '../components/FormComponents/controlledInput'
 import { ControlledSelect } from '../components/FormComponents/ControlledSelect'
 import { removeNumberMask } from '../utils/removeMasks'
 
