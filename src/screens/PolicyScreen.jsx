@@ -1,6 +1,6 @@
 import React from 'react'
 import { VStack, Text, Heading, ScrollView, Button } from 'native-base'
-import { POLICY, TERMS } from '../ConstantText'
+import { POLICY, TERMS } from '../constants/ConstantText.js'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { ButtonBack } from '../components/ButtonBack'
 import { LogoFeira } from '../components/LogoFeira'
