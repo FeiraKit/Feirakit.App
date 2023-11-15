@@ -21,15 +21,26 @@ import { useNavigation } from '@react-navigation/native'
 import { TextInputMask } from 'react-native-masked-text'
 import { LogoFeira } from '../components/LogoFeira'
 import { User } from '../services/user'
+import { RegisterLabel } from '../components/RegisterLabel'
+import { AcceptCheck } from '../components/AcceptCheck'
 
 export function Register() {
   const user = new User()
   const [inputType, setInputType] = useState('password')
-  const [isLoading, setIsLoading] = useState(false)
+
   const cellRef = useRef(null)
   const { colors } = useTheme()
   const navigation = useNavigation()
+  const [isLoading, setIsLoading] = useState(false)
+  const [acceptTerms, setAcceptTerms] = useState(false)
+  const [acceptPolicy, setAcceptPolicy] = useState(false)
 
+  const handleAcceptPolicy = () => {
+    setAcceptPolicy(!acceptPolicy)
+  }
+  const handleAcceptTerms = () => {
+    setAcceptTerms(!acceptTerms)
+  }
   const handleVisibilityPassword = () => {
     if (inputType == 'password') {
       setInputType('text')
@@ -156,15 +167,8 @@ export function Register() {
       >
         <ButtonBack />
         <LogoFeira />
-        <Text
-          alignSelf='flex-start'
-          mt={8}
-          ml={4}
-          fontSize='xl'
-        >
-          Informações da Conta
-        </Text>
 
+        <RegisterLabel title='Informações Pessoais' />
         <Controller
           control={control}
           name='email'
@@ -212,7 +216,6 @@ export function Register() {
             {errors.email.message}
           </Text>
         )}
-
         <Controller
           control={control}
           name='senha'
@@ -270,7 +273,6 @@ export function Register() {
             {errors.senha.message}
           </Text>
         )}
-
         <Text
           alignSelf='flex-start'
           ml={4}
@@ -279,7 +281,6 @@ export function Register() {
         >
           Dados pessoais
         </Text>
-
         <Controller
           control={control}
           name='nome'
@@ -320,7 +321,6 @@ export function Register() {
             {errors.nome.message}
           </Text>
         )}
-
         <HStack
           alignItems='center'
           mt={4}
@@ -382,16 +382,7 @@ export function Register() {
             {errors.telefone.message}
           </Text>
         )}
-
-        <Text
-          alignSelf='flex-start'
-          ml={4}
-          mt={4}
-          fontSize='xl'
-        >
-          Endereço
-        </Text>
-
+        <RegisterLabel title='Endereço' />
         <HStack
           alignItems='center'
           mt={4}
@@ -442,7 +433,6 @@ export function Register() {
             {errors.cep.message}
           </Text>
         )}
-
         <Controller
           control={control}
           name='rua'
@@ -475,7 +465,6 @@ export function Register() {
             {errors.rua.message}
           </Text>
         )}
-
         <Controller
           control={control}
           name='numero'
@@ -509,7 +498,6 @@ export function Register() {
             {errors.numero.message}
           </Text>
         )}
-
         <Controller
           control={control}
           name='complemento'
@@ -531,7 +519,6 @@ export function Register() {
             />
           )}
         />
-
         <Controller
           control={control}
           name='bairro'
@@ -564,17 +551,18 @@ export function Register() {
             {errors.bairro.message}
           </Text>
         )}
-
         <Controller
           control={control}
           name='cidade'
           render={({ field: { onChange, value } }) => (
             <Input
               mt={4}
+              isDisabled
               bgColor={colors.gray[100]}
               height={54}
               alignSelf='center'
               w='94%'
+              _disabled={{ opacity: 1 }}
               color={colors.blue[900]}
               value={value}
               placeholder='* Cidade'
@@ -597,7 +585,6 @@ export function Register() {
             {errors.cidade.message}
           </Text>
         )}
-
         <Controller
           control={control}
           name='estado'
@@ -738,19 +725,36 @@ export function Register() {
             {errors.estado.message}
           </Text>
         )}
-        <Button
-          bgColor={colors.blue[600]}
-          height={54}
-          width='90%'
-          _pressed={{ bgColor: colors.blue[700] }}
-          mt={4}
-          borderRadius={15}
-          alignSelf='center'
-          onPress={handleSubmit(handleCreateUser)}
-          isLoading={isLoading}
-        >
-          Cadastrar
-        </Button>
+
+        <RegisterLabel title='Política de privacidade' />
+
+        <AcceptCheck
+          title={'os termos e condições'}
+          contentTextType={'termos'}
+          action={handleAcceptTerms}
+        />
+        <AcceptCheck
+          title={'a política de privacidade'}
+          contentTextType={'política'}
+          action={handleAcceptPolicy}
+        />
+
+        {acceptTerms && acceptPolicy && (
+          <Button
+            bgColor={colors.blue[600]}
+            height={54}
+            width='90%'
+            _pressed={{ bgColor: colors.blue[700] }}
+            mt={4}
+            borderRadius={15}
+            alignSelf='center'
+            onPress={handleSubmit(handleCreateUser)}
+            isLoading={isLoading}
+          >
+            Cadastrar
+          </Button>
+        )}
+
         {Object.values(errors).length > 0 && (
           <Text
             alignSelf='center'
