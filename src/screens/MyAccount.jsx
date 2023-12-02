@@ -31,7 +31,7 @@ import { TextInputMask } from 'react-native-masked-text'
 import * as yup from 'yup'
 import { User } from '../services/user'
 import { ControlledInput } from '../components/FormComponents/controlledInput'
-import { RegisterLabel } from '../components/FormComponents/RegisterLabel'
+import { InputLabel } from '../components/FormComponents/InputLabel'
 
 export function MyAccount() {
   const userInstance = new User()
@@ -442,7 +442,7 @@ export function MyAccount() {
           />
         </HStack>
 
-        <RegisterLabel title='Endereço' />
+        <InputLabel title='Endereço' />
 
         <HStack
           alignItems='center'

@@ -8,7 +8,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import ViaCep from '../services/ViaCep'
 import { LogoFeira } from '../components/LogoFeira'
 import { User } from '../services/user'
-import { RegisterLabel } from '../components/FormComponents/RegisterLabel'
+import { InputLabel } from '../components/FormComponents/InputLabel'
 import { AcceptCheck } from '../components/FormComponents/AcceptCheck'
 import { userSchema } from '../validationsSchemes/userValidade'
 import { ControlledInput } from '../components/FormComponents/controlledInput'
@@ -128,7 +128,7 @@ export function Register() {
       >
         <ButtonBack />
         <LogoFeira />
-        <RegisterLabel title='Informações do usuário' />
+        <InputLabel title='Informações do usuário' />
         <ControlledInput
           control={control}
           name={'email'}
@@ -147,7 +147,7 @@ export function Register() {
           iconName={'lock'}
           placeholder={'Senha'}
         />
-        <RegisterLabel title='Dados pessoais' />
+        <InputLabel title='Dados pessoais' />
         <ControlledInput
           control={control}
           name={'nome'}
@@ -174,7 +174,7 @@ export function Register() {
           infoText={'Este número deve ser o seu WhatsApp'}
         />
 
-        <RegisterLabel title='Endereço' />
+        <InputLabel title='Endereço' />
 
         {/* input mascarado cep */}
         <ControlledInput
@@ -227,12 +227,13 @@ export function Register() {
 
         <ControlledSelect
           control={control}
+          isSelectState
           name='estado'
           isSelectionInput={true}
           error={errors.estado}
         />
 
-        <RegisterLabel title='Política de privacidade' />
+        <InputLabel title='Política de privacidade' />
         <AcceptCheck
           title={'os termos e condições'}
           contentTextType={'termos'}

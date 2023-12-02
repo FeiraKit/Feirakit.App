@@ -1,7 +1,7 @@
 import { Text } from 'native-base'
 import React from 'react'
 
-export function RegisterLabel({ title }) {
+export function InputLabel({ title }) {
   return (
     <Text
       alignSelf='flex-start'
