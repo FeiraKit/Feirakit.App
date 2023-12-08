@@ -56,7 +56,7 @@ export function Home() {
   const getAllProducts = (refresh) => {
     setIsLoading(true)
     setFindingByName(false)
-    getCities()
+    // getCities()
     setShowFilter(true)
     setSearch('')
     product
@@ -86,11 +86,11 @@ export function Home() {
       })
   }
 
-  const getCities = async () => {
-    product.getCities().then(async ({ data }) => {
-      await setCities(data.resultado)
-    })
-  }
+  // const getCities = async () => {
+  //   product.getCities().then(async ({ data }) => {
+  //     await setCities(data.resultado)
+  //   })
+  // }
   const HandleRegion = (region) => {
     setRegion(region)
   }

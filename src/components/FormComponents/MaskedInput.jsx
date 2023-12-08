@@ -15,7 +15,7 @@ export function MaskedInput({ changeColor, iconName, action, value, ...rest }) {
         w='94%'
         borderWidth={1}
         borderRadius={8}
-        borderColor={colors.gray[300]}
+        borderColor={changeColor ? colors.purple[500] : colors.blue[900]}
         bgColor={colors.gray[100]}
         {...rest}
       >

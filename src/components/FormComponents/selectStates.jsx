@@ -12,6 +12,7 @@ export function SelectStates({ changeColor, ...rest }) {
       mt={4}
       borderRadius={8}
       placeholderTextColor={changeColor ? colors.purple[500] : colors.blue[800]}
+      borderColor={changeColor ? colors.purple[500] : colors.blue[900]}
       color={colors.blue[900]}
       placeholder='Selecione o estado'
       fontSize='md'

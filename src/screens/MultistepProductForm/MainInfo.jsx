@@ -15,8 +15,11 @@ import { Product } from '../../services/product'
 import { LoadingForm } from '../../components/Loading'
 import { mainInfoSchema } from '../../validationsSchemes/productValidations'
 import { removeMoneyMask } from '../../utils/removeMasks'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
+import { useCallback } from 'react'
 
 export function MainInfo() {
+  const navigation = useNavigation()
   const productInstance = new Product()
   const user = useSelector((state) => state.AuthReducers.userData.userData)
   const { colors } = useTheme()
@@ -42,13 +45,12 @@ export function MainInfo() {
         message: 'O preço deve ser maior que R$ 0,00',
       })
     }
-    // console.log(data)
     if (parseFloat(data.preco) !== 0) {
-      console.log('seguimos')
+      navigation.navigate('DescriptionProduct', { produto: data })
     }
   }
 
-  useEffect(() => {
+  const initForm = () => {
     productInstance
       .getUnites()
       .then(({ data }) => {
@@ -60,13 +62,13 @@ export function MainInfo() {
     // productInstance.getCities().then(async ({ data }) => {
     //   //  await setAllCities(data.resultado)
     // })
-
     setFormLoaded(true)
-  }, [])
+  }
+
+  useFocusEffect(useCallback(initForm, []))
 
   return (
     <VStack
-      flex={1}
       w='full'
       h='full'
       px={'3%'}
@@ -75,24 +77,27 @@ export function MainInfo() {
         <LoadingForm />
       ) : (
         <>
-          <ButtonBack />
-          <LogoFeira />
-          <ProgressBar percent='20' />
-          <Text
-            fontFamily={'body'}
-            fontSize={RFValue(22)}
-          >
-            Olá, {user.nome}!
-          </Text>
-          <Text
-            fontFamily={'body'}
-            fontSize={RFValue(22)}
-            textAlign='left'
-            textBreakStrategy='highQuality'
-          >
-            O que você está vendendo hoje?
-          </Text>
           <VStack>
+            <ButtonBack />
+            <LogoFeira />
+            <ProgressBar percent='20' />
+            <Text
+              fontFamily={'body'}
+              fontSize={RFValue(22)}
+            >
+              Olá, {user.nome}!
+            </Text>
+            <Text
+              fontFamily={'body'}
+              fontSize={RFValue(22)}
+              textAlign='left'
+              textBreakStrategy='highQuality'
+            >
+              O que você está vendendo hoje?
+            </Text>
+          </VStack>
+
+          <VStack py={0}>
             <InputLabel
               mt={errors.nome ? 0 : RFValue(4)}
               title={'Nome do Produto'}
@@ -155,23 +160,26 @@ export function MainInfo() {
               mt={1}
             />
           </VStack>
-          <Button
-            alignSelf={'center'}
-            w='98%'
-            mt={8}
-            _pressed={{ bgColor: colors.blue[700] }}
-            borderRadius={8}
-            onPress={handleSubmit(handleCheckInfo)}
-          >
-            <Text
-              color={colors.gray[100]}
-              fontWeight='semibold'
-              fontFamily={'body'}
-              fontSize={RFValue(18)}
+
+          <VStack>
+            <Button
+              alignSelf={'center'}
+              w='98%'
+              mt={8}
+              _pressed={{ bgColor: colors.blue[700] }}
+              borderRadius={8}
+              onPress={handleSubmit(handleCheckInfo)}
             >
-              Continuar
-            </Text>
-          </Button>
+              <Text
+                color={colors.gray[100]}
+                fontWeight='semibold'
+                fontFamily={'body'}
+                fontSize={RFValue(18)}
+              >
+                Continuar
+              </Text>
+            </Button>
+          </VStack>
         </>
       )}
     </VStack>

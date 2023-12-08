@@ -31,7 +31,8 @@ export function InputText({
       borderRadius={8}
       placeholder={placeholder}
       color={changeColor ? colors.purple[500] : colors.blue[900]}
-      placeholderTextColor={changeColor ? colors.purple[500] : colors.blue[800]}
+      borderColor={changeColor ? colors.purple[500] : colors.blue[900]}
+      placeholderTextColor={changeColor ? colors.purple[500] : colors.blue[850]}
       fontSize={RFValue(16)}
       fontFamily={'body'}
       leftElement={
