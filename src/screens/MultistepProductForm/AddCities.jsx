@@ -1,67 +1,78 @@
 import { useNavigation, useRoute } from '@react-navigation/native'
-import {
-  Button,
-  FlatList,
-  KeyboardAvoidingView,
-  ScrollView,
-  Text,
-  VStack,
-  useTheme,
-} from 'native-base'
+import { Button, FlatList, Text, VStack, useTheme } from 'native-base'
 import { ProgressBar } from './components/ProgressBar'
-import React from 'react'
+import React, { useCallback, useRef } from 'react'
 import { ButtonBack } from '../../components/ButtonBack'
-import { yupResolver } from '@hookform/resolvers/yup'
 import { LogoFeira } from '../../components/LogoFeira'
 import { RFValue } from 'react-native-responsive-fontsize'
-import { InputLabel } from '../../components/FormComponents/InputLabel'
-import { ControlledInput } from '../../components/FormComponents/controlledInput'
-import { useForm } from 'react-hook-form'
-import {
-  addCitiesSchema,
-  descriptionSchema,
-} from '../../validationsSchemes/productValidations'
-import { CustonCheckbox } from '../../components/FormComponents/CustonCheckbox'
 import { useEffect } from 'react'
 import { useState } from 'react'
 import { CityItem } from './components/CityItem'
 import { AddCityButton } from './components/AddCityButton'
+import BottomSheetBase from './components/BottomSheetBase'
+import { useSelector } from 'react-redux'
+import { CustonSelectionMany } from '../../components/FormComponents/CustonSelectionMany'
 
 export function AddCities() {
   const route = useRoute()
   const navigation = useNavigation()
+  const currentUser = useSelector(
+    (state) => state.AuthReducers.userData.userData
+  )
   const { colors } = useTheme()
   const prevProduct = route.params.produto
   const [isCitiesLoaded, setIsCitiesLoaded] = useState(false)
-  const [selectedCities, setSelectedCities] = useState([])
+  const allCities = [
+    { nome: 'buriti' },
+    { nome: 'gangorra' },
+    { nome: 'Abaeté' },
+    { nome: 'Bocaiúva' },
+    { nome: 'Carangola' },
+    { nome: 'Dores do Indaiá' },
+    { nome: 'Espera Feliz' },
+    { nome: 'Francisco Sá' },
+    { nome: 'Guaxupé' },
+    { nome: 'Itabirito' },
+    { nome: 'Janaúba' },
+    { nome: 'Lavras' },
+    { nome: 'Muzambinho' },
+    { nome: 'Nanuque' },
+    { nome: 'Oliveira' },
+    { nome: 'Piumhi' },
+    { nome: 'São Gotardo' },
+  ]
+  const [selectedCities, setSelectedCities] = useState([
+    currentUser.endereco.cidade,
+  ])
+  const [error, setError] = useState(false)
 
-  // const handleCheckInfo = (data) => {
-  //   prevProduct.descricao = data.descricao
-  //   prevProduct.bestbefore = bestBefore
-  //   navigation.navigate('AddCities', { produto: prevProduct })
-  // }
-
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(addCitiesSchema),
-  })
-  const handleCheckInfo = (data) => {
-    prevProduct.cidades = data.data
-    console.log(prevProduct)
-    // navigation.navigate('AddCities', { produto: prevProduct })
+  const handleCheckInfo = () => {
+    if (selectedCities.length === 0) {
+      setError(true)
+      return
+    }
+    prevProduct.cidades = selectedCities
+    navigation.navigate('AddImages', { produto: prevProduct })
   }
 
   useEffect(() => {
-    // productInstance.getCities().then(async ({ data }) => {
-    //   await setAllCities(data.resultado)
-    // })
-    console.log(prevProduct)
-
+    //logica para carregar todas as cidades
     setIsCitiesLoaded(true)
   }, [])
+
+  const bottomSheetRef = useRef(BottomSheetBase)
+
+  const openActionsSheet = useCallback(async () => {
+    bottomSheetRef.current?.snapToIndex(1)
+  }, [])
+  const closeActionsSheet = () => {
+    bottomSheetRef.current?.close()
+  }
+
+  const handleSelectCities = (cities) => {
+    setSelectedCities(cities)
+    closeActionsSheet()
+  }
 
   return (
     <VStack
@@ -95,17 +106,27 @@ export function AddCities() {
             )}
           />
         </VStack>
-        <AddCityButton />
+        <AddCityButton action={openActionsSheet} />
+        {error && (
+          <Text
+            alignSelf='flex-start'
+            marginLeft={8}
+            color={colors.purple[500]}
+          >
+            Informe pelo menos uma cidade
+          </Text>
+        )}
       </VStack>
 
       <VStack h={'1/6'}>
         <Button
           alignSelf={'center'}
+          disabled={error}
           w='98%'
           mt={8}
           _pressed={{ bgColor: colors.blue[700] }}
           borderRadius={8}
-          onPress={handleSubmit(handleCheckInfo)}
+          onPress={handleCheckInfo}
         >
           <Text
             color={colors.gray[100]}
@@ -117,6 +138,17 @@ export function AddCities() {
           </Text>
         </Button>
       </VStack>
+
+      <BottomSheetBase
+        ref={bottomSheetRef}
+        PanDownToClose={false}
+      >
+        <CustonSelectionMany
+          cities={allCities}
+          selectedCities={[...selectedCities]}
+          handleCities={handleSelectCities}
+        />
+      </BottomSheetBase>
     </VStack>
   )
 }

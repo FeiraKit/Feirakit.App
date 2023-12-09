@@ -1,8 +1,11 @@
 import React, { forwardRef, useState } from 'react'
 import { VStack, useTheme } from 'native-base'
+import BottomSheet from '@gorhom/bottom-sheet'
 
-const BottomSheetBase = forwardRef(({ ref, children }) => {
+const BottomSheetBase = forwardRef(({ children, PanDownToClose }, ref) => {
   const { colors } = useTheme()
+  const snapPoints = ['30%', '75%']
+
   return (
     <BottomSheet
       backgroundStyle={{ backgroundColor: colors.gray[50] }}
@@ -15,11 +18,10 @@ const BottomSheetBase = forwardRef(({ ref, children }) => {
         borderBottomLeftRadius: 0,
         borderBottomRightRadius: 0,
       }}
-      ref={bottomSheetRef}
+      ref={ref}
       snapPoints={snapPoints}
       index={-1}
-      enablePanDownToClose={true}
-      onClose={() => setIsSheetOpen[false]}
+      enablePanDownToClose={PanDownToClose}
     >
       {children}
     </BottomSheet>

@@ -4,12 +4,13 @@ import { RFValue } from 'react-native-responsive-fontsize'
 import { TouchableOpacity } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 
-export function AddCityButton() {
+export function AddCityButton({ action }) {
   const { colors } = useTheme()
   return (
     <TouchableOpacity
       alignSelf={'center'}
       mb={RFValue(2)}
+      onPress={action}
     >
       <HStack
         alignSelf={'center'}
