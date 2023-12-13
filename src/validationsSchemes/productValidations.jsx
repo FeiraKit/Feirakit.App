@@ -10,7 +10,6 @@ export const mainInfoSchema = yup.object({
 export const descriptionSchema = yup.object({
   descricao: yup.string().required('Nos fale um pouco sobre o produto'),
 })
-
-export const addCitiesSchema = yup.object({
-  cidades: yup.array().required('Informe pelo menos uma cidade'),
+export const imagesSchema = yup.object({
+  imagem_url: yup.array().required('Adicione uma imagem'),
 })

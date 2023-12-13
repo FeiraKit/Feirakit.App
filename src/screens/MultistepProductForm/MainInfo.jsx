@@ -80,7 +80,7 @@ export function MainInfo() {
           <VStack>
             <ButtonBack />
             <LogoFeira />
-            <ProgressBar percent='20' />
+            <ProgressBar percent='25' />
             <Text
               fontFamily={'body'}
               fontSize={RFValue(22)}

@@ -12,7 +12,6 @@ import { ButtonBack } from '../../components/ButtonBack'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { LogoFeira } from '../../components/LogoFeira'
 import { RFValue } from 'react-native-responsive-fontsize'
-import { InputLabel } from '../../components/FormComponents/InputLabel'
 import { ControlledInput } from '../../components/FormComponents/controlledInput'
 import { useForm } from 'react-hook-form'
 import { descriptionSchema } from '../../validationsSchemes/productValidations'
@@ -65,7 +64,7 @@ export function DescriptionProduct() {
       <VStack h='1/6'>
         <ButtonBack />
         <LogoFeira />
-        <ProgressBar percent='40' />
+        <ProgressBar percent='50' />
 
         <Text
           fontFamily={'body'}

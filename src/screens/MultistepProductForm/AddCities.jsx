@@ -83,7 +83,7 @@ export function AddCities() {
       <VStack h={'2/6'}>
         <ButtonBack />
         <LogoFeira />
-        <ProgressBar percent='40' />
+        <ProgressBar percent='75' />
         <Text
           fontFamily={'body'}
           fontSize={RFValue(22)}
