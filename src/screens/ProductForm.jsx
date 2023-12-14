@@ -226,7 +226,6 @@ export function ProductForm() {
         'Permissão',
         'Você se recusou a permitir que este aplicativo acesse sua câmera.Por favor,conceda esta permição para continuar o cadastro do produto'
       )
-
       return
     }
 

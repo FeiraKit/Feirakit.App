@@ -3,6 +3,7 @@ import { MainInfo } from '../screens/MultistepProductForm/MainInfo'
 import { DescriptionProduct } from '../screens/MultistepProductForm/DescriptionProduct'
 import { AddCities } from '../screens/MultistepProductForm/AddCities'
 import { AddImages } from '../screens/MultistepProductForm/AddImages'
+import { AbstractProduct } from '../screens/MultistepProductForm/AbstractProduct'
 
 const { Navigator, Screen } = createNativeStackNavigator()
 export function MultistepRoutes() {
@@ -25,6 +26,10 @@ export function MultistepRoutes() {
       <Screen
         name='AddImages'
         component={AddImages}
+      />
+      <Screen
+        name='Abstract'
+        component={AbstractProduct}
       />
     </Navigator>
   )
