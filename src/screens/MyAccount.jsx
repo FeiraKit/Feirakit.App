@@ -2,11 +2,9 @@ import React, { useRef, useState } from 'react'
 import {
   VStack,
   HStack,
-  Select,
   useTheme,
   Text,
   Button,
-  Input,
   Icon,
 } from 'native-base'
 import {
@@ -19,15 +17,13 @@ import {
 import { ButtonBack } from '../components/ButtonBack'
 import { LogoFeira } from '../components/LogoFeira'
 import { MaterialIcons } from '@expo/vector-icons'
-import { FontAwesome5 } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import ViaCep from '../services/ViaCep'
 import { useSelector, useDispatch } from 'react-redux'
 import { Logout } from '../store/actions'
 import { showMessage } from 'react-native-flash-message'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { TextInputMask } from 'react-native-masked-text'
 import * as yup from 'yup'
 import { User } from '../services/user'
 import { ControlledInput } from '../components/FormComponents/controlledInput'
@@ -287,526 +283,78 @@ export function MyAccount() {
           </TouchableOpacity>
         </HStack>
 
-        <Controller
-          control={control}
-          name='nome'
-          render={({ field: { onChange, value } }) => (
-            <Input
-              mt={4}
-              height={54}
-              alignSelf='center'
-              w='94%'
-              editable={isEdictionMode}
-              borderWidth={isEdictionMode ? 1 : 0}
-              bgColor={colors.gray[100]}
-              color={errors.nome ? colors.purple[500] : colors.blue[900]}
-              leftElement={
-                <Icon
-                  color={errors.nome ? colors.purple[500] : colors.blue[900]}
-                  as={<MaterialIcons name='person' />}
-                  size={6}
-                  ml={2}
-                />
-              }
-              placeholder='Nome Completo'
-              fontFamily={'Montserrat_400Regular'}
-              placeholderTextColor={
-                errors.nome ? colors.purple[500] : colors.blue[900]
-              }
-              fontSize={14}
-              borderRadius={8}
-              value={value}
-              onChangeText={onChange}
-            />
-          )}
-        />
-        {errors.nome && (
-          <Text
-            alignSelf='flex-start'
-            marginLeft={8}
-            color={colors.purple[500]}
-          >
-            {errors.nome.message}
-          </Text>
-        )}
-
         <ControlledInput
           control={control}
           name='nome'
           iconName='person'
           error={errors.nome}
         />
+
         <ControlledInput
           control={control}
-          name='nome'
-          isMasked
-          type={'cel-phone'}
-          options={{
-            maskType: 'BRL',
-            withDDD: true,
-            dddMask: '(99) ',
-          }}
-        />
-
-        <Controller
-          control={control}
           name='email'
-          render={({ field: { onChange, value } }) => (
-            <Input
-              mt={4}
-              editable={isEdictionMode}
-              borderWidth={isEdictionMode ? 1 : 0}
-              bgColor={colors.gray[100]}
-              height={54}
-              alignSelf='center'
-              w='94%'
-              keyboardType='email-address'
-              color={errors.email ? colors.purple[500] : colors.blue[900]}
-              leftElement={
-                <Icon
-                  color={errors.email ? colors.purple[500] : colors.blue[900]}
-                  as={<MaterialIcons name='email' />}
-                  size={6}
-                  ml={2}
-                />
-              }
-              placeholder='E-mail'
-              fontFamily={'Montserrat_400Regular'}
-              placeholderTextColor={
-                errors.email ? colors.purple[500] : colors.blue[900]
-              }
-              fontSize={14}
-              borderRadius={8}
-              value={value}
-              onChangeText={onChange}
-            />
-          )}
+          iconName = 'email'
+          error={errors.email}
         />
-        {errors.email && (
-          <Text
-            alignSelf='flex-start'
-            marginLeft={8}
-            color={colors.purple[500]}
-          >
-            {errors.email.message}
-          </Text>
-        )}
 
-        <HStack
-          alignItems='center'
-          mt={4}
-          borderWidth={isEdictionMode ? 1 : 0}
-          borderRadius={8}
-          borderColor={phoneInputFoccus ? colors.blue[600] : colors.gray[250]}
-          bgColor={colors.gray[100]}
-          height={54}
-          alignSelf='center'
-          w='94%'
-        >
-          <Icon
-            color={errors.telefone ? colors.purple[500] : colors.blue[900]}
-            as={<FontAwesome5 name='whatsapp' />}
-            size={5}
-            ml={3}
-          />
-          <Controller
+          <ControlledInput
             control={control}
             name='telefone'
-            render={({ field: { onChange, value } }) => (
-              <TextInputMask
-                type={'cel-phone'}
-                onFocus={() => setPhoneInputFoccus(true)}
-                onBlur={() => setPhoneInputFoccus(false)}
-                options={{
-                  maskType: 'BRL',
-                  withDDD: true,
-                  dddMask: '(99) ',
-                }}
-                color={errors.telefone ? colors.purple[500] : colors.blue[900]}
-                placeholder='(xx) XXXXX-XXXX'
-                style={{
-                  fontFamily: 'Montserrat_400Regular',
-                  fontSize: 14,
-                  marginLeft: 11,
-                }}
-                width='70%'
-                placeholderTextColor={
-                  errors.telefone ? colors.purple[500] : colors.blue[900]
-                }
-                value={value}
-                onChangeText={onChange}
-                ref={cellRef}
-                editable={isEdictionMode}
-              />
-            )}
+            type={'cel-phone'}
+            error={errors.telefone}
           />
-        </HStack>
-
+           
         <InputLabel title='Endereço' />
 
-        <HStack
-          alignItems='center'
-          mt={4}
-          borderWidth={isEdictionMode ? 1 : 0}
-          borderRadius={8}
-          borderColor={cepInputFoccus ? colors.blue[600] : colors.gray[250]}
-          bgColor={colors.gray[100]}
-          height={54}
-          alignSelf='center'
-          w='94%'
-        >
-          <Controller
+          <ControlledInput
             control={control}
             name='cep'
-            render={({ field: { onChange, value } }) => (
-              <TextInputMask
-                onFocus={() => setCepInputFoccus(true)}
-                onBlur={() => setCepInputFoccus(false)}
-                type={'custom'}
-                options={{
-                  mask: '99999-999',
-                }}
-                color={errors.cep ? colors.purple[500] : colors.blue[900]}
-                placeholder='CEP'
-                style={{
-                  fontFamily: 'Montserrat_400Regular',
-                  fontSize: 14,
-                  marginLeft: 11,
-                }}
-                width='70%'
-                placeholderTextColor={
-                  errors.cep ? colors.purple[500] : colors.blue[800]
-                }
-                value={value}
-                onChangeText={onChange}
-                onEndEditing={() => {
-                  getAddressData(value)
-                }}
-                keyboardType='numeric'
-                editable={isEdictionMode}
-              />
-            )}
+            type={'custom'}
+            error={errors.cep}
           />
-        </HStack>
-        {errors.cep && (
-          <Text
-            alignSelf='flex-start'
-            marginLeft={8}
-            color={colors.purple[500]}
-          >
-            {errors.cep.message}
-          </Text>
-        )}
-
-        <Controller
+          
+          <ControlledInput
           control={control}
           name='rua'
-          render={({ field: { onChange, value } }) => (
-            <Input
-              mt={4}
-              bgColor={colors.gray[100]}
-              color={colors.blue[900]}
-              placeholder='* Rua'
-              fontFamily={'Montserrat_400Regular'}
-              placeholderTextColor={
-                errors.rua ? colors.purple[500] : colors.blue[800]
-              }
-              fontSize={14}
-              borderRadius={8}
-              value={value}
-              onChangeText={onChange}
-              editable={isEdictionMode}
-              height={54}
-              alignSelf='center'
-              w='94%'
-            />
-          )}
+          placeholder='Rua'
+          error={errors.rua}
         />
-        {errors.rua && (
-          <Text
-            alignSelf='flex-start'
-            marginLeft={8}
-            color={colors.purple[500]}
-          >
-            {errors.rua.message}
-          </Text>
-        )}
-
-        <Controller
+        
+        <ControlledInput
           control={control}
           name='numero'
-          render={({ field: { onChange, value } }) => (
-            <Input
-              mt={4}
-              bgColor={colors.gray[100]}
-              color={colors.blue[900]}
-              placeholder='* Numero'
-              fontFamily={'Montserrat_400Regular'}
-              placeholderTextColor={
-                errors.numero ? colors.purple[500] : colors.blue[800]
-              }
-              fontSize={14}
-              borderRadius={8}
-              keyboardType='default'
-              value={value}
-              onChangeText={onChange}
-              editable={isEdictionMode}
-              borderWidth={isEdictionMode ? 1 : 0}
-              height={54}
-              alignSelf='center'
-              w='94%'
-            />
-          )}
+          placeholder='Número'
+          error={errors.numero}
         />
-        {errors.numero && (
-          <Text
-            alignSelf='flex-start'
-            marginLeft={8}
-            color={colors.purple[500]}
-          >
-            {errors.numero.message}
-          </Text>
-        )}
 
-        <Controller
+        <ControlledInput
           control={control}
           name='complemento'
-          render={({ field: { onChange, value } }) => (
-            <Input
-              mt={4}
-              bgColor={colors.gray[100]}
-              color={colors.blue[900]}
-              placeholder='* Complemento'
-              fontFamily={'Montserrat_400Regular'}
-              placeholderTextColor={
-                errors.numero ? colors.purple[500] : colors.blue[800]
-              }
-              fontSize={14}
-              borderRadius={8}
-              keyboardType='default'
-              value={value}
-              onChangeText={onChange}
-              editable={isEdictionMode}
-              borderWidth={isEdictionMode ? 1 : 0}
-              height={54}
-              alignSelf='center'
-              w='94%'
-            />
-          )}
+          placeholder='Complemento'
         />
 
-        <Controller
+        <ControlledInput
           control={control}
           name='bairro'
-          render={({ field: { onChange, value } }) => (
-            <Input
-              mt={4}
-              bgColor={colors.gray[100]}
-              color={colors.blue[900]}
-              placeholder='*Bairro'
-              fontFamily={'Montserrat_400Regular'}
-              placeholderTextColor={
-                errors.bairro ? colors.purple[500] : colors.blue[800]
-              }
-              fontSize={14}
-              borderRadius={8}
-              value={value}
-              onChangeText={onChange}
-              editable={isEdictionMode}
-              borderWidth={isEdictionMode ? 1 : 0}
-              height={54}
-              alignSelf='center'
-              w='94%'
-            />
-          )}
+          error={errors.bairro}
+          placeholder='Bairro'
         />
-        {errors.bairro && (
-          <Text
-            alignSelf='flex-start'
-            marginLeft={8}
-            color={colors.purple[500]}
-          >
-            {errors.bairro.message}
-          </Text>
-        )}
 
-        <Controller
+        <ControlledInput
           control={control}
           name='cidade'
-          render={({ field: { onChange, value } }) => (
-            <Input
-              mt={4}
-              bgColor={colors.gray[100]}
-              color={colors.blue[900]}
-              value={value}
-              placeholder='*Cidade'
-              fontFamily={'Montserrat_400Regular'}
-              placeholderTextColor={
-                errors.cidade ? colors.purple[500] : colors.blue[800]
-              }
-              fontSize={14}
-              borderRadius={8}
-              onChangeText={onChange}
-              editable={isEdictionMode}
-              borderWidth={isEdictionMode ? 1 : 0}
-              height={54}
-              alignSelf='center'
-              w='94%'
-            />
-          )}
+          error={errors.cidade}
+          isDisabled
+          placeholder='Cidade'
         />
-        {errors.cidade && (
-          <Text
-            alignSelf='flex-start'
-            marginLeft={8}
-            color={colors.purple[500]}
-          >
-            {errors.cidade.message}
-          </Text>
-        )}
 
-        <Controller
+        <ControlledInput
           control={control}
+          isSelectState
           name='estado'
-          render={({ field: { onChange, value } }) => (
-            <Select
-              isDisabled={isEdictionMode ? false : true}
-              borderWidth={isEdictionMode ? 1 : 0}
-              mt={4}
-              borderRadius={8}
-              placeholderTextColor={
-                errors.estado ? colors.purple[500] : colors.blue[800]
-              }
-              color={colors.blue[900]}
-              selectedValue={value}
-              placeholder='Selecione o estado'
-              fontSize='md'
-              accessibilityLabel='Escolha a categoria do produto'
-              onValueChange={onChange}
-              height={54}
-              alignSelf='center'
-              w='94%'
-            >
-              <Select.Item
-                label='Acre'
-                value='AC'
-              />
-              <Select.Item
-                label='Alagoas'
-                value='AL'
-              />
-              <Select.Item
-                label='Amapá'
-                value='AP'
-              />
-              <Select.Item
-                label='Amazonas'
-                value='AM'
-              />
-              <Select.Item
-                label='Bahia'
-                value='BA'
-              />
-              <Select.Item
-                label='Ceará'
-                value='CE'
-              />
-              <Select.Item
-                label='Distrito Federal'
-                value='DF'
-              />
-              <Select.Item
-                label='Espírito Santo'
-                value='ES'
-              />
-              <Select.Item
-                label='Goiás'
-                value='GO'
-              />
-              <Select.Item
-                label='Maranhão'
-                value='MA'
-              />
-              <Select.Item
-                label='Mato Grosso'
-                value='MT'
-              />
-              <Select.Item
-                label='Mato Grosso do Sul'
-                value='MS'
-              />
-              <Select.Item
-                label='Minas Gerais'
-                value='MG'
-              />
-              <Select.Item
-                label='Pará'
-                value='PA'
-              />
-              <Select.Item
-                label='Paraíba'
-                value='PB'
-              />
-              <Select.Item
-                label='Paraná'
-                value='PR'
-              />
-              <Select.Item
-                label='Pernambuco'
-                value='PE'
-              />
-              <Select.Item
-                label='Piauí'
-                value='PI'
-              />
-              <Select.Item
-                label='Rio de Janeiro'
-                value='RJ'
-              />
-              <Select.Item
-                label='Rio Grande do Norte'
-                value='RN'
-              />
-              <Select.Item
-                label='Rio Grande do Sul'
-                value='RS'
-              />
-              <Select.Item
-                label='Rondônia'
-                value='RO'
-              />
-              <Select.Item
-                label='Roraima'
-                value='RR'
-              />
-              <Select.Item
-                label='Santa Catarina'
-                value='SC'
-              />
-              <Select.Item
-                label='São Paulo'
-                value='SP'
-              />
-              <Select.Item
-                label='Sergipe'
-                value='SE'
-              />
-              <Select.Item
-                label='Tocantins'
-                value='TO'
-              />
-            </Select>
-          )}
+          isSelectionInput={true}
+          error={errors.estado}
         />
-        {errors.estado && (
-          <Text
-            alignSelf='flex-start'
-            marginLeft={8}
-            color={colors.purple[500]}
-          >
-            {errors.estado.message}
-          </Text>
-        )}
 
         {isEdictionMode && (
           <Button
