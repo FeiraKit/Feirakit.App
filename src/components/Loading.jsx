@@ -227,14 +227,10 @@ export function LoadingForm() {
     <Center
       w='98%'
       alignSelf='center'
+      alignItems={'center'}
+      justifyContent={'center'}
       mt={10}
     >
-      <Skeleton
-        h='8'
-        w={'80%'}
-        alignSelf='flex-start'
-        fadeDuration={0.6}
-      />
       <VStack
         zIndex={1}
         w='100%'
@@ -245,63 +241,19 @@ export function LoadingForm() {
         overflow='hidden'
         rounded='md'
         alignItems='center'
+        marginTop={10}
       >
-        <Skeleton
-          rounded='8'
-          h='12'
-          w={'90%'}
-          alignSelf='flex-start'
-          fadeDuration={0.2}
-        />
-        <Skeleton
-          rounded='8'
-          h='12'
-          w={'90%'}
-          alignSelf='flex-start'
-          fadeDuration={0.3}
-        />
-        <Skeleton
-          rounded='8'
-          h='12'
-          w={'90%'}
-          alignSelf='flex-start'
-          fadeDuration={0.4}
-        />
-        <Skeleton
-          rounded='8'
-          h='12'
-          w={'90%'}
-          alignSelf='flex-start'
-          fadeDuration={0.5}
-        />
-        <Skeleton
-          rounded='8'
-          h='12'
-          w={'90%'}
-          alignSelf='flex-start'
-          fadeDuration={0.6}
-        />
-        <Skeleton
-          rounded='8'
-          h='12'
-          w={'90%'}
-          alignSelf='flex-start'
-          fadeDuration={0.7}
-        />
-        <Skeleton
-          rounded='8'
-          h='12'
-          w={'90%'}
-          alignSelf='flex-start'
-          fadeDuration={0.8}
-        />
-        <Skeleton
-          rounded='8'
-          h='12'
-          w={'90%'}
-          alignSelf='flex-start'
-          fadeDuration={0.9}
-        />
+        {Array.from({ length: 4 }).map((_, index) => (
+          <Skeleton
+            key={index}
+            rounded='8'
+            h={12}
+            mt={20}
+            w={'100%'}
+            alignSelf='center'
+            fadeDuration={0.9}
+          />
+        ))}
       </VStack>
     </Center>
   )

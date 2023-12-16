@@ -6,6 +6,7 @@ import {
   VStack,
   useTheme,
 } from 'native-base'
+import { Keyboard, TouchableWithoutFeedback } from 'react-native'
 import { ProgressBar } from './components/ProgressBar'
 import React from 'react'
 import { ButtonBack } from '../../components/ButtonBack'
@@ -56,67 +57,72 @@ export function DescriptionProduct() {
   })
 
   return (
-    <VStack
-      w='full'
-      h='full'
-      px={'3%'}
+    <TouchableWithoutFeedback
+      touchSoundDisabled
+      onPress={() => Keyboard.dismiss()}
     >
-      <VStack h='1/6'>
-        <ButtonBack />
-        <LogoFeira />
-        <ProgressBar percent='50' />
-
-        <Text
-          fontFamily={'body'}
-          fontSize={RFValue(22)}
-        >
-          Fale mais sobre o produto
-        </Text>
-      </VStack>
-
-      <KeyboardAvoidingView
-        behavior='height'
-        h={'4/6'}
-        pt={10}
-        keyboardVerticalOffset={RFValue(60)}
+      <VStack
+        w='full'
+        h='full'
+        px={'3%'}
       >
-        <ControlledInput
-          control={control}
-          multiline
-          name='descricao'
-          mt={RFValue(8)}
-          placeholder={'Descrição'}
-          bgColor={colors.gray[250]}
-          h={'3/5'}
-          textAlignVertical='top'
-          error={errors.descricao}
-        />
-        {isBestBeforeAvaliable && (
-          <CustonCheckbox
-            label={'O produto será colhido após a compra'}
-            onChange={handleCheckBestBefore}
-          />
-        )}
-      </KeyboardAvoidingView>
-      <VStack h={'1/6'}>
-        <Button
-          alignSelf={'center'}
-          w='98%'
-          mt={8}
-          _pressed={{ bgColor: colors.blue[700] }}
-          borderRadius={8}
-          onPress={handleSubmit(handleCheckInfo)}
-        >
+        <VStack h='1/6'>
+          <ButtonBack />
+          <LogoFeira />
+          <ProgressBar percent='50' />
+
           <Text
-            color={colors.gray[100]}
-            fontWeight='semibold'
             fontFamily={'body'}
-            fontSize={RFValue(18)}
+            fontSize={RFValue(22)}
           >
-            Continuar
+            Fale mais sobre o produto
           </Text>
-        </Button>
+        </VStack>
+
+        <KeyboardAvoidingView
+          behavior='height'
+          h={'4/6'}
+          pt={10}
+          keyboardVerticalOffset={RFValue(60)}
+        >
+          <ControlledInput
+            control={control}
+            multiline
+            name='descricao'
+            mt={RFValue(8)}
+            placeholder={'Descrição'}
+            bgColor={colors.gray[250]}
+            h={'3/5'}
+            textAlignVertical='top'
+            error={errors.descricao}
+          />
+          {isBestBeforeAvaliable && (
+            <CustonCheckbox
+              label={'O produto será colhido após a compra'}
+              onChange={handleCheckBestBefore}
+            />
+          )}
+        </KeyboardAvoidingView>
+        <VStack h={'1/6'}>
+          <Button
+            alignSelf={'center'}
+            w='98%'
+            mt={8}
+            _pressed={{ bgColor: colors.blue[700] }}
+            borderRadius={8}
+            onPress={handleSubmit(handleCheckInfo)}
+          >
+            <Text
+              color={colors.gray[100]}
+              fontWeight='semibold'
+              fontFamily={'body'}
+              fontSize={RFValue(18)}
+            >
+              Continuar
+            </Text>
+          </Button>
+        </VStack>
       </VStack>
-    </VStack>
+    </TouchableWithoutFeedback>
   )
 }
