@@ -12,6 +12,7 @@ import { AddCityButton } from './components/AddCityButton'
 import BottomSheetBase from './components/BottomSheetBase'
 import { useSelector } from 'react-redux'
 import { CustonSelectionMany } from '../../components/FormComponents/CustonSelectionMany'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export function AddCities() {
   const route = useRoute()
@@ -57,6 +58,7 @@ export function AddCities() {
 
   useEffect(() => {
     //logica para carregar todas as cidades
+    //allCities = AsyncStorage.getItem('allCities')
     setIsCitiesLoaded(true)
   }, [])
 

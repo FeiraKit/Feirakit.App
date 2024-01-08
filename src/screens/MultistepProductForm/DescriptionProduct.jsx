@@ -19,6 +19,7 @@ import { descriptionSchema } from '../../validationsSchemes/productValidations'
 import { CustonCheckbox } from '../../components/FormComponents/CustonCheckbox'
 import { useEffect } from 'react'
 import { useState } from 'react'
+import { InputLabel } from '../../components/FormComponents/InputLabel'
 
 export function DescriptionProduct() {
   const route = useRoute()
@@ -33,6 +34,7 @@ export function DescriptionProduct() {
   }
   const handleCheckInfo = (data) => {
     prevProduct.descricao = data.descricao
+    prevProduct.estoque = parseInt(data.estoque)
     prevProduct.bestbefore = bestBefore
     navigation.navigate('AddCities', { produto: prevProduct })
   }
@@ -78,7 +80,6 @@ export function DescriptionProduct() {
             Fale mais sobre o produto
           </Text>
         </VStack>
-
         <KeyboardAvoidingView
           behavior='height'
           h={'4/6'}
@@ -92,13 +93,27 @@ export function DescriptionProduct() {
             mt={RFValue(8)}
             placeholder={'Descrição'}
             bgColor={colors.gray[250]}
-            h={'3/5'}
+            h={'2/5'}
             textAlignVertical='top'
             error={errors.descricao}
+          />
+          <InputLabel
+            title={'Quantidade disponível'}
+            mt={errors.descricao ? -2 : 2}
+          />
+          <ControlledInput
+            control={control}
+            name='estoque'
+            mt={errors.descricao ? RFValue(-1) : RFValue(1)}
+            placeholder={'estoque'}
+            bgColor={colors.gray[250]}
+            error={errors.estoque}
+            keyboardType={'numeric'}
           />
           {isBestBeforeAvaliable && (
             <CustonCheckbox
               label={'O produto será colhido após a compra'}
+              mt={(errors.descricao || errors.estoque) && RFValue(-5)}
               onChange={handleCheckBestBefore}
             />
           )}

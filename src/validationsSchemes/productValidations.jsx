@@ -9,6 +9,7 @@ export const mainInfoSchema = yup.object({
 
 export const descriptionSchema = yup.object({
   descricao: yup.string().required('Nos fale um pouco sobre o produto'),
+  estoque: yup.string().required('Nos fale quantos produtos estão disponíveis'),
 })
 export const imagesSchema = yup.object({
   imagem_url: yup.array().required('Adicione uma imagem'),

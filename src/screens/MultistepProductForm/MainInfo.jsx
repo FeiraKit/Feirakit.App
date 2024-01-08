@@ -18,6 +18,7 @@ import { removeMoneyMask } from '../../utils/removeMasks'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { useCallback } from 'react'
 import { Keyboard, TouchableWithoutFeedback } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export function MainInfo() {
   const navigation = useNavigation()
@@ -39,7 +40,7 @@ export function MainInfo() {
 
   const handleCheckInfo = async (data) => {
     let price = await removeMoneyMask(data.preco)
-    data.preco = await price.replace(',', '.')
+    data.preco = parseFloat(await price.replace(',', '.'))
     if (parseFloat(data.preco) === 0) {
       setError('preco', {
         type: 'custom',
@@ -62,7 +63,7 @@ export function MainInfo() {
       .catch((error) => console.log(error))
 
     // productInstance.getCities().then(async ({ data }) => {
-    //   //  await setAllCities(data.resultado)
+    //   //  await AsyncStorage.setItem('allCities', data)
     // })
   }
 
