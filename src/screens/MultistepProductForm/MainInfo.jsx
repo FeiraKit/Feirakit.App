@@ -40,7 +40,7 @@ export function MainInfo() {
 
   const handleCheckInfo = async (data) => {
     let price = await removeMoneyMask(data.preco)
-    data.preco = parseFloat(await price.replace(',', '.'))
+    data.preco = parseFloat(await price.replace(',', '.')).toFixed(2)
     if (parseFloat(data.preco) === 0) {
       setError('preco', {
         type: 'custom',

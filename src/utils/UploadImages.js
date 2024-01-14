@@ -6,7 +6,6 @@ export const uploadImages = async (
   setUploadedImages
 ) => {
   const storageRef = storage.ref()
-  const uploadedImages = []
   const uploadPromises = []
   selectedImages.map(async (file) => {
     let fileName = null
