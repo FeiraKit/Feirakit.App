@@ -10,10 +10,11 @@ import { LogoFeira } from '../components/LogoFeira'
 import { User } from '../services/user'
 import { InputLabel } from '../components/FormComponents/InputLabel'
 import { AcceptCheck } from '../components/FormComponents/AcceptCheck'
-import { userSchema } from '../validationsSchemes/userValidade'
+import { userSchema } from '../validationsSchemes/userValidations'
 import { ControlledInput } from '../components/FormComponents/controlledInput'
 import { ControlledSelect } from '../components/FormComponents/ControlledSelect'
 import { removeNumberMask } from '../utils/removeMasks'
+import { RFValue } from 'react-native-responsive-fontsize'
 
 export function Register() {
   const user = new User()
@@ -187,6 +188,7 @@ export function Register() {
           }}
           placeholder='CEP'
           action={getAddressData}
+          error={errors.cep}
           keyboardType='numeric'
         />
 

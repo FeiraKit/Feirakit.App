@@ -96,6 +96,7 @@ export function Login() {
           fontFamily={'Montserrat_500Medium'}
           placeholderTextColor={colors.blue[700]}
           fontSize={14}
+          keyboardType='email-address'
           borderRadius={8}
           autoCapitalize='none'
         />

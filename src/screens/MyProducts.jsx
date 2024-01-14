@@ -25,7 +25,7 @@ export function MyProducts() {
   const navigation = useNavigation()
   const user = useSelector((state) => state.AuthReducers.userData.userData)
   function handleOpenAdd() {
-    navigation.navigate('ProductForm', {})
+    navigation.navigate('MultiStepForm', {})
   }
 
   function handleOpenDescription(productId, product, isInfo) {

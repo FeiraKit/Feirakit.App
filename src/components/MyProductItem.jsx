@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 import {
   Center,
   Heading,
@@ -7,19 +7,19 @@ import {
   Pressable,
   useTheme,
   VStack,
-} from "native-base";
-import { RFValue } from "react-native-responsive-fontsize";
-import { StyleSheet } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
+} from 'native-base'
+import { RFValue } from 'react-native-responsive-fontsize'
+import { StyleSheet } from 'react-native'
+import { MaterialIcons } from '@expo/vector-icons'
 
 export function MyProductItem({ product, onPress }) {
-  const { colors } = useTheme();
+  const { colors } = useTheme()
 
   return (
     <Pressable
       bgColor={colors.gray[250]}
       onPress={onPress}
-      mr="4%"
+      mr='4%'
       mb={4}
       w='98%'
       maxH={320}
@@ -27,30 +27,37 @@ export function MyProductItem({ product, onPress }) {
       borderRadius={8}
       borderWidth={1}
       borderColor={colors.blue[500]}
-      justifyContent="space-between"
+      justifyContent='space-between'
     >
-      <HStack justifyContent="space-between">
+      <HStack justifyContent='space-between'>
         <Image
-          source={{uri:product.imagem_url[0]}}
+          source={{ uri: product.imagem_url[0] }}
           style={{
-            width: "20%",
+            width: '20%',
             height: 65,
-            alignSelf: "center",
+            alignSelf: 'center',
             marginBottom: 4,
           }}
-          resizeMode="center"
+          resizeMode='center'
           alt={product.descricao}
         />
 
-        <VStack alignSelf="center" w="70%" ml={2}>
-          <Heading fontSize={product.nome.length > 14 ?RFValue(12) : RFValue(16)} mb={1}>
+        <VStack
+          alignSelf='center'
+          w='70%'
+          ml={2}
+        >
+          <Heading
+            fontSize={product.nome.length > 14 ? RFValue(12) : RFValue(16)}
+            mb={1}
+          >
             {product.nome}
           </Heading>
 
           <HStack>
             <Heading
-              fontWeight="medium"
-              fontFamily="heading"
+              fontWeight='medium'
+              fontFamily='heading'
               fontSize={RFValue(12)}
               mb={1}
               color={colors.green[300]}
@@ -59,8 +66,8 @@ export function MyProductItem({ product, onPress }) {
             </Heading>
 
             <Heading
-              fontWeight="medium"
-              fontFamily="heading"
+              fontWeight='medium'
+              fontFamily='heading'
               fontSize={RFValue(12)}
               mb={1}
               color={colors.gray[400]}
@@ -71,11 +78,13 @@ export function MyProductItem({ product, onPress }) {
           </HStack>
         </VStack>
         <Center>
-          <MaterialIcons color={colors.gray[300]} name="chevron-right" size={RFValue(46)}/>
+          <MaterialIcons
+            color={colors.gray[300]}
+            name='chevron-right'
+            size={RFValue(46)}
+          />
         </Center>
       </HStack>
     </Pressable>
-  );
+  )
 }
-
-const styles = StyleSheet.create({});

@@ -17,6 +17,7 @@ export function MaskedInput({ changeColor, iconName, action, value, ...rest }) {
         borderRadius={8}
         borderColor={changeColor ? colors.purple[500] : colors.blue[900]}
         bgColor={colors.gray[100]}
+        mt={RFValue(3)}
         {...rest}
       >
         {!!iconName && (

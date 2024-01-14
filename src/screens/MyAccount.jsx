@@ -1,19 +1,6 @@
-import React, { useRef, useState } from 'react'
-import {
-  VStack,
-  HStack,
-  useTheme,
-  Text,
-  Button,
-  Icon,
-} from 'native-base'
-import {
-  StyleSheet,
-  Alert,
-  Image,
-  TouchableOpacity,
-  ScrollView,
-} from 'react-native'
+import React, { useState } from 'react'
+import { VStack, HStack, useTheme, Text, Button, Icon } from 'native-base'
+import { Alert, Image, TouchableOpacity, ScrollView } from 'react-native'
 import { ButtonBack } from '../components/ButtonBack'
 import { LogoFeira } from '../components/LogoFeira'
 import { MaterialIcons } from '@expo/vector-icons'
@@ -24,39 +11,25 @@ import { useSelector, useDispatch } from 'react-redux'
 import { Logout } from '../store/actions'
 import { showMessage } from 'react-native-flash-message'
 import { yupResolver } from '@hookform/resolvers/yup'
-import * as yup from 'yup'
 import { User } from '../services/user'
 import { ControlledInput } from '../components/FormComponents/controlledInput'
 import { InputLabel } from '../components/FormComponents/InputLabel'
+import { EditUserSchema } from '../validationsSchemes/userValidations'
+import { RFValue } from 'react-native-responsive-fontsize'
+import { ControlledSelect } from '../components/FormComponents/ControlledSelect'
+import { removeNumberMask } from '../utils/removeMasks'
+import { styles } from './styles/MyAccountStyles'
 
 export function MyAccount() {
   const userInstance = new User()
   const navigation = useNavigation()
   const user = useSelector((state) => state.AuthReducers.userData.userData)
-  const cellRef = useRef(null)
   const [IsLoading, setIsLoading] = useState(false)
   const [isEdictionMode, setIsEdictionMode] = useState(false)
-  const [cepInputFoccus, setCepInputFoccus] = useState(false)
-  const [phoneInputFoccus, setPhoneInputFoccus] = useState(false)
   const [deleteIsLoading, setDeleteIsLoading] = useState(false)
   const { colors } = useTheme()
-  const dispatch = useDispatch()
 
-  const userSchema = yup.object({
-    nome: yup.string().required('informe o seu nome completo'),
-    email: yup
-      .string()
-      .required('Informe um email válido')
-      .email('Informe um email válido'),
-    telefone: yup.string().min(10).required('Informe um numero de whatsapp'),
-    cep: yup.string().min(7, 'CEP Inválido').required('Informe um CEP'),
-    rua: yup.string().required('informe o nome da rua'),
-    numero: yup.string().required('informe o numero da sua residência'),
-    complemento: yup.string().required('adicione um complemento'),
-    bairro: yup.string().required('informe o bairro'),
-    cidade: yup.string().required('informe o nome da cidade'),
-    estado: yup.string().required('selecione o estado'),
-  })
+  const dispatch = useDispatch()
 
   const {
     control,
@@ -65,7 +38,7 @@ export function MyAccount() {
     setValue,
     reset,
   } = useForm({
-    resolver: yupResolver(userSchema),
+    resolver: yupResolver(EditUserSchema),
     defaultValues: {
       nome: user.nome,
       email: user.email,
@@ -100,8 +73,9 @@ export function MyAccount() {
       },
       {
         text: editTexts.optionYes,
-        onPress: () => {
+        onPress: async () => {
           setIsLoading(true)
+          let telefone = await removeNumberMask(data.telefone)
           let objUser = {
             email: data.email,
             nome: data.nome,
@@ -115,7 +89,7 @@ export function MyAccount() {
               cidade: data.cidade,
               estado: data.estado,
             },
-            telefone: cellRef?.current.getRawValue(),
+            telefone,
             id: user.id,
           }
           setIsLoading(false)
@@ -153,7 +127,7 @@ export function MyAccount() {
       .catch((err) => console.log(err))
   }
 
-  const deletTexts = {
+  const deleteTexts = {
     title: 'Excluir',
     description: 'Deseja realmente excluir a sua conta?',
     optionNo: 'Não',
@@ -161,16 +135,16 @@ export function MyAccount() {
   }
   const deleteUser = () => {
     setDeleteIsLoading(true)
-    Alert.alert(deletTexts.title, deletTexts.description, [
+    Alert.alert(deleteTexts.title, deleteTexts.description, [
       {
-        text: deletTexts.optionNo,
+        text: deleteTexts.optionNo,
         onPress: () => {
           setDeleteIsLoading(false)
           return
         },
       },
       {
-        text: deletTexts.optionYes,
+        text: deleteTexts.optionYes,
         onPress: () => {
           let objUserId = { id: user.id }
           userInstance
@@ -285,43 +259,71 @@ export function MyAccount() {
 
         <ControlledInput
           control={control}
+          editable={isEdictionMode}
           name='nome'
           iconName='person'
+          placeholder='Nome Completo'
           error={errors.nome}
         />
 
         <ControlledInput
           control={control}
+          editable={isEdictionMode}
           name='email'
-          iconName = 'email'
+          keyboardType='email-address'
+          iconName='email'
+          placeholder='E-mail'
           error={errors.email}
         />
 
-          <ControlledInput
-            control={control}
-            name='telefone'
-            type={'cel-phone'}
-            error={errors.telefone}
-          />
-           
-        <InputLabel title='Endereço' />
-
-          <ControlledInput
-            control={control}
-            name='cep'
-            type={'custom'}
-            error={errors.cep}
-          />
-          
-          <ControlledInput
+        <ControlledInput
+          isMasked
           control={control}
+          name='telefone'
+          error={errors.telefone}
+          type={'cel-phone'}
+          placeholder={'(00) 0000-0000'}
+          iconName={'whatsapp'}
+          options={{
+            maskType: 'BRL',
+            withDDD: true,
+            dddMask: '(99) ',
+          }}
+          editable={isEdictionMode}
+          keyboardType='numeric'
+        />
+
+        <InputLabel
+          title='Endereço'
+          mt={RFValue(1)}
+        />
+
+        <ControlledInput
+          isMasked
+          control={control}
+          name='cep'
+          type={'custom'}
+          options={{
+            mask: '99999-999',
+          }}
+          placeholder='CEP'
+          editable={isEdictionMode}
+          action={getAddressData}
+          error={errors.cep}
+          keyboardType='numeric'
+        />
+
+        <ControlledInput
+          control={control}
+          editable={isEdictionMode}
           name='rua'
           placeholder='Rua'
           error={errors.rua}
         />
-        
+
         <ControlledInput
           control={control}
+          editable={isEdictionMode}
           name='numero'
           placeholder='Número'
           error={errors.numero}
@@ -329,29 +331,33 @@ export function MyAccount() {
 
         <ControlledInput
           control={control}
+          editable={isEdictionMode}
           name='complemento'
           placeholder='Complemento'
+          error={errors.complemento}
         />
 
         <ControlledInput
           control={control}
+          editable={isEdictionMode}
           name='bairro'
-          error={errors.bairro}
           placeholder='Bairro'
+          error={errors.bairro}
         />
 
         <ControlledInput
           control={control}
+          editable={isEdictionMode}
           name='cidade'
-          error={errors.cidade}
-          isDisabled
           placeholder='Cidade'
+          error={errors.cidade}
         />
 
-        <ControlledInput
+        <ControlledSelect
           control={control}
           isSelectState
           name='estado'
+          isDisabled={!isEdictionMode}
           isSelectionInput={true}
           error={errors.estado}
         />
@@ -425,24 +431,3 @@ export function MyAccount() {
     </ScrollView>
   )
 }
-const styles = StyleSheet.create({
-  userImage: {
-    width: 150,
-    height: 150,
-    alignSelf: 'center',
-  },
-  txt: {
-    fontFamily: 'Montserrat_400Regular',
-    fontSize: 20,
-  },
-  btn: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    paddingVertical: 2,
-    paddingHorizontal: 8,
-    borderRadius: 8,
-    marginTop: 2,
-  },
-})

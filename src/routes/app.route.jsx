@@ -24,6 +24,7 @@ function ProductRoutes() {
         name='MyProducts'
         component={MyProducts}
       />
+      {/* //editar */}
       <Screen
         name='ProductForm'
         component={ProductForm}
@@ -111,19 +112,6 @@ function HomeDrawer() {
       <Drawer.Screen
         name='Sobre'
         component={Sobre}
-        options={{
-          drawerIcon: ({ color }) => (
-            <Ionicons
-              name='help-circle-outline'
-              size={25}
-              color={color}
-            />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name='Form'
-        component={MultistepRoutes}
         options={{
           drawerIcon: ({ color }) => (
             <Ionicons
