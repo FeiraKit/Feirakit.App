@@ -270,7 +270,7 @@ export function Description() {
               style={[styles.text, { paddingTop: 4 }]}
               fontSize={RFValue(20)}
             >
-              R$ {product.preco.toFixed(2)}
+              R$ {product.preco.toFixed(2).replace('.', ',')}
             </Heading>
           </HStack>
         </HStack>

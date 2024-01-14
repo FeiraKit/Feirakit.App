@@ -99,7 +99,7 @@ export function AbstractProduct() {
               }}
             />
           </VStack>
-          {/* div onde ta as informações */}
+
           <VStack
             mt={RFValue(4)}
             borderTopRadius={RFValue(8)}
@@ -181,7 +181,7 @@ export function AbstractProduct() {
                     color={colors.green[600]}
                     textAlign={'left'}
                   >
-                    R${prevProduct.preco}
+                    R${prevProduct.preco.replace('.', ',')}
                   </Text>
                 </HStack>
               </VStack>
