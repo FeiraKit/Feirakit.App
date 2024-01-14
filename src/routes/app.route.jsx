@@ -9,8 +9,8 @@ import { Sobre } from '../screens/Sobre'
 import { ChangePassword } from '../screens/ChangePassword'
 import { Ionicons } from '@expo/vector-icons'
 import { useTheme } from 'native-base'
-import { ProductForm } from '../screens/ProductForm'
 import { MultistepRoutes } from '../routes/MultistepForm.route'
+import { EditProduct } from '../screens/EditProduct'
 
 const { Navigator, Screen } = createNativeStackNavigator()
 
@@ -24,10 +24,9 @@ function ProductRoutes() {
         name='MyProducts'
         component={MyProducts}
       />
-      {/* //editar */}
       <Screen
-        name='ProductForm'
-        component={ProductForm}
+        name='EditProduct'
+        component={EditProduct}
       />
       <Screen
         name='MultiStepForm'

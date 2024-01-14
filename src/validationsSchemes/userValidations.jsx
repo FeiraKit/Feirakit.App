@@ -1,6 +1,6 @@
 import * as yup from 'yup'
 
-export const userSchema = yup.object({
+export const UserDataSchema = yup.object({
   nome: yup.string().required('informe o seu nome completo'),
   email: yup
     .string()
@@ -11,6 +11,9 @@ export const userSchema = yup.object({
     .string()
     .min(6, 'a senha deve ter pelo menos 6 dígitos')
     .required('informe uma senha'),
+})
+
+export const UserAdressSchema = yup.object({
   cep: yup.string().min(7, 'CEP Inválido').required('Informe um CEP'),
   rua: yup.string().required('informe o nome da rua'),
   numero: yup.string().required('informe o numero da sua residência'),

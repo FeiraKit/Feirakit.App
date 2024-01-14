@@ -51,7 +51,7 @@ export function Description() {
   let btnPlusDisabled = amount >= product.estoque ? true : false
 
   function handleOpenEdit(product) {
-    navigation.navigate('ProductForm', { product })
+    navigation.navigate('EditProduct', { produto: product })
   }
   const texts = {
     title: 'Exluir',
