@@ -6,7 +6,7 @@ import {
   VStack,
   useTheme,
 } from 'native-base'
-import { Keyboard, TouchableWithoutFeedback } from 'react-native'
+import { Alert, Keyboard, TouchableWithoutFeedback } from 'react-native'
 import { ButtonBack } from '../../components/ButtonBack'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -18,12 +18,13 @@ import { ControlledInput } from '../../components/FormComponents/controlledInput
 import { removeNumberMask } from '../../utils/removeMasks'
 import { RFValue } from 'react-native-responsive-fontsize'
 import { useNavigation } from '@react-navigation/native'
+import { User } from '../../services/user'
 
 export function UserData() {
   const navigation = useNavigation()
   const { colors } = useTheme()
   const [isLoading, setIsLoading] = useState(false)
-
+  const user = new User()
   const {
     control,
     handleSubmit,
@@ -43,10 +44,30 @@ export function UserData() {
       senha: data.senha,
       telefone,
     }
-    console.log(objUser)
-
-    setIsLoading(false)
-    navigation.navigate('AddAdress', { user: objUser })
+    user
+      .checkPassword(objUser.email, objUser.senha)
+      .then(({ data }) => {
+        if (data.resultado) {
+          setError('email', {
+            type: 'custom',
+            message: 'Este e-mail já está sendo usado',
+          })
+          setIsLoading(false)
+          return Alert.alert(
+            'Erro',
+            'Este endereço de e-mail já está sendo usado'
+          )
+        }
+      })
+      .catch((error) => {
+        setIsLoading(false)
+        if (error.response) {
+          if (!error.response.data.resultado) {
+            return navigation.navigate('AddAdress', { user: objUser })
+          }
+        }
+        return Alert.alert('Erro', 'Tivemos um problema,tente novamente')
+      })
   }
 
   return (
@@ -78,7 +99,7 @@ export function UserData() {
             fontSize={RFValue(22)}
             alignSelf={'center'}
           >
-            Cadastre-se no FeirKit
+            Cadastre-se no FeiraKit
           </Text>
 
           <InputLabel
