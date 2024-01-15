@@ -62,7 +62,7 @@ export function MyProductItem({ product, onPress }) {
               mb={1}
               color={colors.green[300]}
             >
-              R$ {product.preco.toFixed(2)}
+              R$ {product.preco.toFixed(2).replace('.', ',')}
             </Heading>
 
             <Heading
