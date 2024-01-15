@@ -56,12 +56,6 @@ export function AddCities() {
     navigation.navigate('AddImages', { produto: prevProduct })
   }
 
-  useEffect(() => {
-    //logica para carregar todas as cidades
-    //allCities = AsyncStorage.getItem('allCities')
-    setIsCitiesLoaded(true)
-  }, [])
-
   const bottomSheetRef = useRef(BottomSheetBase)
 
   const openActionsSheet = useCallback(async () => {
@@ -73,8 +67,13 @@ export function AddCities() {
 
   const handleSelectCities = (cities) => {
     setSelectedCities(cities)
-    closeActionsSheet()
   }
+
+  useEffect(() => {
+    //logica para carregar todas as cidades
+    //allCities = AsyncStorage.getItem('allCities')
+    setIsCitiesLoaded(true)
+  }, [])
 
   return (
     <VStack
@@ -143,12 +142,13 @@ export function AddCities() {
 
       <BottomSheetBase
         ref={bottomSheetRef}
-        PanDownToClose={false}
+        PanDownToClose={true}
       >
         <CustonSelectionMany
           cities={allCities}
           selectedCities={[...selectedCities]}
           handleCities={handleSelectCities}
+          actionClose={closeActionsSheet}
         />
       </BottomSheetBase>
     </VStack>
