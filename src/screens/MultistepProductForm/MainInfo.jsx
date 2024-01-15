@@ -42,14 +42,13 @@ export function MainInfo() {
     let price = await removeMoneyMask(data.preco)
     data.preco = parseFloat(await price.replace(',', '.')).toFixed(2)
     if (parseFloat(data.preco) === 0) {
-      setError('preco', {
+      return setError('preco', {
         type: 'custom',
         message: 'O preço deve ser maior que R$ 0,00',
       })
     }
-    if (parseFloat(data.preco) !== 0) {
-      navigation.navigate('DescriptionProduct', { produto: data })
-    }
+
+    navigation.navigate('DescriptionProduct', { produto: data })
   }
 
   const initForm = () => {

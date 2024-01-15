@@ -2,7 +2,7 @@ import React from 'react'
 import { Checkbox, HStack, Heading, useTheme } from 'native-base'
 import { RFValue } from 'react-native-responsive-fontsize'
 
-export function CustonCheckbox({ onChange, label, ...rest }) {
+export function CustonCheckbox({ onChange, label, value, ...rest }) {
   const { colors } = useTheme()
   return (
     <HStack
@@ -18,6 +18,7 @@ export function CustonCheckbox({ onChange, label, ...rest }) {
         }
         style={{ width: RFValue(26), height: RFValue(26), borderRadius: 8 }}
         onChange={onChange}
+        isChecked={value}
       >
         <Heading
           fontSize={RFValue(18)}

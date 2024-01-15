@@ -9,6 +9,7 @@ import { RFValue } from 'react-native-responsive-fontsize'
 
 export function ImagePickerSelectedImages({
   images,
+  disableShowImage,
   handleImage,
   changeColor,
   actionShowImage,
@@ -30,7 +31,7 @@ export function ImagePickerSelectedImages({
         onPress: () => {
           let newImages = images.filter((image, i) => i !== index)
           handleImage(newImages)
-          if (newImages.length > 1) {
+          if (newImages.length > 1 && !disableShowImage) {
             actionShowImage(index - 1)
           }
         },
@@ -66,7 +67,11 @@ export function ImagePickerSelectedImages({
               keyExtractor={(item) => item}
               renderItem={({ item, index }) => (
                 <TouchableOpacity
-                  onPress={() => actionShowImage(index)}
+                  onPress={() => {
+                    if (!disableShowImage) {
+                      actionShowImage(index)
+                    }
+                  }}
                   onLongPress={() => removeImage(index)}
                 >
                   <MaterialIcons

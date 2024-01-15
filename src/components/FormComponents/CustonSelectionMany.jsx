@@ -5,7 +5,14 @@ import { RFValue } from 'react-native-responsive-fontsize'
 import { TouchableOpacity } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 
-export function CustonSelectionMany({ selectedCities, cities, handleCities }) {
+export function CustonSelectionMany({
+  selectedCities,
+  cities,
+  handleCities,
+  actionClose,
+  hideConfirmButton,
+  ...rest
+}) {
   const [selected, setSelected] = useState([...selectedCities])
   const { colors } = useTheme()
 
@@ -17,15 +24,22 @@ export function CustonSelectionMany({ selectedCities, cities, handleCities }) {
     } else {
       selectedsArray.push(nome)
     }
+
     setSelected(selectedsArray)
+    handleCities(selectedsArray)
+  }
+  const handleConfirmClose = () => {
+    actionClose()
+    handleCities(selected)
   }
 
   return (
     <VStack>
       <VStack
         position={'relative'}
-        h={'5/6'}
+        h={hideConfirmButton ? 'full' : '5/6'}
         paddingX={RFValue(4)}
+        zIndex={1}
       >
         <BottomSheetFlatList
           data={cities}
@@ -69,20 +83,22 @@ export function CustonSelectionMany({ selectedCities, cities, handleCities }) {
               </TouchableOpacity>
             </HStack>
           )}
-          contentContainerStyle={{ paddingBottom: 30 }}
+          contentContainerStyle={{ paddingBottom: 0, zIndex: 100 }}
           showsVerticalScrollIndicator={false}
         />
       </VStack>
-      <VStack h='1/6'>
-        <Button
-          mt={RFValue(4)}
-          w={'80%'}
-          alignSelf={'center'}
-          onPress={() => handleCities(selected)}
-        >
-          Confirmar
-        </Button>
-      </VStack>
+      {!hideConfirmButton && (
+        <VStack h='1/6'>
+          <Button
+            mt={RFValue(4)}
+            w={'80%'}
+            alignSelf={'center'}
+            onPress={() => handleConfirmClose()}
+          >
+            Confirmar
+          </Button>
+        </VStack>
+      )}
     </VStack>
   )
 }

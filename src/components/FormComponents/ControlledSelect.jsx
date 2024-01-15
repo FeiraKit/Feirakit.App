@@ -16,6 +16,7 @@ export function ControlledSelect({
   isPassword,
   keyboardType,
   selectLabel,
+  secondaryAction,
   ...rest
 }) {
   const { colors } = useTheme()
@@ -34,10 +35,11 @@ export function ControlledSelect({
             />
           ) : (
             <SelectOne
-              onValueChange={onChange}
               changeColor={!!error}
               ItemsValue={selectItemsValue}
               title={selectLabel}
+              selectedValue={value}
+              onValueChange={onChange}
               {...rest}
             />
           )
