@@ -9,15 +9,17 @@ export const uploadImages = async (
   const uploadPromises = []
   selectedImages.map(async (file) => {
     let fileName = null
-    if (file[0] == 'f') {
+    if (file.includes('file:///')) {
       fileName = file.substring(file.lastIndexOf('/') + 1)
-    } else {
-      fileName = file.substring(file.lastIndexOf('*fk*'), file.lastIndexOf('?'))
+    }
+
+    if (file.includes('https://') || file.includes('http://')) {
+      return setUploadedImages((prevState) => [...prevState, file])
     }
 
     const response = await fetch(file)
     let blob = await response.blob()
-    const fileRef = storageRef.child(`images/*fk*${slugProduct}-${fileName}`)
+    const fileRef = storageRef.child(`images/${slugProduct}-${fileName}`)
 
     const uploadTask = fileRef.put(blob).then(async (snapshot) => {
       await snapshot.ref.getDownloadURL().then((url) => {
