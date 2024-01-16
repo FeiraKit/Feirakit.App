@@ -19,7 +19,7 @@ export const uploadImages = async (
 
     const response = await fetch(file)
     let blob = await response.blob()
-    const fileRef = storageRef.child(`images/${slugProduct}-${fileName}`)
+    const fileRef = storageRef.child(`images/fk*${slugProduct}-${fileName}`)
 
     const uploadTask = fileRef.put(blob).then(async (snapshot) => {
       await snapshot.ref.getDownloadURL().then((url) => {
@@ -29,4 +29,16 @@ export const uploadImages = async (
     uploadPromises.push(uploadTask)
   })
   await Promise.all(uploadPromises)
+}
+
+export const removeImageInFirebaseStorage = (url) => {
+  // Remove the image from Firebase Storage
+
+  if (url.includes('https://firebasestorage.googleapis.com/')) {
+    let deleteImage = url.substring(
+      url.lastIndexOf('fk*'),
+      url.lastIndexOf('?')
+    )
+    storage.ref(`images/${deleteImage}`).delete()
+  }
 }
