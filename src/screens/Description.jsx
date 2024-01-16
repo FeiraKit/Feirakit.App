@@ -27,8 +27,8 @@ import { FontAwesome5 } from '@expo/vector-icons'
 import { LogoFeira } from '../components/LogoFeira'
 import { Product } from '../services/product'
 import { User } from '../services/user'
-import { storage } from '../../firebaseConfig'
 import { styles } from './styles/DescriptionStyles'
+import { removeImageInFirebaseStorage } from '../utils/UploadImages'
 
 export function Description() {
   const productInstance = new Product()
@@ -76,8 +76,7 @@ export function Description() {
             .deleteProduct(JSON.stringify(objDelete))
             .then(() => {
               product.imagem_url.map((url) => {
-                let delelteImage = url.substring(82, url.lastIndexOf('?'))
-                storage.ref(`images/${delelteImage}`).delete()
+                removeImageInFirebaseStorage(url)
               })
 
               showMessage({

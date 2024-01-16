@@ -6,10 +6,11 @@ import { MaterialIcons } from '@expo/vector-icons'
 import { Alert, Image, TouchableOpacity } from 'react-native'
 import { LoadingImage } from '../Loading'
 import { RFValue } from 'react-native-responsive-fontsize'
+import { removeImageInFirebaseStorage } from '../../utils/UploadImages'
 
 export function ImagePickerSelectedImages({
   images,
-  disableShowImage,
+  editionMode,
   handleImage,
   changeColor,
   actionShowImage,
@@ -31,7 +32,10 @@ export function ImagePickerSelectedImages({
         onPress: () => {
           let newImages = images.filter((image, i) => i !== index)
           handleImage(newImages)
-          if (newImages.length > 1 && !disableShowImage) {
+          if (editionMode) {
+            removeImageInFirebaseStorage(images[index])
+          }
+          if (newImages.length > 1 && !editionMode) {
             actionShowImage(index - 1)
           }
         },
@@ -68,7 +72,7 @@ export function ImagePickerSelectedImages({
               renderItem={({ item, index }) => (
                 <TouchableOpacity
                   onPress={() => {
-                    if (!disableShowImage) {
+                    if (!editionMode) {
                       actionShowImage(index)
                     }
                   }}

@@ -1,7 +1,6 @@
 import {
   Button,
   HStack,
-  Icon,
   KeyboardAvoidingView,
   Progress,
   Text,
@@ -28,14 +27,14 @@ import { CustonCheckbox } from '../components/FormComponents/CustonCheckbox'
 import { ImagePickerSelectedImages } from '../components/FormComponents/ImagePickerSelectedImages'
 import BottomSheetBase from './MultistepProductForm/components/BottomSheetBase'
 import { CustomImagePickerBottomSheet } from '../components/FormComponents/CustonImagePickerBottomSheet'
-import { TouchableOpacity } from 'react-native'
+import { Alert, TouchableOpacity } from 'react-native'
 import { CustonSelectionMany } from '../components/FormComponents/CustonSelectionMany'
-import { SelectOne } from '../components/FormComponents/CustonSelectOne'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import moment from 'moment'
 import { uploadImages } from '../utils/UploadImages'
 import { useSelector } from 'react-redux'
 import { removeMoneyMask } from '../utils/removeMasks'
+import { LoadingEditForm } from '../components/Loading'
 
 export function EditProduct() {
   const route = useRoute()
@@ -45,11 +44,9 @@ export function EditProduct() {
   const [categories, setCategories] = useState([])
   const [unities, setUnities] = useState([])
   const [FormLoaded, setFormLoaded] = useState(false)
-  const [isBestBeforeAvaliable, setIsBestBeforeAvailable] = useState(false)
-  const [bestBefore, setBestBefore] = useState(prevProduct.bestbefore)
-  const [selectedCategory, setSelectedCategory] = useState(null)
+  const [isLoading, setIsLoading] = useState()
   const [images, setImages] = useState(prevProduct.imagem_url)
-  const [error, setImageError] = useState()
+  const [error, setCustomError] = useState()
   const [uploadProgress, setUploadProgress] = useState(0)
   const [uploadedImages, setUploadedImages] = useState([])
 
@@ -127,20 +124,56 @@ export function EditProduct() {
       .catch((error) => console.log(error))
   }
 
-  const handleCheckInfo = async (data) => {
-    console.log(data)
+  const submitForm = (data) => {
     if (images.length === 0) {
-      return setImageError(true)
+      setIsLoading(false)
+      setCustomError(true)
+
+      return Alert.alert('Erro', 'Adicione uma imagem ao produto', [
+        { text: 'ok', onPress: () => setCustomError(false) },
+      ])
     }
+    if (selectedCities.length === 0) {
+      setIsLoading(false)
+      setCustomError(true)
+      return Alert.alert('Erro', 'Adicione pelo menos uma cidade', [
+        { text: 'ok', onPress: () => setCustomError(false) },
+      ])
+    }
+
+    Alert.alert('Editar', 'Deseja realmente alterar esse produto?', [
+      {
+        text: 'Alterar',
+        onPress: () => {
+          handleCheckInfo(data)
+        },
+      },
+      {
+        text: 'continuar editando',
+        onPress: () => {
+          return
+        },
+      },
+      {
+        text: 'cancelar',
+        onPress: () => {
+          reset()
+        },
+      },
+    ])
+  }
+
+  const handleCheckInfo = async (data) => {
+    setIsLoading(true)
 
     let price = await removeMoneyMask(data.preco)
     if (parseFloat(data.preco) === 0) {
+      setIsLoading(false)
       return setError('preco', {
         type: 'custom',
         message: 'O preço deve ser maior que R$ 0,00',
       })
     }
-
     prevProduct.nome = data.nome
     prevProduct.categoria = data.categoria
     prevProduct.descricao = data.descricao
@@ -165,6 +198,7 @@ export function EditProduct() {
       prevProduct.imagem_url = uploadedImages
       console.log(prevProduct)
       console.log('enviar produto ao banco')
+      setIsLoading(false)
     }
   }, [uploadedImages])
 
@@ -174,6 +208,7 @@ export function EditProduct() {
       h='full'
       px={'3%'}
     >
+      {!FormLoaded && <LoadingEditForm />}
       <KeyboardAvoidingView
         behavior='height'
         w='full'
@@ -361,7 +396,7 @@ export function EditProduct() {
             alignItems={'center'}
           >
             <ImagePickerSelectedImages
-              disableShowImage
+              editionMode
               images={images}
               handleImage={setImages}
               actionOpenBottomSheet={openActionsSheet}
@@ -380,7 +415,9 @@ export function EditProduct() {
             w='98%'
             _pressed={{ bgColor: colors.blue[700] }}
             borderRadius={8}
-            onPress={handleSubmit(handleCheckInfo)}
+            onPress={handleSubmit(submitForm)}
+            isLoading={isLoading ? true : false}
+            disable={error}
           >
             <Text
               color={colors.gray[100]}
