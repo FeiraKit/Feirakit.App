@@ -259,6 +259,106 @@ export function LoadingForm() {
   )
 }
 
+export function LoadingEditForm() {
+  const { colors } = useTheme()
+  return (
+    <Center
+      w='98%'
+      alignSelf='center'
+      alignItems={'center'}
+      justifyContent={'space-around'}
+      mt={20}
+      height={'full'}
+    >
+      <VStack
+        zIndex={100}
+        w='100%'
+        maxW='400'
+        h='full'
+        mt={4}
+        space={2}
+        overflow='hidden'
+        rounded='md'
+        alignItems='center'
+      >
+        <Skeleton
+          rounded='8'
+          h={12}
+          mt={8}
+          w={'100%'}
+          alignSelf='center'
+          bg={colors.gray[200]}
+          fadeDuration={0.6}
+        />
+
+        <HStack space={'2%'}>
+          <Skeleton
+            rounded='8'
+            h={12}
+            bg={colors.gray[250]}
+            mt={8}
+            w={'48%'}
+            alignSelf='center'
+            fadeDuration={0.6}
+          />
+          <Skeleton
+            rounded='8'
+            h={12}
+            mt={8}
+            bg={colors.gray[250]}
+            w={'48%'}
+            alignSelf='center'
+            fadeDuration={0.6}
+          />
+        </HStack>
+        <HStack
+          mt={8}
+          space={'2%'}
+        >
+          <Skeleton
+            rounded='8'
+            h={12}
+            mt={8}
+            bg={colors.gray[250]}
+            w={'48%'}
+            alignSelf='center'
+            fadeDuration={0.6}
+          />
+          <Skeleton
+            rounded='8'
+            h={12}
+            mt={8}
+            w={'48%'}
+            bg={colors.gray[250]}
+            alignSelf='center'
+            fadeDuration={0.6}
+          />
+        </HStack>
+
+        <Skeleton
+          rounded='8'
+          h={20}
+          mt={20}
+          w={'100%'}
+          bg={colors.gray[250]}
+          alignSelf='center'
+          fadeDuration={0.6}
+        />
+
+        <Skeleton
+          rounded='8'
+          h={40}
+          mt={20}
+          w={'100%'}
+          bg={colors.gray[250]}
+          alignSelf='center'
+          fadeDuration={0.6}
+        />
+      </VStack>
+    </Center>
+  )
+}
+
 export function LoadingUploadImages({ percent }) {
   const { colors } = useTheme()
   return (
