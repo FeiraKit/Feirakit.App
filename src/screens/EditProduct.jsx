@@ -119,7 +119,6 @@ export function EditProduct() {
       .then(({ data }) => {
         setCategories(data[0].categorias)
         setUnities(data[0].unidades)
-
         setFormLoaded(true)
       })
       .catch((error) => console.log(error))
