@@ -128,4 +128,4 @@ export const BRAZILIANS_STATES = [
     label: 'Tocantins',
     value: 'TO',
   },
-]
+];

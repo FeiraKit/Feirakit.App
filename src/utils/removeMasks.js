@@ -1,17 +1,17 @@
 export async function removeNumberMask(numberText) {
-  let numberArray = await numberText.split('')
-  let finalnumber = numberArray
-    .filter((char) => !isNaN(char))
+  const numberArray = await numberText.split('');
+  const finalnumber = numberArray
+    .filter((char) => !Number.isNaN(char))
     .join('')
-    .replace(' ', '')
-  return finalnumber
+    .replace(' ', '');
+  return finalnumber;
 }
 
 export async function removeMoneyMask(numberText) {
-  let numberArray = await numberText.split('')
-  let finalnumber = numberArray
-    .filter((char) => !isNaN(char) || char == ',' || char == '.')
+  const numberArray = await numberText.split('');
+  const finalnumber = numberArray
+    .filter((char) => !Number.isNaN(char) || char === ',' || char === '.')
     .join('')
-    .replace(' ', '')
-  return finalnumber
+    .replace(' ', '');
+  return finalnumber;
 }
