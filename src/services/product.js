@@ -1,6 +1,6 @@
 import apiFeiraKit from './ApiFeiraKit'
 import { useSelector } from 'react-redux'
-import { storage } from '../../firebaseConfig.js'
+
 export class Product {
   jwt = useSelector((state) => state.AuthReducers.authToken)
   async getAllProducts(page, limit, sort) {
@@ -10,11 +10,11 @@ export class Product {
   }
 
   async getProductsByName(name) {
-    return await apiFeiraKit.get(`/products/byname/${name}`)
+    return await apiFeiraKit.get(`/products/filters?nome=${name}`)
   }
 
   async getProductsByIdUsuario(id) {
-    return await apiFeiraKit.get(`/products/by-id-usuario/${id}`)
+    return await apiFeiraKit.get(`/products/filters?id=${id}`)
   }
 
   async createProduct(product) {

@@ -117,8 +117,9 @@ export function EditProduct() {
     productInstance
       .getUnites()
       .then(({ data }) => {
-        setCategories(data.categorias)
-        setUnities(data.unidades)
+        setCategories(data[0].categorias)
+        setUnities(data[0].unidades)
+
         setFormLoaded(true)
       })
       .catch((error) => console.log(error))
@@ -184,7 +185,6 @@ export function EditProduct() {
     prevProduct.bestbefore = data.bestbefore
     prevProduct.validade = moment().format('YYYY-MM-DD')
     prevProduct.preco = parseFloat(await price.replace(',', '.')).toFixed(2)
-
     let productSlug = data.nome.slice(0, 5)
     await uploadImages(images, productSlug, setUploadedImages)
   }
@@ -196,8 +196,8 @@ export function EditProduct() {
     setUploadProgress(isNaN(totalProgress) ? 0 : totalProgress)
     if (images.length === uploadedImages.length) {
       prevProduct.imagem_url = uploadedImages
-      console.log(prevProduct)
-      console.log('enviar produto ao banco')
+      console.log(JSON.stringify(prevProduct))
+      console.log('enviar produto ao banco para editar')
       setIsLoading(false)
     }
   }, [uploadedImages])

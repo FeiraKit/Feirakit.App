@@ -45,22 +45,22 @@ export function Home() {
     navigation.navigate('description', { productId, product, isInfo })
   }
   const getNewProducts = () => {
-    if (search === '' && keepFetching) {
+    if (keepFetching) {
       setTimeout(() => {
         setFetchingProducts(true)
-        getAllProducts()
+        getAllProducts(false, true)
       }, 100)
     }
   }
 
-  const getAllProducts = (refresh) => {
-    setIsLoading(true)
+  const getAllProducts = (refresh, gettingNew) => {
+    setIsLoading(gettingNew ? false : true)
     setFindingByName(false)
     // getCities()
     setShowFilter(true)
     setSearch('')
     product
-      .getAllProducts(!refresh ? page : 1, limit, sort)
+      .getAllProducts(refresh ? 1 : page, limit, sort)
       .then(({ data }) => {
         if (refresh) {
           setProducts(data)
@@ -73,8 +73,10 @@ export function Home() {
         }
         setRefreshing(false)
         setIsLoading(false)
-        if (data.length == 0 || data.length <= limit) {
+        if (data.length == 0) {
           setKeepFetching(false)
+        }
+        if (data.length <= limit) {
         }
       })
       .catch((error) => {
@@ -110,8 +112,11 @@ export function Home() {
       })
     setIsLoading(false)
   }
+  const loadFeed = () => {
+    getAllProducts(true)
+  }
 
-  useFocusEffect(useCallback(getAllProducts, []))
+  useFocusEffect(useCallback(loadFeed, []))
 
   const onRefresh = () => {
     setPage(1)
@@ -171,6 +176,9 @@ export function Home() {
             value={search}
             onChangeText={setSearch}
             onSubmitEditing={() => {
+              getProductsByName(search)
+            }}
+            onBlur={() => {
               getProductsByName(search)
             }}
             style={{ fontFamily: 'Montserrat_500Medium', fontWeight: '500' }}
@@ -252,7 +260,7 @@ export function Home() {
               </Center>
             )}
             onEndReached={getNewProducts}
-            onEndReachedThreshold={0.2}
+            onEndReachedThreshold={0.1}
             ListFooterComponent={
               <FooterListLoader fetchingProducts={fetchingProducts} />
             }
