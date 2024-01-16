@@ -10,7 +10,7 @@ export async function removeNumberMask(numberText) {
 export async function removeMoneyMask(numberText) {
   let numberArray = await numberText.split('')
   let finalnumber = numberArray
-    .filter((char) => !isNaN(char) || char == ',')
+    .filter((char) => !isNaN(char) || char == ',' || char == '.')
     .join('')
     .replace(' ', '')
   return finalnumber
