@@ -11,6 +11,7 @@ import { Ionicons } from '@expo/vector-icons'
 import { useTheme } from 'native-base'
 import { MultistepRoutes } from '../routes/MultistepForm.route'
 import { EditProduct } from '../screens/EditProduct'
+import { PolicyScreen } from '../screens/PolicyScreen'
 
 const { Navigator, Screen } = createNativeStackNavigator()
 
@@ -139,6 +140,10 @@ export function AppRoutes() {
       <Screen
         name='myaccount'
         component={MyAccount}
+      />
+      <Screen
+        name='PolicyAndTerms'
+        component={PolicyScreen}
       />
     </Navigator>
   )
