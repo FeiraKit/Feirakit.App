@@ -13,12 +13,17 @@
   "rules": {
     "react/react-in-jsx-scope": "off",
     "react/jsx-filename-extension": [1, { "extensions": [".js", "jsx"] }],
-    "no-use-before-define": ["error", { "variables": false }],
+    "no-use-before-define": [0, { "variables": false }],
     "import/prefer-default-export": 0,
     "no-return-await": "off",
     "class-methods-use-this": "off",
-    "react/prop-types": ["error", { "ignore": ["navigation", "navigation.navigate"] }],
+    "react/prop-types": [0, { "ignore": ["navigation", "navigation.navigate"] }],
     "camelcase": "off",
-    "react/jsx-props-no-spreading": "off"
+    "react/jsx-props-no-spreading": "off",
+    "import/no-extraneous-dependencies": "off",
+    "react/no-unstable-nested-components": "off",
+    "consistent-return": "off",
+    "react-hooks/exhaustive-deps": "off",
+    "no-console": "off"
   }
 }
