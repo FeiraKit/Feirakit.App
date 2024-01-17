@@ -24,6 +24,7 @@
     "react/no-unstable-nested-components": "off",
     "consistent-return": "off",
     "react-hooks/exhaustive-deps": "off",
-    "no-console": "off"
+    "no-console": "off",
+    "no-param-reassign": "off"
   }
 }

@@ -12,7 +12,7 @@ import { RFValue } from 'react-native-responsive-fontsize';
 import { useFocusEffect, useRoute } from '@react-navigation/native';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, TouchableOpacity } from 'react-native';
+import { Alert, Keyboard, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
@@ -206,215 +206,217 @@ export function EditProduct() {
     <VStack w="full" h="full" px="3%">
       {isLoading && <LoadingUploadImages percent={uploadProgress} />}
       {!FormLoaded && <LoadingEditForm />}
-      <KeyboardAvoidingView behavior="height" w="full" h="full" keyboardVerticalOffset={10}>
-        <VStack>
-          <ButtonBack />
-          <LogoFeira />
-        </VStack>
-        <VStack h="4/5">
-          <InputLabel
-            title="Nome"
-            pt={0}
-            bg={colors.gray[100]}
-            borderTopRadius={RFValue(4)}
-            color={colors.blue[950]}
-          />
-          <ControlledInput
-            control={control}
-            mt={RFValue(-3)}
-            zIndex={-1}
-            name="nome"
-            error={errors.nome}
-            placeholder="Nome do produto"
-          />
-          <HStack alignSelf="center" justifyContent="space-between">
-            <VStack w="49%">
-              <InputLabel
-                title="Preço"
-                pt={0}
-                bg={colors.gray[100]}
-                borderTopRadius={RFValue(4)}
-                color={colors.blue[950]}
-              />
-              <ControlledInput
-                control={control}
-                zIndex={-1}
-                mt={RFValue(-3)}
-                name="preco"
-                error={errors.preco}
-                placeholder="R$ 0,00"
-                isMasked
-                type="money"
-                keyboardType="numeric"
-                options={{
-                  precision: 2,
-                  separator: ',',
-                  delimiter: '.',
-                  unit: 'R$ ',
-                  suffixUnit: '',
-                }}
-              />
-            </VStack>
+      <TouchableWithoutFeedback touchSoundDisabled onPress={() => Keyboard.dismiss()}>
+        <KeyboardAvoidingView behavior="height" w="full" h="full" keyboardVerticalOffset={10}>
+          <VStack>
+            <ButtonBack />
+            <LogoFeira />
+          </VStack>
+          <VStack h="4/5">
+            <InputLabel
+              title="Nome"
+              pt={0}
+              bg={colors.gray[100]}
+              borderTopRadius={RFValue(4)}
+              color={colors.blue[950]}
+            />
+            <ControlledInput
+              control={control}
+              mt={RFValue(-3)}
+              zIndex={-1}
+              name="nome"
+              error={errors.nome}
+              placeholder="Nome do produto"
+            />
+            <HStack alignSelf="center" justifyContent="space-between">
+              <VStack w="49%">
+                <InputLabel
+                  title="Preço"
+                  pt={0}
+                  bg={colors.gray[100]}
+                  borderTopRadius={RFValue(4)}
+                  color={colors.blue[950]}
+                />
+                <ControlledInput
+                  control={control}
+                  zIndex={-1}
+                  mt={RFValue(-3)}
+                  name="preco"
+                  error={errors.preco}
+                  placeholder="R$ 0,00"
+                  isMasked
+                  type="money"
+                  keyboardType="numeric"
+                  options={{
+                    precision: 2,
+                    separator: ',',
+                    delimiter: '.',
+                    unit: 'R$ ',
+                    suffixUnit: '',
+                  }}
+                />
+              </VStack>
 
-            <VStack w="48%">
-              <InputLabel
-                title="Estoque"
-                pt={0}
-                bg={colors.gray[100]}
-                borderTopRadius={RFValue(4)}
-                color={colors.blue[950]}
-              />
-              <ControlledInput
-                control={control}
-                mt={RFValue(-3)}
-                zIndex={-1}
-                name="estoque"
-                error={errors.estoque}
-                keyboardType="numeric"
-              />
-            </VStack>
-          </HStack>
-
-          <HStack alignSelf="center" justifyContent="space-between">
-            <VStack w="49%">
-              <InputLabel
-                title="Categoria"
-                pt={0}
-                bg={colors.gray[100]}
-                borderTopRadius={RFValue(4)}
-                color={colors.blue[950]}
-              />
-              <ControlledSelect
-                control={control}
-                zIndex={-1}
-                name="categoria"
-                error={errors.categoria}
-                selectItemsValue={categories}
-                selectLabel="categoria"
-                mt={RFValue(-3)}
-              />
-            </VStack>
-
-            <VStack w="48%">
-              <InputLabel
-                title="Unidade"
-                pt={0}
-                bg={colors.gray[100]}
-                borderTopRadius={RFValue(4)}
-                color={colors.blue[950]}
-              />
-              <ControlledSelect
-                control={control}
-                mt={RFValue(-3)}
-                zIndex={-1}
-                name="unidade"
-                error={errors.unidade}
-                selectItemsValue={unities}
-                selectLabel="unidade"
-              />
-            </VStack>
-          </HStack>
-
-          <InputLabel
-            title="Descrição"
-            pt={0}
-            bg={colors.gray[100]}
-            borderTopRadius={RFValue(4)}
-            color={colors.blue[950]}
-          />
-          <ControlledInput
-            control={control}
-            zIndex={-1}
-            mt={RFValue(-3)}
-            h={RFValue(90)}
-            multiline
-            textAlignVertical="top"
-            name="descricao"
-            error={errors.descricao}
-            placeholder="Descrição"
-          />
-
-          <Controller
-            name="bestbefore"
-            control={control}
-            render={({ field: { onChange, value } }) => (
-              <CustonCheckbox
-                label="O produto será colhido após a compra"
-                onChange={onChange}
-                value={value}
-              />
-            )}
-          />
-          <InputLabel title="disponível em:" color={colors.blue[950]} />
-          <TouchableOpacity onPress={openCitiesBottomSheet}>
-            <HStack
-              borderBottomWidth={1}
-              borderBottomColor={colors.gray[300]}
-              px={RFValue(2)}
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Text fontFamily="heading" fontSize={RFValue(18)} color={colors.blueGray[600]}>
-                {selectedCities.length === 0
-                  ? `Selecione uma cidade`
-                  : `Disponível em ${selectedCities.length} cidade${
-                      selectedCities.length > 1 ? 's' : ''
-                    }`}
-              </Text>
-
-              <MaterialIcons name="edit" size={RFValue(22)} color={colors.blueGray[600]} />
+              <VStack w="48%">
+                <InputLabel
+                  title="Estoque"
+                  pt={0}
+                  bg={colors.gray[100]}
+                  borderTopRadius={RFValue(4)}
+                  color={colors.blue[950]}
+                />
+                <ControlledInput
+                  control={control}
+                  mt={RFValue(-3)}
+                  zIndex={-1}
+                  name="estoque"
+                  error={errors.estoque}
+                  keyboardType="numeric"
+                />
+              </VStack>
             </HStack>
-          </TouchableOpacity>
 
-          <VStack w="full" alignItems="center">
-            <ImagePickerSelectedImages
-              editionMode
-              setImageToRemove={setImageToRemove}
+            <HStack alignSelf="center" justifyContent="space-between">
+              <VStack w="49%">
+                <InputLabel
+                  title="Categoria"
+                  pt={0}
+                  bg={colors.gray[100]}
+                  borderTopRadius={RFValue(4)}
+                  color={colors.blue[950]}
+                />
+                <ControlledSelect
+                  control={control}
+                  zIndex={-1}
+                  name="categoria"
+                  error={errors.categoria}
+                  selectItemsValue={categories}
+                  selectLabel="categoria"
+                  mt={RFValue(-3)}
+                />
+              </VStack>
+
+              <VStack w="48%">
+                <InputLabel
+                  title="Unidade"
+                  pt={0}
+                  bg={colors.gray[100]}
+                  borderTopRadius={RFValue(4)}
+                  color={colors.blue[950]}
+                />
+                <ControlledSelect
+                  control={control}
+                  mt={RFValue(-3)}
+                  zIndex={-1}
+                  name="unidade"
+                  error={errors.unidade}
+                  selectItemsValue={unities}
+                  selectLabel="unidade"
+                />
+              </VStack>
+            </HStack>
+
+            <InputLabel
+              title="Descrição"
+              pt={0}
+              bg={colors.gray[100]}
+              borderTopRadius={RFValue(4)}
+              color={colors.blue[950]}
+            />
+            <ControlledInput
+              control={control}
+              zIndex={-1}
+              mt={RFValue(-3)}
+              h={RFValue(90)}
+              multiline
+              textAlignVertical="top"
+              name="descricao"
+              error={errors.descricao}
+              placeholder="Descrição"
+            />
+
+            <Controller
+              name="bestbefore"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <CustonCheckbox
+                  label="O produto será colhido após a compra"
+                  onChange={onChange}
+                  value={value}
+                />
+              )}
+            />
+            <InputLabel title="disponível em:" color={colors.blue[950]} />
+            <TouchableOpacity onPress={openCitiesBottomSheet}>
+              <HStack
+                borderBottomWidth={1}
+                borderBottomColor={colors.gray[300]}
+                px={RFValue(2)}
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <Text fontFamily="heading" fontSize={RFValue(18)} color={colors.blueGray[600]}>
+                  {selectedCities.length === 0
+                    ? `Selecione uma cidade`
+                    : `Disponível em ${selectedCities.length} cidade${
+                        selectedCities.length > 1 ? 's' : ''
+                      }`}
+                </Text>
+
+                <MaterialIcons name="edit" size={RFValue(22)} color={colors.blueGray[600]} />
+              </HStack>
+            </TouchableOpacity>
+
+            <VStack w="full" alignItems="center">
+              <ImagePickerSelectedImages
+                editionMode
+                setImageToRemove={setImageToRemove}
+                images={images}
+                handleImage={setImages}
+                actionOpenBottomSheet={openActionsSheet}
+              />
+              <Progress w="full" h={RFValue(0.5)} value={uploadProgress} />
+            </VStack>
+          </VStack>
+
+          <VStack h="1/6">
+            <Button
+              alignSelf="center"
+              w="98%"
+              _pressed={{ bgColor: colors.blue[700] }}
+              borderRadius={8}
+              onPress={handleSubmit(submitForm)}
+              isLoading={!!isLoading}
+              disable={error}
+            >
+              <Text
+                color={colors.gray[100]}
+                fontWeight="semibold"
+                fontFamily="body"
+                fontSize={RFValue(18)}
+              >
+                Salvar alterações
+              </Text>
+            </Button>
+          </VStack>
+          <BottomSheetBase ref={bottomSheetRef} PanDownToClose>
+            <CustomImagePickerBottomSheet
               images={images}
               handleImage={setImages}
-              actionOpenBottomSheet={openActionsSheet}
+              actionCloseBottonSheet={closeActionsSheet}
             />
-            <Progress w="full" h={RFValue(0.5)} value={uploadProgress} />
-          </VStack>
-        </VStack>
-
-        <VStack h="1/6">
-          <Button
-            alignSelf="center"
-            w="98%"
-            _pressed={{ bgColor: colors.blue[700] }}
-            borderRadius={8}
-            onPress={handleSubmit(submitForm)}
-            isLoading={!!isLoading}
-            disable={error}
-          >
-            <Text
-              color={colors.gray[100]}
-              fontWeight="semibold"
-              fontFamily="body"
-              fontSize={RFValue(18)}
-            >
-              Salvar alterações
-            </Text>
-          </Button>
-        </VStack>
-        <BottomSheetBase ref={bottomSheetRef} PanDownToClose>
-          <CustomImagePickerBottomSheet
-            images={images}
-            handleImage={setImages}
-            actionCloseBottonSheet={closeActionsSheet}
-          />
-        </BottomSheetBase>
-        <BottomSheetBase ref={bottomSheetRefCities} PanDownToClose>
-          <CustonSelectionMany
-            cities={allCities}
-            selectedCities={[...selectedCities]}
-            handleCities={handleSelectCities}
-            actionClose={closeCitiesBottomSheet}
-            hideConfirmButton
-          />
-        </BottomSheetBase>
-      </KeyboardAvoidingView>
+          </BottomSheetBase>
+          <BottomSheetBase ref={bottomSheetRefCities} PanDownToClose>
+            <CustonSelectionMany
+              cities={allCities}
+              selectedCities={[...selectedCities]}
+              handleCities={handleSelectCities}
+              actionClose={closeCitiesBottomSheet}
+              hideConfirmButton
+            />
+          </BottomSheetBase>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
     </VStack>
   );
 }
