@@ -1,10 +1,11 @@
+/* eslint-disable default-param-last */
 const initialState = {
   authToken: null,
   userData: {},
   anyData: [],
 };
 
-export default (action, state = initialState) => {
+export default (state = initialState, action) => {
   switch (action.type) {
     case 'LOGIN':
       return {
