@@ -9,7 +9,6 @@ import {
   VStack,
 } from 'native-base'
 import { RFValue } from 'react-native-responsive-fontsize'
-import { StyleSheet } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 
 export function MyProductItem({ product, onPress }) {

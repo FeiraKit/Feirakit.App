@@ -81,7 +81,7 @@ export function ImagePickerSelectedImages({
                     source={{ uri: item }}
                     style={{
                       marginRight: RFValue(4),
-                      marginleft: RFValue(1),
+                      marginLeft: RFValue(1),
                       width: RFValue(56),
                       height: RFValue(56),
                       borderRadius: 4,

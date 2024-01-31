@@ -26,7 +26,7 @@ export function CustomDrawer(props) {
         text: texts.optionYes,
         onPress: () => {
           dispatch(Logout());
-          return;
+          
         },
       },
       {
@@ -48,6 +48,7 @@ export function CustomDrawer(props) {
         }}
       >
         <Image
+          // eslint-disable-next-line global-require
           source={require("../assets/user.png")}
           style={{
             height: 70,

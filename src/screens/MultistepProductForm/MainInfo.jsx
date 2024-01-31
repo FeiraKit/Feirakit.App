@@ -56,8 +56,8 @@ export function MainInfo() {
     productInstance
       .getUnites()
       .then(({ data }) => {
-        setCategories(data.categorias);
-        setUnities(data.unidades);
+        setCategories(data[0].categorias);
+        setUnities(data[0].unidades);
         setFormLoaded(true);
       })
       .catch((error) => console.log(error));
@@ -71,9 +71,8 @@ export function MainInfo() {
 
   return (
     <TouchableWithoutFeedback touchSoundDisabled onPress={() => Keyboard.dismiss()}>
+      {!FormLoaded ? <LoadingForm />:
       <VStack w="full" h="full" px="3%">
-        {!FormLoaded && <LoadingForm />}
-
         <VStack>
           <ButtonBack />
           <LogoFeira />
@@ -162,7 +161,7 @@ export function MainInfo() {
             </Text>
           </Button>
         </VStack>
-      </VStack>
+      </VStack>}
     </TouchableWithoutFeedback>
   );
 }

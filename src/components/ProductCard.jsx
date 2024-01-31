@@ -6,7 +6,7 @@ import { Text } from 'react-native'
 export function ProductCard({ product, onPress }) {
   const { colors } = useTheme()
   const [isLoadingImage, setIsloadingImage] = useState(true)
-  const description = product.descricao.slice(0, 25) + '...'
+  const description = `${product.descricao.slice(0, 25)  }...`
   return (
     <Pressable
       onPress={onPress}
@@ -23,6 +23,7 @@ export function ProductCard({ product, onPress }) {
     >
       {isLoadingImage && (
         <Image
+          // eslint-disable-next-line global-require
           source={require('../assets/loading.gif')}
           style={{
             width: '100%',

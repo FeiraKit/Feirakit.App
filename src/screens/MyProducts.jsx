@@ -9,12 +9,12 @@ import {
   View,
 } from 'native-base'
 import { ActivityIndicator, TouchableOpacity } from 'react-native'
-import { ButtonBack } from '../components/ButtonBack'
-import { LogoFeira } from '../components/LogoFeira'
 import { MaterialIcons } from '@expo/vector-icons'
-import { MyProductItem } from '../components/MyProductItem'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { useSelector } from 'react-redux'
+import { ButtonBack } from '../components/ButtonBack'
+import { LogoFeira } from '../components/LogoFeira'
+import { MyProductItem } from '../components/MyProductItem'
 import { Product } from '../services/product'
 
 export function MyProducts() {
@@ -72,7 +72,6 @@ export function MyProducts() {
         size='md'
         mt={4}
         color={colors.gray[500]}
-        justifyItems='left'
         w='full'
         ml='2%'
         mb={4}
@@ -101,7 +100,7 @@ export function MyProducts() {
               mr='4%'
               mb={4}
               w='98%'
-              h={'90%'}
+              h="90%"
               p={4}
               borderRadius={8}
               borderWidth={1}
