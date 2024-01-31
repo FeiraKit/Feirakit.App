@@ -1,10 +1,11 @@
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { Button, HStack, Text, VStack, useTheme } from 'native-base';
 import { MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
 import React, { useCallback, useRef, useState, useEffect } from 'react';
 import { RFValue } from 'react-native-responsive-fontsize';
 import moment from 'moment';
 import { Image, ScrollView, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import { showMessage } from 'react-native-flash-message';
 import { ButtonBack } from '../../components/ButtonBack';
 import { LogoFeira } from '../../components/LogoFeira';
 
@@ -13,9 +14,12 @@ import BottomSheetBase from './components/BottomSheetBase';
 import { CustonBottonSheetShowList } from '../../components/FormComponents/CustonBottonSheetShowList';
 import { uploadImages } from '../../utils/UploadImages';
 import { LoadingUploadImages } from '../../components/Loading';
+import { Product } from '../../services/product';
 
 export function AbstractProduct() {
   const route = useRoute();
+  const navigation = useNavigation()
+  const ProductInstance= new Product
   const { colors } = useTheme();
   const prevProduct = route.params.produto;
   const bottomSheetRef = useRef(BottomSheetBase);
@@ -24,6 +28,7 @@ export function AbstractProduct() {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadingProduct, setUploadingProduct] = useState(false);
   const date = moment().format('DD/MM/YYYY');
+  const productPriceString=prevProduct.preco
 
   const openBottomSheet = useCallback(async () => {
     bottomSheetRef.current?.snapToIndex(prevProduct.cidades.length < 5 ? 0 : 1);
@@ -39,15 +44,33 @@ export function AbstractProduct() {
     await uploadImages(prevProduct.imagem_url, productSlug, setUploadedImages);
   };
 
+  const handleCreateProduct = async(productToSave) =>{
+      ProductInstance.createProduct(productToSave).then(()=>{
+        showMessage({
+          message: 'Produto adicionado com sucesso',
+          type: 'success',
+        })
+        navigation.navigate('MyProducts')
+      }).catch(e=>{
+        showMessage({
+          message: 'Um erro inesperado aconteceu,tente novamente',
+          type: 'error',
+        })
+        console.log(e)
+        navigation.goBack()
+      })
+  }
+
   useEffect(() => {
     const totalProgress = Math.ceil((uploadedImages.length * 100) / prevProduct.imagem_url.length);
     // eslint-disable-next-line no-restricted-globals
     setUploadProgress(isNaN(totalProgress) ? 0 : totalProgress);
 
     if (prevProduct.imagem_url.length === uploadedImages.length) {
-      prevProduct.imagem_url = uploadedImages;
-      console.log(prevProduct);
-      console.log('enviar produto ao banco');
+      prevProduct.imagem_url = uploadedImages; 
+      prevProduct.preco=parseFloat(prevProduct.preco)
+      
+      handleCreateProduct(prevProduct)
       setUploadingProduct(false);
     }
   }, [uploadedImages]);
@@ -144,7 +167,7 @@ export function AbstractProduct() {
                     color={colors.green[600]}
                     textAlign="left"
                   >
-                    R${prevProduct.preco.replace('.', ',')}
+                    R${productPriceString}
                   </Text>
                 </HStack>
               </VStack>

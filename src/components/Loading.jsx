@@ -103,7 +103,7 @@ export function LoadingForm() {
             mt={20}
             w="100%"
             alignSelf="center"
-            fadeDuration={0.9}
+            fadeDuration={0.1}
           />
         ))}
       </VStack>

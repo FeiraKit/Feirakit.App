@@ -1,18 +1,18 @@
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { Button, FlatList, Text, VStack, useTheme } from 'native-base'
+import React, { useCallback, useRef , useEffect , useState } from 'react'
+import { RFValue } from 'react-native-responsive-fontsize'
+import { useSelector } from 'react-redux'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { ProgressBar } from './components/ProgressBar'
-import React, { useCallback, useRef } from 'react'
 import { ButtonBack } from '../../components/ButtonBack'
 import { LogoFeira } from '../../components/LogoFeira'
-import { RFValue } from 'react-native-responsive-fontsize'
-import { useEffect } from 'react'
-import { useState } from 'react'
+
+import { LoadingForm } from '../../components/Loading';
 import { CityItem } from './components/CityItem'
 import { AddCityButton } from './components/AddCityButton'
 import BottomSheetBase from './components/BottomSheetBase'
-import { useSelector } from 'react-redux'
 import { CustonSelectionMany } from '../../components/FormComponents/CustonSelectionMany'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export function AddCities() {
   const route = useRoute()
@@ -23,25 +23,8 @@ export function AddCities() {
   const { colors } = useTheme()
   const prevProduct = route.params.produto
   const [isCitiesLoaded, setIsCitiesLoaded] = useState(false)
-  const allCities = [
-    { nome: 'buriti' },
-    { nome: 'gangorra' },
-    { nome: 'Abaeté' },
-    { nome: 'Bocaiúva' },
-    { nome: 'Carangola' },
-    { nome: 'Dores do Indaiá' },
-    { nome: 'Espera Feliz' },
-    { nome: 'Francisco Sá' },
-    { nome: 'Guaxupé' },
-    { nome: 'Itabirito' },
-    { nome: 'Janaúba' },
-    { nome: 'Lavras' },
-    { nome: 'Muzambinho' },
-    { nome: 'Nanuque' },
-    { nome: 'Oliveira' },
-    { nome: 'Piumhi' },
-    { nome: 'São Gotardo' },
-  ]
+  const [allCities,setAllCities] = useState([currentUser.endereco.cidade])
+  
   const [selectedCities, setSelectedCities] = useState([
     currentUser.endereco.cidade,
   ])
@@ -68,35 +51,42 @@ export function AddCities() {
   const handleSelectCities = (cities) => {
     setSelectedCities(cities)
   }
+  const getCities = async()=>{
+    const cities = await AsyncStorage.getItem('allCities')
+    setAllCities(JSON.parse(cities))
+    setIsCitiesLoaded(true)
+  }
 
   useEffect(() => {
-    //logica para carregar todas as cidades
-    //allCities = AsyncStorage.getItem('allCities')
-    setIsCitiesLoaded(true)
+    getCities()
   }, [])
 
   return (
     <VStack
       w='full'
-      h='full'
-      px={'3%'}
     >
-      <VStack h={'2/6'}>
+    {!isCitiesLoaded ? <LoadingForm/>:
+    <VStack
+      w='full'
+      h='full'
+      px="3%"
+    >
+      <VStack h="2/6">
         <ButtonBack />
         <LogoFeira />
         <ProgressBar percent='75' />
         <Text
-          fontFamily={'body'}
+          fontFamily="body"
           fontSize={RFValue(22)}
-          textAlign={'left'}
+          textAlign="left"
         >
           Onde o produto estará disponível?
         </Text>
       </VStack>
 
       <VStack
-        h={'3/6'}
-        pb={'10'}
+        h="3/6"
+        pb="10"
       >
         <VStack pb={4}>
           <FlatList
@@ -119,9 +109,9 @@ export function AddCities() {
         )}
       </VStack>
 
-      <VStack h={'1/6'}>
+      <VStack h="1/6">
         <Button
-          alignSelf={'center'}
+          alignSelf="center"
           disabled={error}
           w='98%'
           mt={8}
@@ -132,7 +122,7 @@ export function AddCities() {
           <Text
             color={colors.gray[100]}
             fontWeight='semibold'
-            fontFamily={'body'}
+            fontFamily="body"
             fontSize={RFValue(18)}
           >
             Continuar
@@ -142,7 +132,7 @@ export function AddCities() {
 
       <BottomSheetBase
         ref={bottomSheetRef}
-        PanDownToClose={true}
+        PanDownToClose
       >
         <CustonSelectionMany
           cities={allCities}
@@ -151,6 +141,7 @@ export function AddCities() {
           actionClose={closeActionsSheet}
         />
       </BottomSheetBase>
+    </VStack>}
     </VStack>
   )
 }

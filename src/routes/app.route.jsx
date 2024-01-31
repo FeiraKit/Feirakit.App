@@ -1,5 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createDrawerNavigator } from '@react-navigation/drawer'
+import { Ionicons } from '@expo/vector-icons'
+import { useTheme } from 'native-base'
 import { Home } from '../screens/Home'
 import { Description } from '../screens/Description'
 import { CustomDrawer } from '../components/CustomDrawer'
@@ -7,9 +9,7 @@ import { MyProducts } from '../screens/MyProducts'
 import { MyAccount } from '../screens/MyAccount'
 import { Sobre } from '../screens/Sobre'
 import { ChangePassword } from '../screens/ChangePassword'
-import { Ionicons } from '@expo/vector-icons'
-import { useTheme } from 'native-base'
-import { MultistepRoutes } from '../routes/MultistepForm.route'
+import { MultistepRoutes } from "./MultistepForm.route"
 import { EditProduct } from '../screens/EditProduct'
 import { PolicyScreen } from '../screens/PolicyScreen'
 
@@ -18,7 +18,7 @@ const { Navigator, Screen } = createNativeStackNavigator()
 const Drawer = createDrawerNavigator()
 
 function ProductRoutes() {
-  const { colors } = useTheme()
+
   return (
     <Navigator screenOptions={{ headerShown: false }}>
       <Screen
@@ -37,7 +37,6 @@ function ProductRoutes() {
   )
 }
 function MyAccountRoutes() {
-  const { colors } = useTheme()
   return (
     <Navigator screenOptions={{ headerShown: false }}>
       <Screen

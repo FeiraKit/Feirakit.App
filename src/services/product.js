@@ -12,6 +12,10 @@ export class Product {
     return await apiFeiraKit.get(`/products/filters?nome=${name}`);
   }
 
+  async getProductsByCity(name) {
+    return await apiFeiraKit.get(`/products/filters?cidade=${name}`);
+  }
+
   async getProductsByIdUsuario(id) {
     return await apiFeiraKit.get(`/products/filters?id=${id}`);
   }

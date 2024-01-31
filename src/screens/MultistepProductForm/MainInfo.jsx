@@ -25,6 +25,7 @@ export function MainInfo() {
   const navigation = useNavigation();
   const productInstance = new Product();
   const user = useSelector((state) => state.AuthReducers.userData.userData);
+  
   const { colors } = useTheme();
 
   const {
@@ -41,6 +42,7 @@ export function MainInfo() {
 
   const handleCheckInfo = async (data) => {
     const price = await removeMoneyMask(data.preco);
+    data.produtor_id=user.id
     data.preco = parseFloat(await price.replace(',', '.')).toFixed(2);
     if (parseFloat(data.preco) === 0) {
       return setError('preco', {
@@ -62,9 +64,7 @@ export function MainInfo() {
       })
       .catch((error) => console.log(error));
 
-    // productInstance.getCities().then(async ({ data }) => {
-    //   //  await AsyncStorage.setItem('allCities', data)
-    // })
+    
   };
 
   useFocusEffect(useCallback(initForm, []));

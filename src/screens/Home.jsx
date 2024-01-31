@@ -8,15 +8,14 @@ import {
   Center,
   Text,
 } from 'native-base'
-import { ProductCard } from '../components/ProductCard'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { MaterialIcons } from '@expo/vector-icons'
-import { useState, useCallback } from 'react'
-import { FooterListLoader, LoadingProducts } from '../components/Loading'
+import { useState, useCallback , useEffect } from 'react'
 import { Image, TouchableOpacity, View, RefreshControl } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { FooterListLoader, LoadingProducts } from '../components/Loading'
 import { Product } from '../services/product'
-
-import { useEffect } from 'react'
+import { ProductCard } from '../components/ProductCard'
 import { SelectCity } from '../components/SelectCity'
 import { HeaderHome } from '../components/HeaderHome'
 
@@ -32,15 +31,18 @@ export function Home() {
   const [products, setProducts] = useState([])
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
-  const [region, setRegion] = useState('-1')
+  const [zone, setZone] = useState('-1')
   const [headerText, setHeaderText] = useState('Produtos em')
+  // eslint-disable-next-line no-unused-vars
   const [cities, setCities] = useState([])
   const [showFilter, setShowFilter] = useState(true)
   const [keepFetching, setKeepFetching] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
   const [findingByName, setFindingByName] = useState(false)
+  
   const navigation = useNavigation()
 
+  // eslint-disable-next-line no-shadow
   function handleOpenDescription(productId, product, isInfo) {
     navigation.navigate('description', { productId, product, isInfo })
   }
@@ -54,11 +56,13 @@ export function Home() {
   }
 
   const getAllProducts = (refresh, gettingNew) => {
-    setIsLoading(gettingNew ? false : true)
+    setIsLoading(!gettingNew)
     setFindingByName(false)
-    // getCities()
+    
+    getCities()
     setShowFilter(true)
     setSearch('')
+
     product
       .getAllProducts(refresh ? 1 : page, limit, sort)
       .then(({ data }) => {
@@ -73,13 +77,15 @@ export function Home() {
         }
         setRefreshing(false)
         setIsLoading(false)
-        if (data.length == 0) {
+        if (data.length === 0) {
           setKeepFetching(false)
         }
         if (data.length <= limit) {
+          setKeepFetching(false)
         }
       })
       .catch((error) => {
+        console.log(error)
         setProducts([])
         setIsLoading(false)
         setRefreshing(false)
@@ -88,19 +94,18 @@ export function Home() {
       })
   }
 
-  // const getCities = async () => {
-  //   product.getCities().then(async ({ data }) => {
-  //     await setCities(data.resultado)
-  //   })
-  // }
-  const HandleRegion = (region) => {
-    setRegion(region)
-  }
+  const getCities = async () => {
+     product.getCities().then(async ({ data }) => {
+       setCities(data.resultado)
+       await AsyncStorage.setItem('allCities',JSON.stringify(data.resultado))
+     })
+   }
 
   const getProductsByName = (name) => {
     setIsLoading(true)
     setFindingByName(true)
     setShowFilter(false)
+    
     setHeaderText(`resultado para: "${name}"`)
     product
       .getProductsByName(name)
@@ -112,8 +117,25 @@ export function Home() {
       })
     setIsLoading(false)
   }
+
+   const getProductsByZone=(selectedzone)=>{
+     setIsLoading(true)
+     
+     product
+       .getProductsByCity(selectedzone)
+       .then(({ data }) => {
+         setProducts(data)
+       })
+       .catch((error) => {
+         console.log(error)
+       })
+     setIsLoading(false)
+  }
+
   const loadFeed = () => {
-    getAllProducts(true)
+    if(zone==='-1'){
+      getAllProducts(true)
+    }
   }
 
   useFocusEffect(useCallback(loadFeed, []))
@@ -121,15 +143,19 @@ export function Home() {
   const onRefresh = () => {
     setPage(1)
     setIsLoading(true)
-    setRegion('-1')
+    setZone('-1')
     setRefreshing(true)
     setProducts([])
     getAllProducts(true)
   }
 
   useEffect(() => {
-    // chamada para a api passando o filtro de região que vai ser criado no backend
-  }, [region])
+    if(zone==='-1'){
+      onRefresh()
+      return
+    }
+    getProductsByZone(zone)
+  }, [zone])
 
   return (
     <VStack
@@ -201,7 +227,9 @@ export function Home() {
         <HStack
           w='full'
           alignItems='center'
-          justifyContent={'flex-start'}
+          justifyContent="flex-start"
+          style={{justifyContent: "center", paddingVertical: 4,
+          marginVertical: 4,alignItems:'center',alignContent:'center'}}
         >
           {findingByName && (
             <HeaderHome
@@ -209,11 +237,13 @@ export function Home() {
               CBclear={getAllProducts}
             />
           )}
+          
 
           {showFilter && (
             <SelectCity
               cities={cities}
-              CBsetRegion={HandleRegion}
+              defaultValue={zone}
+              onSelectZone={setZone}
             />
           )}
         </HStack>
@@ -222,14 +252,13 @@ export function Home() {
       {isLoading ? (
         <LoadingProducts />
       ) : (
-        <>
-          <FlatList
+        <FlatList
             data={products}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{ paddingBottom: 70 }}
             numColumns='2'
             w='100%'
-            keyExtractor={(product) => product.id}
+            keyExtractor={(productData) => productData.id}
             renderItem={({ item }) => (
               <ProductCard
                 product={item}
@@ -272,7 +301,6 @@ export function Home() {
               />
             }
           />
-        </>
       )}
     </VStack>
   )

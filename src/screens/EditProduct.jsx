@@ -9,13 +9,15 @@ import {
 } from 'native-base';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { useFocusEffect, useRoute } from '@react-navigation/native';
+import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, Keyboard, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { showMessage } from 'react-native-flash-message';
 import { ButtonBack } from '../components/ButtonBack';
 import { LogoFeira } from '../components/LogoFeira';
 import { editProductSchema } from '../validationsSchemes/productValidations';
@@ -34,6 +36,7 @@ import { LoadingEditForm, LoadingUploadImages } from '../components/Loading';
 
 export function EditProduct() {
   const route = useRoute();
+  const navigation = useNavigation()
   const { colors } = useTheme();
   const productInstance = new Product();
   const prevProduct = route.params.produto;
@@ -48,29 +51,11 @@ export function EditProduct() {
   const [imagesToRemove, setImageToRemove] = useState([]);
 
   const [selectedCities, setSelectedCities] = useState([prevProduct.cidades]);
-  const allCities = [
-    { nome: 'buriti' },
-    { nome: 'gangorra' },
-    { nome: 'Abaeté' },
-    { nome: 'Bocaiúva' },
-    { nome: 'Carangola' },
-    { nome: 'Dores do Indaiá' },
-    { nome: 'Espera Feliz' },
-    { nome: 'Francisco Sá' },
-    { nome: 'Guaxupé' },
-    { nome: 'Itabirito' },
-    { nome: 'Janaúba' },
-    { nome: 'Lavras' },
-    { nome: 'Muzambinho' },
-    { nome: 'Nanuque' },
-    { nome: 'Oliveira' },
-    { nome: 'Piumhi' },
-    { nome: 'São Gotardo' },
-  ];
+  const [allCities,setAllCities] = useState([])
   const bottomSheetRef = useRef(BottomSheetBase);
   const bottomSheetRefCities = useRef(bottomSheetRefCities);
   const producerId = useSelector((state) => state.AuthReducers.userData.userData).id;
-
+  
   const {
     control,
     handleSubmit,
@@ -107,7 +92,9 @@ export function EditProduct() {
     setSelectedCities(cities);
   };
 
-  const initForm = () => {
+  const initForm = async () => {
+    const cities = await AsyncStorage.getItem('allCities')
+    setAllCities(JSON.parse(cities))
     productInstance
       .getUnites()
       .then(({ data }) => {
@@ -179,14 +166,13 @@ export function EditProduct() {
     prevProduct.cidades = selectedCities;
     prevProduct.bestbefore = data.bestbefore;
     prevProduct.validade = moment().format('YYYY-MM-DD');
-    prevProduct.preco = parseFloat(await price.replace(',', '.')).toFixed(2);
+    prevProduct.preco = parseFloat(await price.replace(',', '.'));
     const productSlug = data.nome.slice(0, 5);
 
-    console.log(imagesToRemove);
     await uploadImages(images, productSlug, setUploadedImages);
   };
 
-  useFocusEffect(useCallback(initForm, []));
+  useFocusEffect(useCallback(()=>{initForm()}, []));
 
   useEffect(() => {
     const totalProgress = Math.ceil((uploadedImages.length * 100) / images.length);
@@ -195,8 +181,21 @@ export function EditProduct() {
     if (images.length === uploadedImages.length) {
       prevProduct.imagem_url = uploadedImages;
       imagesToRemove.map((image) => removeImageInFirebaseStorage(image));
-      console.log(JSON.stringify(prevProduct));
-      console.log('enviar produto ao banco para editar');
+      
+      productInstance.updateProduct(prevProduct).then(()=>{
+        showMessage({
+        message: 'Produto adicionado com sucesso',
+        type: 'success',
+      })
+      navigation.navigate('MyProducts')}).catch((e)=>{
+        showMessage(
+          {
+            message: 'Um erro inesperado aconteceu,tente novamente',
+            type: 'error',
+          })
+          console.log(e)
+          navigation.goBack()
+        })
       setIsLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
