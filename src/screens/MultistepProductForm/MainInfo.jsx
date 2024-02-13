@@ -65,7 +65,7 @@ export function MainInfo() {
       })
       .catch(() => {
         showMessage({
-          message: 'um ero inesperado aconteceu',
+          message: 'um erro inesperado aconteceu',
           type: 'danger',
         });
         navigation.goBack();
