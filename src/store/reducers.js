@@ -1,3 +1,4 @@
+/* eslint-disable default-param-last */
 const initialState = {
   authToken: null,
   userData: {},
@@ -6,13 +7,13 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case "LOGIN":
+    case 'LOGIN':
       return {
         ...state,
         authToken: action.payload.authToken,
-        userData:action.payload
+        userData: action.payload,
       };
-    case "LOGOUT":
+    case 'LOGOUT':
       return {
         ...state,
         authToken: null,

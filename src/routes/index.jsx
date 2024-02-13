@@ -1,13 +1,14 @@
 import { NavigationContainer } from "@react-navigation/native";
-import { Loading } from "../components/Loading";
-//actions
-import { Init } from "../store/actions";
-//routes
-import { LoginRoutes } from "./login.route";
-import { AppRoutes } from "./app.route";
-//hooks
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { Loading } from "../components/Loading";
+
+// actions
+import { Init } from "../store/actions";
+
+import { LoginRoutes } from "./login.route";
+import { AppRoutes } from "./app.route";
+
 
 
 export function Routes() {

@@ -1,66 +1,35 @@
-import React, { useRef, useState } from 'react'
-import {
-  VStack,
-  HStack,
-  Select,
-  useTheme,
-  Text,
-  Button,
-  Input,
-  Icon,
-} from 'native-base'
-import {
-  StyleSheet,
-  Alert,
-  Image,
-  TouchableOpacity,
-  ScrollView,
-} from 'react-native'
+import React, { useState } from 'react'
+import { VStack, HStack, useTheme, Text, Button, Icon } from 'native-base'
+import { Alert, Image, TouchableOpacity, ScrollView } from 'react-native'
 import { ButtonBack } from '../components/ButtonBack'
 import { LogoFeira } from '../components/LogoFeira'
 import { MaterialIcons } from '@expo/vector-icons'
-import { FontAwesome5 } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import ViaCep from '../services/ViaCep'
 import { useSelector, useDispatch } from 'react-redux'
 import { Logout } from '../store/actions'
 import { showMessage } from 'react-native-flash-message'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { TextInputMask } from 'react-native-masked-text'
-import * as yup from 'yup'
 import { User } from '../services/user'
 import { ControlledInput } from '../components/FormComponents/controlledInput'
-import { RegisterLabel } from '../components/FormComponents/RegisterLabel'
+import { InputLabel } from '../components/FormComponents/InputLabel'
+import { EditUserSchema } from '../validationsSchemes/userValidations'
+import { RFValue } from 'react-native-responsive-fontsize'
+import { ControlledSelect } from '../components/FormComponents/ControlledSelect'
+import { removeNumberMask } from '../utils/removeMasks'
+import { styles } from './styles/MyAccountStyles'
 
 export function MyAccount() {
   const userInstance = new User()
   const navigation = useNavigation()
   const user = useSelector((state) => state.AuthReducers.userData.userData)
-  const cellRef = useRef(null)
   const [IsLoading, setIsLoading] = useState(false)
   const [isEdictionMode, setIsEdictionMode] = useState(false)
-  const [cepInputFoccus, setCepInputFoccus] = useState(false)
-  const [phoneInputFoccus, setPhoneInputFoccus] = useState(false)
   const [deleteIsLoading, setDeleteIsLoading] = useState(false)
   const { colors } = useTheme()
-  const dispatch = useDispatch()
 
-  const userSchema = yup.object({
-    nome: yup.string().required('informe o seu nome completo'),
-    email: yup
-      .string()
-      .required('Informe um email válido')
-      .email('Informe um email válido'),
-    telefone: yup.string().min(10).required('Informe um numero de whatsapp'),
-    cep: yup.string().min(7, 'CEP Inválido').required('Informe um CEP'),
-    rua: yup.string().required('informe o nome da rua'),
-    numero: yup.string().required('informe o numero da sua residência'),
-    complemento: yup.string().required('adicione um complemento'),
-    bairro: yup.string().required('informe o bairro'),
-    cidade: yup.string().required('informe o nome da cidade'),
-    estado: yup.string().required('selecione o estado'),
-  })
+  const dispatch = useDispatch()
 
   const {
     control,
@@ -69,7 +38,7 @@ export function MyAccount() {
     setValue,
     reset,
   } = useForm({
-    resolver: yupResolver(userSchema),
+    resolver: yupResolver(EditUserSchema),
     defaultValues: {
       nome: user.nome,
       email: user.email,
@@ -104,8 +73,9 @@ export function MyAccount() {
       },
       {
         text: editTexts.optionYes,
-        onPress: () => {
+        onPress: async () => {
           setIsLoading(true)
+          let telefone = await removeNumberMask(data.telefone)
           let objUser = {
             email: data.email,
             nome: data.nome,
@@ -119,7 +89,7 @@ export function MyAccount() {
               cidade: data.cidade,
               estado: data.estado,
             },
-            telefone: cellRef?.current.getRawValue(),
+            telefone,
             id: user.id,
           }
           setIsLoading(false)
@@ -157,7 +127,7 @@ export function MyAccount() {
       .catch((err) => console.log(err))
   }
 
-  const deletTexts = {
+  const deleteTexts = {
     title: 'Excluir',
     description: 'Deseja realmente excluir a sua conta?',
     optionNo: 'Não',
@@ -165,16 +135,16 @@ export function MyAccount() {
   }
   const deleteUser = () => {
     setDeleteIsLoading(true)
-    Alert.alert(deletTexts.title, deletTexts.description, [
+    Alert.alert(deleteTexts.title, deleteTexts.description, [
       {
-        text: deletTexts.optionNo,
+        text: deleteTexts.optionNo,
         onPress: () => {
           setDeleteIsLoading(false)
           return
         },
       },
       {
-        text: deletTexts.optionYes,
+        text: deleteTexts.optionYes,
         onPress: () => {
           let objUserId = { id: user.id }
           userInstance
@@ -287,526 +257,110 @@ export function MyAccount() {
           </TouchableOpacity>
         </HStack>
 
-        <Controller
+        <ControlledInput
           control={control}
+          editable={isEdictionMode}
           name='nome'
-          render={({ field: { onChange, value } }) => (
-            <Input
-              mt={4}
-              height={54}
-              alignSelf='center'
-              w='94%'
-              editable={isEdictionMode}
-              borderWidth={isEdictionMode ? 1 : 0}
-              bgColor={colors.gray[100]}
-              color={errors.nome ? colors.purple[500] : colors.blue[900]}
-              leftElement={
-                <Icon
-                  color={errors.nome ? colors.purple[500] : colors.blue[900]}
-                  as={<MaterialIcons name='person' />}
-                  size={6}
-                  ml={2}
-                />
-              }
-              placeholder='Nome Completo'
-              fontFamily={'Montserrat_400Regular'}
-              placeholderTextColor={
-                errors.nome ? colors.purple[500] : colors.blue[900]
-              }
-              fontSize={14}
-              borderRadius={8}
-              value={value}
-              onChangeText={onChange}
-            />
-          )}
+          iconName='person'
+          placeholder='Nome Completo'
+          error={errors.nome}
         />
-        {errors.nome && (
-          <Text
-            alignSelf='flex-start'
-            marginLeft={8}
-            color={colors.purple[500]}
-          >
-            {errors.nome.message}
-          </Text>
-        )}
 
         <ControlledInput
           control={control}
-          name='nome'
-          iconName='person'
-          error={errors.nome}
+          editable={isEdictionMode}
+          name='email'
+          keyboardType='email-address'
+          iconName='email'
+          placeholder='E-mail'
+          error={errors.email}
         />
+
         <ControlledInput
-          control={control}
-          name='nome'
           isMasked
+          control={control}
+          name='telefone'
+          error={errors.telefone}
           type={'cel-phone'}
+          placeholder={'(00) 0000-0000'}
+          iconName={'whatsapp'}
           options={{
             maskType: 'BRL',
             withDDD: true,
             dddMask: '(99) ',
           }}
+          editable={isEdictionMode}
+          keyboardType='numeric'
         />
 
-        <Controller
-          control={control}
-          name='email'
-          render={({ field: { onChange, value } }) => (
-            <Input
-              mt={4}
-              editable={isEdictionMode}
-              borderWidth={isEdictionMode ? 1 : 0}
-              bgColor={colors.gray[100]}
-              height={54}
-              alignSelf='center'
-              w='94%'
-              keyboardType='email-address'
-              color={errors.email ? colors.purple[500] : colors.blue[900]}
-              leftElement={
-                <Icon
-                  color={errors.email ? colors.purple[500] : colors.blue[900]}
-                  as={<MaterialIcons name='email' />}
-                  size={6}
-                  ml={2}
-                />
-              }
-              placeholder='E-mail'
-              fontFamily={'Montserrat_400Regular'}
-              placeholderTextColor={
-                errors.email ? colors.purple[500] : colors.blue[900]
-              }
-              fontSize={14}
-              borderRadius={8}
-              value={value}
-              onChangeText={onChange}
-            />
-          )}
+        <InputLabel
+          title='Endereço'
+          mt={RFValue(1)}
         />
-        {errors.email && (
-          <Text
-            alignSelf='flex-start'
-            marginLeft={8}
-            color={colors.purple[500]}
-          >
-            {errors.email.message}
-          </Text>
-        )}
 
-        <HStack
-          alignItems='center'
-          mt={4}
-          borderWidth={isEdictionMode ? 1 : 0}
-          borderRadius={8}
-          borderColor={phoneInputFoccus ? colors.blue[600] : colors.gray[250]}
-          bgColor={colors.gray[100]}
-          height={54}
-          alignSelf='center'
-          w='94%'
-        >
-          <Icon
-            color={errors.telefone ? colors.purple[500] : colors.blue[900]}
-            as={<FontAwesome5 name='whatsapp' />}
-            size={5}
-            ml={3}
-          />
-          <Controller
-            control={control}
-            name='telefone'
-            render={({ field: { onChange, value } }) => (
-              <TextInputMask
-                type={'cel-phone'}
-                onFocus={() => setPhoneInputFoccus(true)}
-                onBlur={() => setPhoneInputFoccus(false)}
-                options={{
-                  maskType: 'BRL',
-                  withDDD: true,
-                  dddMask: '(99) ',
-                }}
-                color={errors.telefone ? colors.purple[500] : colors.blue[900]}
-                placeholder='(xx) XXXXX-XXXX'
-                style={{
-                  fontFamily: 'Montserrat_400Regular',
-                  fontSize: 14,
-                  marginLeft: 11,
-                }}
-                width='70%'
-                placeholderTextColor={
-                  errors.telefone ? colors.purple[500] : colors.blue[900]
-                }
-                value={value}
-                onChangeText={onChange}
-                ref={cellRef}
-                editable={isEdictionMode}
-              />
-            )}
-          />
-        </HStack>
-
-        <RegisterLabel title='Endereço' />
-
-        <HStack
-          alignItems='center'
-          mt={4}
-          borderWidth={isEdictionMode ? 1 : 0}
-          borderRadius={8}
-          borderColor={cepInputFoccus ? colors.blue[600] : colors.gray[250]}
-          bgColor={colors.gray[100]}
-          height={54}
-          alignSelf='center'
-          w='94%'
-        >
-          <Controller
-            control={control}
-            name='cep'
-            render={({ field: { onChange, value } }) => (
-              <TextInputMask
-                onFocus={() => setCepInputFoccus(true)}
-                onBlur={() => setCepInputFoccus(false)}
-                type={'custom'}
-                options={{
-                  mask: '99999-999',
-                }}
-                color={errors.cep ? colors.purple[500] : colors.blue[900]}
-                placeholder='CEP'
-                style={{
-                  fontFamily: 'Montserrat_400Regular',
-                  fontSize: 14,
-                  marginLeft: 11,
-                }}
-                width='70%'
-                placeholderTextColor={
-                  errors.cep ? colors.purple[500] : colors.blue[800]
-                }
-                value={value}
-                onChangeText={onChange}
-                onEndEditing={() => {
-                  getAddressData(value)
-                }}
-                keyboardType='numeric'
-                editable={isEdictionMode}
-              />
-            )}
-          />
-        </HStack>
-        {errors.cep && (
-          <Text
-            alignSelf='flex-start'
-            marginLeft={8}
-            color={colors.purple[500]}
-          >
-            {errors.cep.message}
-          </Text>
-        )}
-
-        <Controller
+        <ControlledInput
+          isMasked
           control={control}
+          name='cep'
+          type={'custom'}
+          options={{
+            mask: '99999-999',
+          }}
+          placeholder='CEP'
+          editable={isEdictionMode}
+          action={getAddressData}
+          error={errors.cep}
+          keyboardType='numeric'
+        />
+
+        <ControlledInput
+          control={control}
+          editable={isEdictionMode}
           name='rua'
-          render={({ field: { onChange, value } }) => (
-            <Input
-              mt={4}
-              bgColor={colors.gray[100]}
-              color={colors.blue[900]}
-              placeholder='* Rua'
-              fontFamily={'Montserrat_400Regular'}
-              placeholderTextColor={
-                errors.rua ? colors.purple[500] : colors.blue[800]
-              }
-              fontSize={14}
-              borderRadius={8}
-              value={value}
-              onChangeText={onChange}
-              editable={isEdictionMode}
-              height={54}
-              alignSelf='center'
-              w='94%'
-            />
-          )}
+          placeholder='Rua'
+          error={errors.rua}
         />
-        {errors.rua && (
-          <Text
-            alignSelf='flex-start'
-            marginLeft={8}
-            color={colors.purple[500]}
-          >
-            {errors.rua.message}
-          </Text>
-        )}
 
-        <Controller
+        <ControlledInput
           control={control}
+          editable={isEdictionMode}
           name='numero'
-          render={({ field: { onChange, value } }) => (
-            <Input
-              mt={4}
-              bgColor={colors.gray[100]}
-              color={colors.blue[900]}
-              placeholder='* Numero'
-              fontFamily={'Montserrat_400Regular'}
-              placeholderTextColor={
-                errors.numero ? colors.purple[500] : colors.blue[800]
-              }
-              fontSize={14}
-              borderRadius={8}
-              keyboardType='default'
-              value={value}
-              onChangeText={onChange}
-              editable={isEdictionMode}
-              borderWidth={isEdictionMode ? 1 : 0}
-              height={54}
-              alignSelf='center'
-              w='94%'
-            />
-          )}
+          placeholder='Número'
+          error={errors.numero}
         />
-        {errors.numero && (
-          <Text
-            alignSelf='flex-start'
-            marginLeft={8}
-            color={colors.purple[500]}
-          >
-            {errors.numero.message}
-          </Text>
-        )}
 
-        <Controller
+        <ControlledInput
           control={control}
+          editable={isEdictionMode}
           name='complemento'
-          render={({ field: { onChange, value } }) => (
-            <Input
-              mt={4}
-              bgColor={colors.gray[100]}
-              color={colors.blue[900]}
-              placeholder='* Complemento'
-              fontFamily={'Montserrat_400Regular'}
-              placeholderTextColor={
-                errors.numero ? colors.purple[500] : colors.blue[800]
-              }
-              fontSize={14}
-              borderRadius={8}
-              keyboardType='default'
-              value={value}
-              onChangeText={onChange}
-              editable={isEdictionMode}
-              borderWidth={isEdictionMode ? 1 : 0}
-              height={54}
-              alignSelf='center'
-              w='94%'
-            />
-          )}
+          placeholder='Complemento'
+          error={errors.complemento}
         />
 
-        <Controller
+        <ControlledInput
           control={control}
+          editable={isEdictionMode}
           name='bairro'
-          render={({ field: { onChange, value } }) => (
-            <Input
-              mt={4}
-              bgColor={colors.gray[100]}
-              color={colors.blue[900]}
-              placeholder='*Bairro'
-              fontFamily={'Montserrat_400Regular'}
-              placeholderTextColor={
-                errors.bairro ? colors.purple[500] : colors.blue[800]
-              }
-              fontSize={14}
-              borderRadius={8}
-              value={value}
-              onChangeText={onChange}
-              editable={isEdictionMode}
-              borderWidth={isEdictionMode ? 1 : 0}
-              height={54}
-              alignSelf='center'
-              w='94%'
-            />
-          )}
+          placeholder='Bairro'
+          error={errors.bairro}
         />
-        {errors.bairro && (
-          <Text
-            alignSelf='flex-start'
-            marginLeft={8}
-            color={colors.purple[500]}
-          >
-            {errors.bairro.message}
-          </Text>
-        )}
 
-        <Controller
+        <ControlledInput
           control={control}
+          editable={isEdictionMode}
           name='cidade'
-          render={({ field: { onChange, value } }) => (
-            <Input
-              mt={4}
-              bgColor={colors.gray[100]}
-              color={colors.blue[900]}
-              value={value}
-              placeholder='*Cidade'
-              fontFamily={'Montserrat_400Regular'}
-              placeholderTextColor={
-                errors.cidade ? colors.purple[500] : colors.blue[800]
-              }
-              fontSize={14}
-              borderRadius={8}
-              onChangeText={onChange}
-              editable={isEdictionMode}
-              borderWidth={isEdictionMode ? 1 : 0}
-              height={54}
-              alignSelf='center'
-              w='94%'
-            />
-          )}
+          placeholder='Cidade'
+          error={errors.cidade}
         />
-        {errors.cidade && (
-          <Text
-            alignSelf='flex-start'
-            marginLeft={8}
-            color={colors.purple[500]}
-          >
-            {errors.cidade.message}
-          </Text>
-        )}
 
-        <Controller
+        <ControlledSelect
           control={control}
+          isSelectState
           name='estado'
-          render={({ field: { onChange, value } }) => (
-            <Select
-              isDisabled={isEdictionMode ? false : true}
-              borderWidth={isEdictionMode ? 1 : 0}
-              mt={4}
-              borderRadius={8}
-              placeholderTextColor={
-                errors.estado ? colors.purple[500] : colors.blue[800]
-              }
-              color={colors.blue[900]}
-              selectedValue={value}
-              placeholder='Selecione o estado'
-              fontSize='md'
-              accessibilityLabel='Escolha a categoria do produto'
-              onValueChange={onChange}
-              height={54}
-              alignSelf='center'
-              w='94%'
-            >
-              <Select.Item
-                label='Acre'
-                value='AC'
-              />
-              <Select.Item
-                label='Alagoas'
-                value='AL'
-              />
-              <Select.Item
-                label='Amapá'
-                value='AP'
-              />
-              <Select.Item
-                label='Amazonas'
-                value='AM'
-              />
-              <Select.Item
-                label='Bahia'
-                value='BA'
-              />
-              <Select.Item
-                label='Ceará'
-                value='CE'
-              />
-              <Select.Item
-                label='Distrito Federal'
-                value='DF'
-              />
-              <Select.Item
-                label='Espírito Santo'
-                value='ES'
-              />
-              <Select.Item
-                label='Goiás'
-                value='GO'
-              />
-              <Select.Item
-                label='Maranhão'
-                value='MA'
-              />
-              <Select.Item
-                label='Mato Grosso'
-                value='MT'
-              />
-              <Select.Item
-                label='Mato Grosso do Sul'
-                value='MS'
-              />
-              <Select.Item
-                label='Minas Gerais'
-                value='MG'
-              />
-              <Select.Item
-                label='Pará'
-                value='PA'
-              />
-              <Select.Item
-                label='Paraíba'
-                value='PB'
-              />
-              <Select.Item
-                label='Paraná'
-                value='PR'
-              />
-              <Select.Item
-                label='Pernambuco'
-                value='PE'
-              />
-              <Select.Item
-                label='Piauí'
-                value='PI'
-              />
-              <Select.Item
-                label='Rio de Janeiro'
-                value='RJ'
-              />
-              <Select.Item
-                label='Rio Grande do Norte'
-                value='RN'
-              />
-              <Select.Item
-                label='Rio Grande do Sul'
-                value='RS'
-              />
-              <Select.Item
-                label='Rondônia'
-                value='RO'
-              />
-              <Select.Item
-                label='Roraima'
-                value='RR'
-              />
-              <Select.Item
-                label='Santa Catarina'
-                value='SC'
-              />
-              <Select.Item
-                label='São Paulo'
-                value='SP'
-              />
-              <Select.Item
-                label='Sergipe'
-                value='SE'
-              />
-              <Select.Item
-                label='Tocantins'
-                value='TO'
-              />
-            </Select>
-          )}
+          isDisabled={!isEdictionMode}
+          isSelectionInput={true}
+          error={errors.estado}
         />
-        {errors.estado && (
-          <Text
-            alignSelf='flex-start'
-            marginLeft={8}
-            color={colors.purple[500]}
-          >
-            {errors.estado.message}
-          </Text>
-        )}
 
         {isEdictionMode && (
           <Button
@@ -877,24 +431,3 @@ export function MyAccount() {
     </ScrollView>
   )
 }
-const styles = StyleSheet.create({
-  userImage: {
-    width: 150,
-    height: 150,
-    alignSelf: 'center',
-  },
-  txt: {
-    fontFamily: 'Montserrat_400Regular',
-    fontSize: 20,
-  },
-  btn: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    paddingVertical: 2,
-    paddingHorizontal: 8,
-    borderRadius: 8,
-    marginTop: 2,
-  },
-})

@@ -80,7 +80,6 @@ export function ChangePassword() {
               navigation.goBack()
             })
             .catch((error) => {
-              console.log(error.response.data)
               if (error.response.data.mensagem) {
                 return Alert.alert('Erro', error.response.data.mensagem)
               }

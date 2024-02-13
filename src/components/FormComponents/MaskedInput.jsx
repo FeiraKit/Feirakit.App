@@ -2,6 +2,7 @@ import React from 'react'
 import { Icon, useTheme, HStack } from 'native-base'
 import { FontAwesome5 } from '@expo/vector-icons'
 import { TextInputMask } from 'react-native-masked-text'
+import { RFValue } from 'react-native-responsive-fontsize'
 
 export function MaskedInput({ changeColor, iconName, action, value, ...rest }) {
   const { colors } = useTheme()
@@ -9,14 +10,15 @@ export function MaskedInput({ changeColor, iconName, action, value, ...rest }) {
     <>
       <HStack
         alignItems='center'
-        mt={4}
         height={54}
         alignSelf='center'
         w='94%'
         borderWidth={1}
         borderRadius={8}
-        borderColor={colors.gray[300]}
+        borderColor={changeColor ? colors.purple[500] : colors.blue[900]}
         bgColor={colors.gray[100]}
+        mt={RFValue(3)}
+        {...rest}
       >
         {!!iconName && (
           <Icon
@@ -31,7 +33,7 @@ export function MaskedInput({ changeColor, iconName, action, value, ...rest }) {
           color={changeColor ? colors.purple[500] : colors.blue[900]}
           style={{
             fontFamily: 'Montserrat_400Regular',
-            fontSize: 14,
+            fontSize: RFValue(16),
             marginLeft: 11,
           }}
           width={!!iconName ? '70%' : '100%'}

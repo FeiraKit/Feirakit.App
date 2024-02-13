@@ -1,18 +1,20 @@
-import apiFeiraKit from './ApiFeiraKit'
-import { useDispatch } from 'react-redux'
-import { Alert } from 'react-native'
-import { Login as loginAction } from '../store/actions'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux';
+import { Alert } from 'react-native';
+import { Login as loginAction } from '../store/actions';
+
+import apiFeiraKit from './ApiFeiraKit';
 
 export class User {
-  jwt = useSelector((state) => state.AuthReducers.authToken)
-  dispatch = useDispatch()
+  jwt = useSelector((state) => state.AuthReducers.authToken);
+
+  dispatch = useDispatch();
+
   async checkPassword(email, password) {
-    let credentials = {
+    const credentials = {
       email,
       senha: password,
-    }
-    return await apiFeiraKit.post('/users/login', JSON.stringify(credentials))
+    };
+    return await apiFeiraKit.post('/users/login', JSON.stringify(credentials));
   }
 
   async getUserByEmail(email, jwtToken) {
@@ -23,14 +25,9 @@ export class User {
         },
       })
       .then(({ data }) => {
-        this.login(data.resultado[0], jwtToken)
+        this.login(data.resultado[0], jwtToken);
       })
-      .catch((error) => {
-        return Alert.alert(
-          'Erro',
-          'Um erro inesperado aconteceu,tente novamente'
-        )
-      })
+      .catch(() => Alert.alert('Erro', 'Um erro inesperado aconteceu,tente novamente'));
   }
 
   async getUserById(id) {
@@ -38,11 +35,11 @@ export class User {
       headers: {
         Authorization: `Bearer ${this.jwt}`,
       },
-    })
+    });
   }
 
   async createUser(user) {
-    return await apiFeiraKit.post('/users', JSON.stringify(user))
+    return await apiFeiraKit.post('/users', JSON.stringify(user));
   }
 
   async changePassword(newPasswordData) {
@@ -50,11 +47,11 @@ export class User {
       headers: {
         Authorization: `Bearer ${this.jwt}`,
       },
-    })
+    });
   }
 
   async recoverPassword(recoverPasswordData) {
-    return await apiFeiraKit.post('/users/send_email', recoverPasswordData)
+    return await apiFeiraKit.post('/users/send_email', recoverPasswordData);
   }
 
   async editUser(user) {
@@ -62,7 +59,7 @@ export class User {
       headers: {
         Authorization: `Bearer ${this.jwt}`,
       },
-    })
+    });
   }
 
   async deleteUser(id) {
@@ -71,10 +68,10 @@ export class User {
         Authorization: `Bearer ${this.jwt}`,
       },
       data: id,
-    })
+    });
   }
 
   async login(userData, jwtToken) {
-    this.dispatch(loginAction(userData, jwtToken))
+    this.dispatch(loginAction(userData, jwtToken));
   }
 }

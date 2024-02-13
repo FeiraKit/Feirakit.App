@@ -1,10 +1,10 @@
 import React from 'react'
-import { VStack, Image, Text, useTheme, Button, Heading } from 'native-base'
+import { VStack, Image, Text, useTheme, Button } from 'native-base'
 import { useNavigation } from '@react-navigation/native'
 import { RFValue } from 'react-native-responsive-fontsize'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { OnboardTitle } from './onboardTitle'
 import { StepIndicator } from './StepIndicator'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export function ScreenContent({
   urlImage,
@@ -36,7 +36,7 @@ export function ScreenContent({
       <OnboardTitle title={ScreenTitle} />
       <Text
         fontSize={RFValue(12)}
-        mx={'2%'}
+        mx="2%"
         mt={4}
         color={colors.gray[450]}
         mb={2}
@@ -53,7 +53,7 @@ export function ScreenContent({
         _pressed={{ bgColor: colors.blue[700] }}
         borderRadius={50}
         onPress={() => {
-          if (BtnText == 'Iniciar') {
+          if (BtnText === 'Iniciar') {
             SaveIfUserAlreadyUsedTheApp()
           }
           navigation.navigate(NextPage)

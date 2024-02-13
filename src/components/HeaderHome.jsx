@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { View, TouchableOpacity } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 import { useTheme, Heading } from 'native-base'
+import { RFValue } from 'react-native-responsive-fontsize'
 
 export function HeaderHome({ headerText, CBclear }) {
   const { colors } = useTheme()
@@ -26,7 +27,7 @@ export function HeaderHome({ headerText, CBclear }) {
       >
         <MaterialIcons
           name='clear'
-          size={22}
+          size={RFValue(22)}
         />
       </TouchableOpacity>
       <Heading

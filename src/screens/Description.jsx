@@ -14,20 +14,20 @@ import {
   View,
   ScrollView,
   TouchableOpacity,
-  StyleSheet,
   Alert,
 } from 'react-native'
 import { RFValue } from 'react-native-responsive-fontsize'
-import ImageButton from '../components/ImageButton'
 import { showMessage } from 'react-native-flash-message'
+import { MaterialIcons , FontAwesome5 } from '@expo/vector-icons'
+import ImageButton from '../components/ImageButton'
 import { WhatsappButton } from '../components/WhatsappButton'
-import { MaterialIcons } from '@expo/vector-icons'
 import { ButtonBack } from '../components/ButtonBack'
-import { FontAwesome5 } from '@expo/vector-icons'
+
 import { LogoFeira } from '../components/LogoFeira'
 import { Product } from '../services/product'
 import { User } from '../services/user'
-import { storage } from '../../firebaseConfig'
+import { styles } from './styles/DescriptionStyles'
+import { removeImageInFirebaseStorage } from '../utils/UploadImages'
 
 export function Description() {
   const productInstance = new Product()
@@ -46,11 +46,12 @@ export function Description() {
   const [produtor, setProdutor] = useState()
   const [isLoadingImage, setIsloadingImage] = useState(true)
 
-  let btnLessDisabled = amount === 1 ? true : false
-  let btnPlusDisabled = amount >= product.estoque ? true : false
+  const btnLessDisabled = amount === 1
+  const btnPlusDisabled = amount >= product.estoque
 
+  // eslint-disable-next-line no-shadow
   function handleOpenEdit(product) {
-    navigation.navigate('ProductForm', { product })
+    navigation.navigate('EditProduct', { produto: product })
   }
   const texts = {
     title: 'Exluir',
@@ -64,19 +65,19 @@ export function Description() {
       {
         text: texts.optionNo,
         onPress: () => {
-          return
+          
         },
       },
       {
         text: texts.optionYes,
         onPress: () => {
-          let objDelete = { id: id }
+          const objDelete = { id }
           productInstance
             .deleteProduct(JSON.stringify(objDelete))
             .then(() => {
+              // eslint-disable-next-line array-callback-return
               product.imagem_url.map((url) => {
-                let delelteImage = url.substring(82, url.lastIndexOf('?'))
-                storage.ref(`images/${delelteImage}`).delete()
+                removeImageInFirebaseStorage(url)
               })
 
               showMessage({
@@ -90,7 +91,7 @@ export function Description() {
                 message: 'Erro ao apagar produto',
                 type: 'danger',
               })
-              console.log('====>um erro ocorreu: ' + error)
+              console.log(`====>um erro ocorreu: ${  error}`)
             })
         },
       },
@@ -102,9 +103,9 @@ export function Description() {
       .getUserById(product.produtor_id)
       .then(({ data }) => {
         setEndereco(
-          data.resultado[0].endereco.cidade +
-            '-' +
-            data.resultado[0].endereco.estado
+          `${data.resultado[0].endereco.cidade 
+            }-${ 
+            data.resultado[0].endereco.estado}`
         )
         setProdutor(data.resultado[0].nome)
         setBairroProdutor(data.resultado[0].endereco.bairro)
@@ -147,7 +148,7 @@ export function Description() {
       </Box>
       <ScrollView height='100%'>
         <FlatList
-          width={'100%'}
+          width="100%"
           showsHorizontalScrollIndicator={false}
           mt={-4}
           horizontal
@@ -157,7 +158,7 @@ export function Description() {
           renderItem={({ index }) => (
             <ImageButton
               urlImage={product.imagem_url[index]}
-              active={urlImage == product.imagem_url[index] ? true : false}
+              active={urlImage === product.imagem_url[index]}
               onPress={() => {
                 if (urlImage !== product.imagem_url[index]) {
                   setIsloadingImage(true)
@@ -269,7 +270,7 @@ export function Description() {
               style={[styles.text, { paddingTop: 4 }]}
               fontSize={RFValue(20)}
             >
-              R$ {product.preco.toFixed(2)}
+              R$ {product.preco.toFixed(2).replace('.', ',')}
             </Heading>
           </HStack>
         </HStack>
@@ -386,11 +387,11 @@ export function Description() {
               </TouchableOpacity>
             </HStack>
             <Heading
-              alignSelf={'center'}
+              alignSelf="center"
               color={colors.blue[700]}
               fontSize={RFValue(16)}
             >
-              {amount == 1 ? product.unidade : product.unidade + 's'}
+              {amount === 1 ? product.unidade : `${product.unidade  }s`}
             </Heading>
             {WhatsAppNumber !== '' && (
               <WhatsappButton
@@ -408,62 +409,3 @@ export function Description() {
     </VStack>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: '100%',
-    backgroundColor: '#FFF',
-  },
-  image: {
-    resizeMode: 'center',
-    height: '100%',
-    width: '100%',
-  },
-  imagebox: {
-    height: '30%',
-    width: '70%',
-    display: 'flex',
-    alignSelf: 'center',
-    alignItems: 'center',
-    marginTop: '-5%',
-  },
-  descriptionBox: {
-    height: 'auto',
-    width: '90%',
-    alignSelf: 'center',
-    backgroundColor: '#f2f2f2',
-    padding: 12,
-    borderRadius: 20,
-  },
-  qtdButton: {
-    height: '100%',
-    width: '30%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: '#0088a7',
-  },
-  text: {
-    fontFamily: 'Montserrat_400Regular',
-    marginVertical: 15,
-  },
-
-  btnActions: {
-    borderWidth: 1,
-    borderRadius: 8,
-    width: '40%',
-    paddingHorizontal: 16,
-    paddingVertical: 2,
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
-  },
-
-  actionsContainer: {
-    borderRadius: 20,
-    paddingVertical: 16,
-    width: '90%',
-    alignSelf: 'center',
-  },
-})

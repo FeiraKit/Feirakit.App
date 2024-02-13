@@ -1,20 +1,23 @@
-import apiFeiraKit from './ApiFeiraKit'
-import { useSelector } from 'react-redux'
-import { storage } from '../../firebaseConfig.js'
+import { useSelector } from 'react-redux';
+import apiFeiraKit from './ApiFeiraKit';
+
 export class Product {
-  jwt = useSelector((state) => state.AuthReducers.authToken)
+  jwt = useSelector((state) => state.AuthReducers.authToken);
+
   async getAllProducts(page, limit, sort) {
-    return await apiFeiraKit.get(
-      `products?page=${page}&limit=${limit}&sort=${sort}`
-    )
+    return await apiFeiraKit.get(`products?page=${page}&limit=${limit}&sort=${sort}`);
   }
 
   async getProductsByName(name) {
-    return await apiFeiraKit.get(`/products/byname/${name}`)
+    return await apiFeiraKit.get(`/products/filters?nome=${name}`);
+  }
+
+  async getProductsByCity(name) {
+    return await apiFeiraKit.get(`/products/filters?cidade=${name}`);
   }
 
   async getProductsByIdUsuario(id) {
-    return await apiFeiraKit.get(`/products/by-id-usuario/${id}`)
+    return await apiFeiraKit.get(`/products/filters?id=${id}`);
   }
 
   async createProduct(product) {
@@ -22,7 +25,7 @@ export class Product {
       headers: {
         Authorization: `Bearer ${this.jwt}`,
       },
-    })
+    });
   }
 
   async updateProduct(product) {
@@ -30,11 +33,11 @@ export class Product {
       headers: {
         Authorization: `Bearer ${this.jwt}`,
       },
-    })
+    });
   }
 
   async getUnites() {
-    return await apiFeiraKit.get(`/products/units`)
+    return await apiFeiraKit.get(`/products/units`);
   }
 
   async getCities() {
@@ -42,7 +45,7 @@ export class Product {
       headers: {
         Authorization: `Bearer ${this.jwt}`,
       },
-    })
+    });
   }
 
   async deleteProduct(product) {
@@ -51,6 +54,6 @@ export class Product {
         Authorization: `Bearer ${this.jwt}`,
       },
       data: product,
-    })
+    });
   }
 }
