@@ -21,7 +21,7 @@ export function LoginRoutes() {
   useEffect(() => {
     VerifyIfUserAlreadyUsedTheApp()
   }, [])
-
+  console.log(AlreadyUsed)
   return (
     <>
       {isUndefined(AlreadyUsed) && <Loading />}
