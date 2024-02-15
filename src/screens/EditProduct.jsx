@@ -16,7 +16,7 @@ import { Alert, Keyboard, TouchableOpacity, TouchableWithoutFeedback } from 'rea
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { showMessage } from 'react-native-flash-message';
 import { ButtonBack } from '../components/ButtonBack';
 import { LogoFeira } from '../components/LogoFeira';
@@ -36,7 +36,7 @@ import { LoadingEditForm, LoadingUploadImages } from '../components/Loading';
 
 export function EditProduct() {
   const route = useRoute();
-  const navigation = useNavigation()
+  const navigation = useNavigation();
   const { colors } = useTheme();
   const productInstance = new Product();
   const prevProduct = route.params.produto;
@@ -50,12 +50,12 @@ export function EditProduct() {
   const [uploadedImages, setUploadedImages] = useState([]);
   const [imagesToRemove, setImageToRemove] = useState([]);
 
-  const [selectedCities, setSelectedCities] = useState([prevProduct.cidades]);
-  const [allCities,setAllCities] = useState([])
+  const [selectedCities, setSelectedCities] = useState([...prevProduct.cidades]);
+  const [allCities, setAllCities] = useState([]);
   const bottomSheetRef = useRef(BottomSheetBase);
   const bottomSheetRefCities = useRef(bottomSheetRefCities);
   const producerId = useSelector((state) => state.AuthReducers.userData.userData).id;
-  
+
   const {
     control,
     handleSubmit,
@@ -93,8 +93,8 @@ export function EditProduct() {
   };
 
   const initForm = async () => {
-    const cities = await AsyncStorage.getItem('allCities')
-    setAllCities(JSON.parse(cities))
+    const cities = await AsyncStorage.getItem('allCities');
+    setAllCities(JSON.parse(cities));
     productInstance
       .getUnites()
       .then(({ data }) => {
@@ -172,7 +172,11 @@ export function EditProduct() {
     await uploadImages(images, productSlug, setUploadedImages);
   };
 
-  useFocusEffect(useCallback(()=>{initForm()}, []));
+  useFocusEffect(
+    useCallback(() => {
+      initForm();
+    }, [])
+  );
 
   useEffect(() => {
     const totalProgress = Math.ceil((uploadedImages.length * 100) / images.length);
@@ -181,21 +185,24 @@ export function EditProduct() {
     if (images.length === uploadedImages.length) {
       prevProduct.imagem_url = uploadedImages;
       imagesToRemove.map((image) => removeImageInFirebaseStorage(image));
-      
-      productInstance.updateProduct(prevProduct).then(()=>{
-        showMessage({
-        message: 'Produto adicionado com sucesso',
-        type: 'success',
-      })
-      navigation.navigate('MyProducts')}).catch((e)=>{
-        showMessage(
-          {
+
+      productInstance
+        .updateProduct(prevProduct)
+        .then(() => {
+          showMessage({
+            message: 'Produto adicionado com sucesso',
+            type: 'success',
+          });
+          navigation.navigate('MyProducts');
+        })
+        .catch((e) => {
+          showMessage({
             message: 'Um erro inesperado aconteceu,tente novamente',
             type: 'error',
-          })
-          console.log(e)
-          navigation.goBack()
-        })
+          });
+          console.log(e);
+          navigation.goBack();
+        });
       setIsLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
