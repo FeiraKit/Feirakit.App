@@ -59,6 +59,7 @@ export function Home() {
       .then(({ data }) => {
         if (refresh) {
           setProducts(data);
+          setZone('-1');
           setPage(2);
           setKeepFetching(true);
         } else {
@@ -80,6 +81,7 @@ export function Home() {
         setProducts([]);
         setIsLoading(false);
         setRefreshing(false);
+        setKeepFetching(false);
         setIconName('sync-problem');
         setEmptyText(":'(\n Ocorreu um erro,tente novamente");
       });
@@ -205,7 +207,14 @@ export function Home() {
         >
           {findingByName && <HeaderHome headerText={headerText} CBclear={getAllProducts} />}
 
-          {showFilter && <SelectCity cities={cities} defaultValue={zone} onSelectZone={setZone} />}
+          {showFilter && (
+            <SelectCity
+              cities={cities}
+              defaultValue={zone}
+              selectedZone={zone}
+              onSelectZone={setZone}
+            />
+          )}
         </HStack>
       </VStack>
 
