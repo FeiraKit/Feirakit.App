@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
-import { Button, VStack, HStack, Heading, useTheme } from 'native-base'
-import { BottomSheetFlatList } from '@gorhom/bottom-sheet'
-import { RFValue } from 'react-native-responsive-fontsize'
-import { TouchableOpacity } from 'react-native'
-import { MaterialIcons } from '@expo/vector-icons'
+import React, { useState } from 'react';
+import { Button, VStack, HStack, Heading, useTheme } from 'native-base';
+import { BottomSheetFlatList } from '@gorhom/bottom-sheet';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { TouchableOpacity } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
 
 export function CustonSelectionMany({
   selectedCities,
@@ -11,32 +11,31 @@ export function CustonSelectionMany({
   handleCities,
   actionClose,
   hideConfirmButton,
-  ...rest
 }) {
-  const [selected, setSelected] = useState([...selectedCities])
-  const { colors } = useTheme()
+  const [selected, setSelected] = useState([...selectedCities]);
+  const { colors } = useTheme();
 
   function toggle(nome) {
-    let index = selected.findIndex((i) => i === nome)
-    let selectedsArray = [...selected]
+    const index = selected.findIndex((i) => i === nome);
+    const selectedsArray = [...selected];
     if (index !== -1) {
-      selectedsArray.splice(index, 1)
+      selectedsArray.splice(index, 1);
     } else {
-      selectedsArray.push(nome)
+      selectedsArray.push(nome);
     }
 
-    setSelected(selectedsArray)
-    handleCities(selectedsArray)
+    setSelected(selectedsArray);
+    handleCities(selectedsArray);
   }
   const handleConfirmClose = () => {
-    actionClose()
-    handleCities(selected)
-  }
+    actionClose();
+    handleCities(selected);
+  };
 
   return (
     <VStack>
       <VStack
-        position={'relative'}
+        position="relative"
         h={hideConfirmButton ? 'full' : '5/6'}
         paddingX={RFValue(4)}
         zIndex={1}
@@ -45,11 +44,7 @@ export function CustonSelectionMany({
           data={cities}
           keyExtractor={(city) => city.nome}
           renderItem={({ index }) => (
-            <HStack
-              flex={1}
-              width='100%'
-              mt={2}
-            >
+            <HStack flex={1} width="100%" mt={2}>
               <TouchableOpacity
                 style={{
                   width: '100%',
@@ -64,19 +59,15 @@ export function CustonSelectionMany({
                 onPress={() => toggle(cities[index].nome)}
               >
                 {selected.findIndex((i) => i === cities[index].nome) !== -1 && (
-                  <MaterialIcons
-                    name='check'
-                    size={RFValue(22)}
-                    color={colors.blue[800]}
-                  />
+                  <MaterialIcons name="check" size={RFValue(22)} color={colors.blue[800]} />
                 )}
 
                 <Heading
                   fontSize={RFValue(18)}
-                  fontFamily='body'
-                  fontWeight='semibold'
-                  w='90%'
-                  ml='2%'
+                  fontFamily="body"
+                  fontWeight="semibold"
+                  w="90%"
+                  ml="2%"
                 >
                   {cities[index].nome}
                 </Heading>
@@ -88,17 +79,12 @@ export function CustonSelectionMany({
         />
       </VStack>
       {!hideConfirmButton && (
-        <VStack h='1/6'>
-          <Button
-            mt={RFValue(4)}
-            w={'80%'}
-            alignSelf={'center'}
-            onPress={() => handleConfirmClose()}
-          >
+        <VStack h="1/6">
+          <Button mt={RFValue(4)} w="80%" alignSelf="center" onPress={() => handleConfirmClose()}>
             Confirmar
           </Button>
         </VStack>
       )}
     </VStack>
-  )
+  );
 }
