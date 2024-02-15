@@ -19,9 +19,6 @@ import { LoadingForm } from '../../components/Loading';
 import { mainInfoSchema } from '../../validationsSchemes/productValidations';
 import { removeMoneyMask } from '../../utils/removeMasks';
 
-// eslint-disable-next-line import/order, no-unused-vars
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
 export function MainInfo() {
   const navigation = useNavigation();
   const productInstance = new Product();
