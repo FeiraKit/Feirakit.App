@@ -77,8 +77,7 @@ export function Home() {
         console.log(error);
         setProducts([]);
         setIsLoading(false);
-        setRefreshing(false);
-        setKeepFetching(false);
+        setRefreshing(false)
         setIconName('sync-problem');
         setEmptyText(":'(\n Ocorreu um erro,tente novamente");
       });
