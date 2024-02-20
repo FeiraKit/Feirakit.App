@@ -373,7 +373,7 @@ export function EditProduct() {
               </HStack>
             </TouchableOpacity>
 
-            <VStack w="full" alignItems="center">
+            <VStack w="full" alignItems="center" mt={2}>
               <ImagePickerSelectedImages
                 editionMode
                 setImageToRemove={setImageToRemove}

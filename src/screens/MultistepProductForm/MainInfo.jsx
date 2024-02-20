@@ -77,16 +77,16 @@ export function MainInfo() {
         <LoadingForm />
       ) : (
         <VStack w="full" h="full" px="3%">
-          <VStack>
+          <VStack h="1/6">
             <ButtonBack />
             <LogoFeira />
             <ProgressBar percent="25" />
-            <Text fontFamily="body" fontSize={RFValue(22)}>
+            <Text fontFamily="body" fontSize={RFValue(18)}>
               Olá, {user.nome}!
             </Text>
             <Text
               fontFamily="body"
-              fontSize={RFValue(22)}
+              fontSize={RFValue(18)}
               textAlign="left"
               textBreakStrategy="highQuality"
             >
@@ -94,7 +94,7 @@ export function MainInfo() {
             </Text>
           </VStack>
 
-          <VStack py={0}>
+          <VStack py={0} h="4/6">
             <InputLabel mt={errors.nome ? 0 : RFValue(4)} title="Nome do Produto" />
             <ControlledInput
               control={control}
@@ -146,7 +146,7 @@ export function MainInfo() {
             />
           </VStack>
 
-          <VStack>
+          <VStack h="1/6">
             <Button
               alignSelf="center"
               w="98%"

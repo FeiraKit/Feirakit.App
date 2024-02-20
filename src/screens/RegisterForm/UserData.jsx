@@ -36,28 +36,35 @@ export function UserData() {
       senha: data.senha,
       telefone,
     };
-    user
-      .checkPassword(objUser.email, objUser.senha)
-      // eslint-disable-next-line no-shadow
-      .then(({ data }) => {
-        if (data.resultado) {
-          setError('email', {
-            type: 'custom',
-            message: 'Este e-mail já está sendo usado',
-          });
-          setIsLoading(false);
-          return Alert.alert('Erro', 'Este endereço de e-mail já está sendo usado');
-        }
-      })
-      .catch((error) => {
-        setIsLoading(false);
-        if (error.response) {
-          if (!error.response.data.resultado) {
-            return navigation.navigate('AddAdress', { user: objUser });
+    try {
+      user
+        .checkPassword(objUser.email, objUser.senha)
+        // eslint-disable-next-line no-shadow
+        .then(({ data }) => {
+          if (data.resultado) {
+            setError('email', {
+              type: 'custom',
+              message: 'Este e-mail já está sendo usado',
+            });
+            setIsLoading(false);
+            return Alert.alert('Erro', 'Este endereço de e-mail já está sendo usado');
           }
-        }
-        return Alert.alert('Erro', 'Tivemos um problema,tente novamente');
-      });
+        })
+        .catch((error) => {
+          setIsLoading(false);
+          if (error.response) {
+            if (!error.response.data.resultado) {
+              return navigation.navigate('AddAdress', { user: objUser });
+            }
+          }
+          return Alert.alert('Erro', 'Tivemos um problema,tente novamente');
+        });
+    } catch (error) {
+      return Alert.alert(
+        'Erro',
+        'Tivemos um problema, por favor,feche o aplicativo e tente novamente '
+      );
+    }
   };
 
   return (
