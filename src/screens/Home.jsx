@@ -69,10 +69,7 @@ export function Home() {
         }
         setRefreshing(false);
         setIsLoading(false);
-        if (data.length === 0) {
-          setKeepFetching(false);
-        }
-        if (data.length <= limit) {
+        if (data.length === 0 || data.length <= limit) {
           setKeepFetching(false);
         }
       })
@@ -80,8 +77,7 @@ export function Home() {
         console.log(error);
         setProducts([]);
         setIsLoading(false);
-        setRefreshing(false);
-        setKeepFetching(false);
+        setRefreshing(false)
         setIconName('sync-problem');
         setEmptyText(":'(\n Ocorreu um erro,tente novamente");
       });
@@ -246,7 +242,7 @@ export function Home() {
             </Center>
           )}
           onEndReached={getNewProducts}
-          onEndReachedThreshold={0.1}
+          onEndReachedThreshold={0.2}
           ListFooterComponent={<FooterListLoader fetchingProducts={fetchingProducts} />}
           refreshControl={
             <RefreshControl
