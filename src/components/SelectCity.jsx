@@ -5,7 +5,7 @@ import { RFValue } from 'react-native-responsive-fontsize';
 import { MaterialIcons } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-export function SelectCity({ cities, onSelectZone, selectedZone }) {
+export function SelectCity({ cities, onSelectZone, selectedZone, CBclear }) {
   const { colors } = useTheme();
 
   const handleSelectValue = (zone) => {
@@ -13,7 +13,8 @@ export function SelectCity({ cities, onSelectZone, selectedZone }) {
   };
 
   const closeSelect = () => {
-    onSelectZone('-1');
+    onSelectZone(null);
+    CBclear();
   };
 
   return (
@@ -26,7 +27,7 @@ export function SelectCity({ cities, onSelectZone, selectedZone }) {
     >
       <TouchableOpacity onPress={closeSelect}>
         <MaterialIcons
-          name={selectedZone === '-1' ? 'location-pin' : 'clear'}
+          name={selectedZone === null ? 'location-pin' : 'clear'}
           size={22}
           color={colors.gray[500]}
         />
@@ -36,8 +37,8 @@ export function SelectCity({ cities, onSelectZone, selectedZone }) {
         alignSelf="flex-start"
         w="full"
         flex={1}
-        defaultValue="-1"
-        selectedValue={selectedZone}
+        defaultValue={null}
+        selectedValue={selectedZone === null ? '-1' : selectedZone}
         color={colors.gray[600]}
         fontSize={RFValue(16)}
         fontWeight="bold"

@@ -36,3 +36,6 @@ jobs:
 
       - name: Publish update
         run: eas update --branch preview --auto
+
+      - name: Publish update
+        run: eas update --branch preview --development

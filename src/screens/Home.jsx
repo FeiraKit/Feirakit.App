@@ -1,7 +1,7 @@
 import { VStack, HStack, Input, Icon, useTheme, FlatList, Center, Text } from 'native-base';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Image, TouchableOpacity, View, RefreshControl } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FooterListLoader, LoadingProducts } from '../components/Loading';
@@ -14,6 +14,7 @@ export function Home() {
   const product = new Product();
   const limit = 10;
   const sort = -1;
+  const [page, setPage] = useState(1);
   const { colors } = useTheme();
   const [isLoading, setIsLoading] = useState(true);
   const [fetchingProducts, setFetchingProducts] = useState(false);
@@ -21,8 +22,7 @@ export function Home() {
   const [emptyText, setEmptyText] = useState('Não há Produtos para mostrar.');
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState('');
-  const [page, setPage] = useState(1);
-  const [zone, setZone] = useState('-1');
+  const [zone, setZone] = useState(null);
   const [headerText, setHeaderText] = useState('Produtos em');
   // eslint-disable-next-line no-unused-vars
   const [cities, setCities] = useState([]);
@@ -39,17 +39,31 @@ export function Home() {
   }
   const getNewProducts = () => {
     if (keepFetching) {
+      setFetchingProducts(true);
+
       setTimeout(() => {
-        setFetchingProducts(true);
-        getAllProducts(false, true);
+        getProducts();
       }, 100);
     }
   };
 
-  const getAllProducts = (refresh, gettingNew) => {
-    setIsLoading(!gettingNew);
+  const handleRefresh = () => {
+    setProducts([]);
+    setPage(1);
+    setIsLoading(true);
+    setZone(null);
+    setRefreshing(true);
     setFindingByName(false);
+    setShowFilter(true);
+    setSearch('');
+    getProducts(true);
+  };
 
+  const getProducts = (refresh) => {
+    if (page === 1) {
+      setIsLoading(true);
+    }
+    setFindingByName(false);
     getCities();
     setShowFilter(true);
     setSearch('');
@@ -59,25 +73,26 @@ export function Home() {
       .then(({ data }) => {
         if (refresh) {
           setProducts(data);
-          setZone('-1');
           setPage(2);
-          setKeepFetching(true);
         } else {
           setProducts([...products, ...data]);
           setPage(page + 1);
-          setFetchingProducts(false);
         }
+        setFetchingProducts(false);
         setRefreshing(false);
         setIsLoading(false);
-        if (data.length === 0 || data.length <= limit) {
+        if (data.length === 0 || data.length < limit) {
           setKeepFetching(false);
+        } else {
+          setKeepFetching(true);
         }
       })
       .catch((error) => {
         console.log(error);
         setProducts([]);
+        setPage(1);
         setIsLoading(false);
-        setRefreshing(false)
+        setRefreshing(false);
         setIconName('sync-problem');
         setEmptyText(":'(\n Ocorreu um erro,tente novamente");
       });
@@ -109,7 +124,6 @@ export function Home() {
 
   const getProductsByZone = (selectedzone) => {
     setIsLoading(true);
-
     product
       .getProductsByCity(selectedzone)
       .then(({ data }) => {
@@ -122,25 +136,15 @@ export function Home() {
   };
 
   const loadFeed = () => {
-    if (zone === '-1') {
-      getAllProducts(true);
+    if (zone === null) {
+      getProducts();
     }
   };
 
-  useFocusEffect(useCallback(loadFeed, []));
-
-  const onRefresh = () => {
-    setPage(1);
-    setIsLoading(true);
-    setZone('-1');
-    setRefreshing(true);
-    setProducts([]);
-    getAllProducts(true);
-  };
+  useEffect(loadFeed, []);
 
   useEffect(() => {
-    if (zone === '-1') {
-      onRefresh();
+    if (zone === null) {
       return;
     }
     getProductsByZone(zone);
@@ -201,14 +205,14 @@ export function Home() {
             alignContent: 'center',
           }}
         >
-          {findingByName && <HeaderHome headerText={headerText} CBclear={getAllProducts} />}
+          {findingByName && <HeaderHome headerText={headerText} CBclear={handleRefresh} />}
 
           {showFilter && (
             <SelectCity
               cities={cities}
-              defaultValue={zone}
               selectedZone={zone}
               onSelectZone={setZone}
+              CBclear={handleRefresh}
             />
           )}
         </HStack>
@@ -232,7 +236,7 @@ export function Home() {
           )}
           ListEmptyComponent={() => (
             <Center flex={1} h={400}>
-              <TouchableOpacity onPress={() => getAllProducts(true)}>
+              <TouchableOpacity onPress={handleRefresh}>
                 <MaterialIcons name={iconName} size={80} color={colors.gray[300]} mt />
               </TouchableOpacity>
               {'\n'}
@@ -242,12 +246,12 @@ export function Home() {
             </Center>
           )}
           onEndReached={getNewProducts}
-          onEndReachedThreshold={0.2}
+          onEndReachedThreshold={0.1}
           ListFooterComponent={<FooterListLoader fetchingProducts={fetchingProducts} />}
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
-              onRefresh={onRefresh}
+              onRefresh={handleRefresh}
               colors={[colors.blue[600]]}
             />
           }

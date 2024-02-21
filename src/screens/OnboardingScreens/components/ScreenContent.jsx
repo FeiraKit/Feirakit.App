@@ -23,8 +23,8 @@ export function ScreenContent({
 
   return (
     <VStack flex={1} justifyContent="center" alignItems="center" w="full">
-      <VStack w="full" h="4/6">
-        <Image source={urlImage} resizeMode="contain" alt={TextDescription} />
+      <VStack w="full" h="4/6" alignSelf="center" justifyContent="center">
+        <Image source={urlImage} resizeMode="contain" alt={TextDescription} alignSelf="center" />
         <OnboardTitle title={ScreenTitle} />
         <Text
           fontSize={RFValue(12)}
@@ -38,14 +38,13 @@ export function ScreenContent({
         </Text>
         <StepIndicator active={PageActive} />
       </VStack>
-      <VStack w="full" h="2/6">
+      <VStack w="full" h="2/6" alignSelf="center" justifyContent="center" alignItems="center">
         <Button
-          height={50}
-          mt={150}
+          height={RFValue(50)}
           w="80%"
           bgColor={colors.blue[900]}
           _pressed={{ bgColor: colors.blue[700] }}
-          borderRadius={50}
+          borderRadius="xl"
           onPress={() => {
             if (BtnText === 'Iniciar') {
               SaveIfUserAlreadyUsedTheApp();
