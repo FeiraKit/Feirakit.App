@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Text, VStack, useTheme, Button } from 'native-base';
+import { Text, VStack, useTheme, Button, ScrollView } from 'native-base';
 import { useSelector } from 'react-redux';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { useForm } from 'react-hook-form';
@@ -76,17 +76,17 @@ export function MainInfo() {
       {!FormLoaded ? (
         <LoadingForm />
       ) : (
-        <VStack w="full" h="full" px="3%">
-          <VStack h="1/6">
+        <ScrollView w="full" h="full" px="3%">
+          <VStack>
             <ButtonBack />
             <LogoFeira />
             <ProgressBar percent="25" />
-            <Text fontFamily="body" fontSize={RFValue(18)}>
+            <Text fontFamily="body" fontSize={RFValue(22)}>
               Olá, {user.nome}!
             </Text>
             <Text
               fontFamily="body"
-              fontSize={RFValue(18)}
+              fontSize={RFValue(22)}
               textAlign="left"
               textBreakStrategy="highQuality"
             >
@@ -94,7 +94,7 @@ export function MainInfo() {
             </Text>
           </VStack>
 
-          <VStack py={0} h="4/6">
+          <VStack py={0}>
             <InputLabel mt={errors.nome ? 0 : RFValue(4)} title="Nome do Produto" />
             <ControlledInput
               control={control}
@@ -146,7 +146,7 @@ export function MainInfo() {
             />
           </VStack>
 
-          <VStack h="1/6">
+          <VStack>
             <Button
               alignSelf="center"
               w="98%"
@@ -165,7 +165,7 @@ export function MainInfo() {
               </Text>
             </Button>
           </VStack>
-        </VStack>
+        </ScrollView>
       )}
     </TouchableWithoutFeedback>
   );
