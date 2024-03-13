@@ -39,13 +39,6 @@
       "policy": "sdkVersion"
     },
     "extra": {
-      "eas": {
-        "projectId": "e12c9d36-24f8-4235-a12d-ac2d1b198c8b"
-      }
-    },
-    "updates": {
-      "checkAutomatically": "WIFI_ONLY",
-      "url": "https://u.expo.dev/e12c9d36-24f8-4235-a12d-ac2d1b198c8b"
     }
   }
 }
