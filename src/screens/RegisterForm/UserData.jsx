@@ -110,26 +110,7 @@ export function UserData() {
             iconName="lock"
             placeholder="Senha"
           />
-
-          <InputLabel mt={RFValue(2)} title="Telefone" />
-          <ControlledInput
-            mt={RFValue(1)}
-            isMasked
-            control={control}
-            name="telefone"
-            error={errors.telefone}
-            type="cel-phone"
-            placeholder="(00) 0000-0000"
-            iconName="whatsapp"
-            options={{
-              maskType: 'BRL',
-              withDDD: true,
-              dddMask: '(99) ',
-            }}
-            keyboardType="numeric"
-            infoText="Este número deve ser o seu WhatsApp"
-          />
-
+          
           <Button
             bgColor={colors.blue[600]}
             height={54}

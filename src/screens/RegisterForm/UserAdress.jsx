@@ -196,38 +196,6 @@ export function UserAdress() {
               isSelectionInput
               error={errors.estado}
             />
-
-            <InputLabel title="Política de privacidade" />
-            <AcceptCheck
-              title="os termos e condições"
-              contentTextType="termos"
-              action={handleAcceptTerms}
-            />
-            <AcceptCheck
-              title="a política de privacidade"
-              contentTextType="política"
-              action={handleAcceptPolicy}
-            />
-            {acceptTerms && acceptPolicy && (
-              <Button
-                bgColor={colors.blue[600]}
-                height={54}
-                width="90%"
-                _pressed={{ bgColor: colors.blue[700] }}
-                mt={4}
-                borderRadius={15}
-                alignSelf="center"
-                onPress={handleSubmit(handleCreateUser)}
-                isLoading={isLoading}
-              >
-                Cadastrar
-              </Button>
-            )}
-            {Object.values(errors).length > 0 && (
-              <Text alignSelf="center" color={colors.purple[500]} mt={4}>
-                Verifique todos os campos antes de continuar
-              </Text>
-            )}
           </VStack>
         </KeyboardAvoidingView>
       </ScrollView>

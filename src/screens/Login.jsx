@@ -107,7 +107,7 @@ export function Login() {
               />
             </TouchableOpacity>
           }
-          placeholder="Senha"
+          placeholder= "Senha"
           fontFamily="Montserrat_500Medium"
           placeholderTextColor={colors.blue[700]}
           fontSize={14}
