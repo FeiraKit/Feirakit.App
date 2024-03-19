@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, KeyboardAvoidingView, Text, VStack, useTheme } from 'native-base';
+import { Button, KeyboardAvoidingView, ScrollView, Text, VStack, useTheme } from 'native-base';
 import { Alert, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { RFValue } from 'react-native-responsive-fontsize';
@@ -74,76 +74,80 @@ export function UserData() {
           <ButtonBack />
           <LogoFeira />
         </VStack>
+        <ScrollView
+          _contentContainerStyle={{ paddingBottom: 100 }}
+          showsVerticalScrollIndicator={false}
+        >
+          <VStack w="full" h="4/6">
+            <Text fontFamily="body" fontSize={RFValue(22)} alignSelf="center">
+              Cadastre-se no FeiraKit
+            </Text>
 
-        <VStack w="full" h="5/6">
-          <Text fontFamily="body" fontSize={RFValue(22)} alignSelf="center">
-            Cadastre-se no FeiraKit
-          </Text>
+            <InputLabel mt={RFValue(3)} title="Nome" />
+            <ControlledInput
+              mt={RFValue(1)}
+              control={control}
+              name="nome"
+              placeholder="Nome"
+              error={errors.nome}
+              iconName="person"
+            />
+            <InputLabel title="E-mail" />
+            <ControlledInput
+              control={control}
+              name="email"
+              mt={RFValue(1)}
+              iconName="email"
+              placeholder="E-mail"
+              infoText="Informe um E-mail ativo"
+              error={errors.email}
+              keyboardType="email-address"
+            />
+            <InputLabel mt={RFValue(2)} title="Senha" />
+            <ControlledInput
+              mt={RFValue(1)}
+              control={control}
+              error={errors.senha}
+              isPassword
+              name="senha"
+              iconName="lock"
+              placeholder="Senha"
+            />
 
-          <InputLabel mt={RFValue(3)} title="Nome" />
-          <ControlledInput
-            mt={RFValue(1)}
-            control={control}
-            name="nome"
-            placeholder="Nome"
-            error={errors.nome}
-            iconName="person"
-          />
-          <InputLabel title="E-mail" />
-          <ControlledInput
-            control={control}
-            name="email"
-            mt={RFValue(1)}
-            iconName="email"
-            placeholder="E-mail"
-            infoText="Informe um E-mail ativo"
-            error={errors.email}
-            keyboardType="email-address"
-          />
-          <InputLabel mt={RFValue(2)} title="Senha" />
-          <ControlledInput
-            mt={RFValue(1)}
-            control={control}
-            error={errors.senha}
-            isPassword
-            name="senha"
-            iconName="lock"
-            placeholder="Senha"
-          />
+            <InputLabel mt={RFValue(2)} title="Telefone" />
+            <ControlledInput
+              mt={RFValue(1)}
+              isMasked
+              control={control}
+              name="telefone"
+              error={errors.telefone}
+              type="cel-phone"
+              placeholder="(00) 0000-0000"
+              iconName="whatsapp"
+              options={{
+                maskType: 'BRL',
+                withDDD: true,
+                dddMask: '(99) ',
+              }}
+              keyboardType="numeric"
+              infoText="Este número deve ser o seu WhatsApp"
+            />
 
-          <InputLabel mt={RFValue(2)} title="Telefone" />
-          <ControlledInput
-            mt={RFValue(1)}
-            isMasked
-            control={control}
-            name="telefone"
-            error={errors.telefone}
-            type="cel-phone"
-            placeholder="(00) 0000-0000"
-            iconName="whatsapp"
-            options={{
-              maskType: 'BRL',
-              withDDD: true,
-              dddMask: '(99) ',
-            }}
-            keyboardType="numeric"
-            infoText="Este número deve ser o seu WhatsApp"
-          />
-
-          <Button
-            bgColor={colors.blue[600]}
-            height={54}
-            width="90%"
-            _pressed={{ bgColor: colors.blue[700] }}
-            mt={6}
-            borderRadius={15}
-            alignSelf="center"
-            onPress={handleSubmit(handleCreateUser)}
-            isLoading={isLoading}
-          >
-            Continuar
-          </Button>
-        </VStack>
+            <Button
+              bgColor={colors.blue[600]}
+              height={54}
+              width="90%"
+              _pressed={{ bgColor: colors.blue[700] }}
+              mt={6}
+              borderRadius={15}
+              alignSelf="center"
+              onPress={handleSubmit(handleCreateUser)}
+              isLoading={isLoading}
+            >
+              Continuar
+            </Button>
+          </VStack>
+        </ScrollView>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );

@@ -112,6 +112,7 @@ export function UserAdress() {
         contentContainerStyle={{
           width: '100%',
           justifyContent: 'center',
+          paddingBottom: 100,
         }}
       >
         <KeyboardAvoidingView behavior="padding" h="full" w="full" px="3%">
@@ -208,21 +209,23 @@ export function UserAdress() {
               contentTextType="política"
               action={handleAcceptPolicy}
             />
-            {acceptTerms && acceptPolicy && (
-              <Button
-                bgColor={colors.blue[600]}
-                height={54}
-                width="90%"
-                _pressed={{ bgColor: colors.blue[700] }}
-                mt={4}
-                borderRadius={15}
-                alignSelf="center"
-                onPress={handleSubmit(handleCreateUser)}
-                isLoading={isLoading}
-              >
-                Cadastrar
-              </Button>
-            )}
+
+            <Button
+              bgColor={colors.blue[600]}
+              height={54}
+              isDisabled={!(acceptPolicy && acceptTerms)}
+              width="90%"
+              _pressed={{ bgColor: colors.blue[700] }}
+              _disabled={{}}
+              mt={4}
+              borderRadius={15}
+              alignSelf="center"
+              onPress={handleSubmit(handleCreateUser)}
+              isLoading={isLoading}
+            >
+              Cadastrar
+            </Button>
+
             {Object.values(errors).length > 0 && (
               <Text alignSelf="center" color={colors.purple[500]} mt={4}>
                 Verifique todos os campos antes de continuar
