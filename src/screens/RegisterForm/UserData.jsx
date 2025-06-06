@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
-import { Button, Text, VStack, useTheme } from 'native-base';
-import { Alert, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Button, KeyboardAvoidingView, ScrollView, Text, VStack, useTheme } from 'native-base';
+import { Alert, Keyboard, Platform, TouchableWithoutFeedback } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { ButtonBack } from '../../components/ButtonBack';
 import { LogoFeira } from '../../components/LogoFeira';
 import { InputLabel } from '../../components/FormComponents/InputLabel';
@@ -35,56 +34,56 @@ export function UserData() {
       nome: data.nome,
       senha: data.senha,
     };
-    try {
-      user
-        .checkPassword(objUser.email, objUser.senha)
-        // eslint-disable-next-line no-shadow
-        .then(({ data }) => {
-          if (data.resultado) {
-            setError('email', {
-              type: 'custom',
-              message: 'Este e-mail já está sendo usado',
-            });
-            setIsLoading(false);
-            return Alert.alert('Erro', 'Este endereço de e-mail já está sendo usado');
-          }
-        })
-        .catch((error) => {
-          setIsLoading(false);
-          if (error.response) {
-            if (!error.response.data.resultado) {
-              return navigation.navigate('AddAdress', { user: objUser });
-            }
-          }
-          return Alert.alert('Erro', 'Tivemos um problema,tente novamente');
-        });
-    } catch (error) {
+
+    const result = await user.checkPassword(objUser.email, objUser.senha);
+
+    if (!result) {
+      setIsLoading(false);
       return Alert.alert(
         'Erro',
         'Tivemos um problema, por favor,feche o aplicativo e tente novamente '
       );
     }
+
+    if (result.resultado || result.mensagem === 'Senha inválida') {
+      setIsLoading(false);
+      setError('email', {
+        type: 'custom',
+        message: 'Este e-mail já está sendo usado',
+      });
+      return Alert.alert(
+        'Conta existente',
+        'Este e-mail já está cadastrado. Tente outro ou faça login.'
+      );
+    }
+    setIsLoading(false);
+    return navigation.navigate('AddAdress', { user: objUser });
   };
 
-  return (
-    <TouchableWithoutFeedback touchSoundDisabled onPress={() => Keyboard.dismiss()}>
-      <KeyboardAwareScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          width: '100%',
-          minHeight: '100%',
-          justifyContent: 'space-evenly',
-          paddingBottom: 20,
-        }}
-      >
-        <VStack w="full" h="1/6">
-          <ButtonBack />
-          <LogoFeira />
-          <StepIndicator quantitySteps={3} active={1} mt={-5} />
-        </VStack>
+  useEffect(() => {
+    if (errors) {
+      Keyboard.dismiss();
+    }
+  }, [errors]);
 
-        <VStack w="full" h="4/6" mb={5}>
-          <Text fontFamily="body" fontSize={RFValue(22)} alignSelf="center">
+  return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={{ flex: 1, height: '100%', width: '100%' }}
+        mt="2"
+      >
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1, paddingBottom: 30 }}
+          keyboardShouldPersistTaps="handled"
+        >
+          <VStack w="full">
+            <ButtonBack />
+            <LogoFeira />
+            <StepIndicator quantitySteps={3} active={1} mt={-5} />
+          </VStack>
+
+          <Text fontFamily="body" fontSize={RFValue(18)} alignSelf="center">
             Cadastre-se no FeiraKit
           </Text>
 
@@ -97,7 +96,7 @@ export function UserData() {
             error={errors.nome}
             iconName="person"
           />
-          <InputLabel title="E-mail" />
+          <InputLabel title="E-mail" mt={RFValue(3)} />
           <ControlledInput
             control={control}
             name="email"
@@ -129,8 +128,8 @@ export function UserData() {
             iconName="lock"
             placeholder="confirme sua senha"
           />
-        </VStack>
-        <VStack w="full" h="1/6">
+        </ScrollView>
+        <VStack px="4" pb={Platform.OS === 'ios' ? 10 : 8}>
           <Button
             bgColor={colors.blue[600]}
             height={54}
@@ -145,7 +144,7 @@ export function UserData() {
             Continuar
           </Button>
         </VStack>
-      </KeyboardAwareScrollView>
+      </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
 }

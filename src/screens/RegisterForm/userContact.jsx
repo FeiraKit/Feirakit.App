@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { Button, VStack, useTheme } from 'native-base';
-import { Alert, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { Button, KeyboardAvoidingView, ScrollView, Text, VStack, useTheme } from 'native-base';
+import { Alert, Keyboard, Platform, TouchableWithoutFeedback } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { showMessage } from 'react-native-flash-message';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
 import { ButtonBack } from '../../components/ButtonBack';
 import { removeNumberMask } from '../../utils/removeMasks';
 import { LogoFeira } from '../../components/LogoFeira';
@@ -42,17 +42,19 @@ export function UserContact() {
     resolver: yupResolver(UserContactSchema),
   });
   const Login = async (email, password) => {
-    const userAuth = await (await user.checkPassword(email, password)).data;
-    if (!userAuth.resultado) {
+    const result = await await user.checkPassword(email, password);
+    console.log(result);
+
+    if (!result) {
       setIsLoading(false);
       showMessage({
-        message: 'Erro ao efetuar Login',
+        message: 'Erro ao criar usuario',
         type: 'danger',
       });
       return navigation.navigate('SignIn');
     }
 
-    const jwtToken = userAuth.token;
+    const jwtToken = result.token;
     user.getUserByEmail(email, jwtToken);
     setIsLoading(false);
   };
@@ -86,22 +88,24 @@ export function UserContact() {
 
   return (
     <TouchableWithoutFeedback touchSoundDisabled onPress={() => Keyboard.dismiss()}>
-      <KeyboardAwareScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          width: '100%',
-          minHeight: '100%',
-          justifyContent: 'center',
-          paddingBottom: 100,
-        }}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={{ flex: 1, height: '100%', width: '100%' }}
+        mt="2"
       >
-        <VStack w="full" h="1/6">
-          <ButtonBack />
-          <LogoFeira />
-          <StepIndicator quantitySteps={3} active={3} mt={-5} />
-        </VStack>
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1, paddingBottom: 30 }}
+          keyboardShouldPersistTaps="handled"
+        >
+          <VStack w="full">
+            <ButtonBack />
+            <LogoFeira />
+            <StepIndicator quantitySteps={3} active={3} mt={-5} />
+          </VStack>
+          <Text fontFamily="body" fontSize={RFValue(18)} alignSelf="center">
+            Cadastre-se no FeiraKit
+          </Text>
 
-        <VStack w="full" h="4/6" justifyContent="space-evenly">
           <VStack>
             <InputLabel mt={RFValue(2)} title="Informe o seu WhatsApp" />
             <ControlledInput
@@ -122,6 +126,7 @@ export function UserContact() {
               infoText="Este número deve ser o seu WhatsApp"
             />
           </VStack>
+
           <VStack justifyItems="center">
             <InputLabel title="Política de privacidade" />
             <AcceptCheck
@@ -135,23 +140,26 @@ export function UserContact() {
               action={handleAcceptPolicy}
             />
           </VStack>
+        </ScrollView>
+
+        <VStack px="4" pb={Platform.OS === 'ios' ? 10 : 8}>
+          <Button
+            bgColor={colors.blue[600]}
+            height={54}
+            isDisabled={!(acceptPolicy && acceptTerms)}
+            width="90%"
+            _pressed={{ bgColor: colors.blue[700] }}
+            _disabled={{}}
+            mt={4}
+            borderRadius={15}
+            alignSelf="center"
+            onPress={handleSubmit(handleCreateUser)}
+            isLoading={isLoading}
+          >
+            Cadastrar
+          </Button>
         </VStack>
-        <Button
-          bgColor={colors.blue[600]}
-          height={54}
-          isDisabled={!(acceptPolicy && acceptTerms)}
-          width="90%"
-          _pressed={{ bgColor: colors.blue[700] }}
-          _disabled={{}}
-          mt={4}
-          borderRadius={15}
-          alignSelf="center"
-          onPress={handleSubmit(handleCreateUser)}
-          isLoading={isLoading}
-        >
-          Cadastrar
-        </Button>
-      </KeyboardAwareScrollView>
+      </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
 }

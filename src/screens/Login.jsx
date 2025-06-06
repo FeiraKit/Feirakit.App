@@ -67,7 +67,7 @@ export function Login() {
   return (
     <KeyboardAvoidingView
       behavior="height"
-      style={{ flex: 1, height: '100%', width: '98%', justifyContent: 'center' }}
+      style={{ flex: 1, height: '100%', width: '100%', justifyContent: 'center' }}
     >
       <VStack alignItems="center" w="full" mb={10}>
         <Image
