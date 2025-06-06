@@ -7,7 +7,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "postinstall": "npx patch-package"
   },
   "dependencies": {
     "@expo-google-fonts/montserrat": "^0.2.2",

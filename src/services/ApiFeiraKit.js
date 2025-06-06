@@ -4,7 +4,7 @@ import { API_URL } from '@env';
 
 const apiFeiraKit = axios.create({
   baseURL: API_URL,
-  timeout: 10000,
+  timeout: 1000,
   headers: {
     accept: 'application/json',
     'Content-Type': 'application/json',

@@ -11,36 +11,37 @@ import { SelectCity } from '../components/SelectCity';
 import { HeaderHome } from '../components/HeaderHome';
 
 export function Home() {
+  // screen variables
   const product = new Product();
+  const { colors } = useTheme();
+  const navigation = useNavigation();
+  const [isLoading, setIsLoading] = useState(true);
+  const [fetchingProducts, setFetchingProducts] = useState(false);
+  const [keepFetching, setKeepFetching] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  // Pagination variables
+  const [products, setProducts] = useState([]);
   const limit = 10;
   const sort = -1;
   const [page, setPage] = useState(1);
-  const { colors } = useTheme();
-  const [isLoading, setIsLoading] = useState(true);
-  const [fetchingProducts, setFetchingProducts] = useState(false);
-  const [iconName, setIconName] = useState('storefront');
-  const [emptyText, setEmptyText] = useState('Não há Produtos para mostrar.');
-  const [products, setProducts] = useState([]);
   const [search, setSearch] = useState('');
   const [zone, setZone] = useState(null);
-  const [headerText, setHeaderText] = useState('Produtos em');
-  // eslint-disable-next-line no-unused-vars
   const [cities, setCities] = useState([]);
-  const [showFilter, setShowFilter] = useState(true);
-  const [keepFetching, setKeepFetching] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
   const [findingByName, setFindingByName] = useState(false);
 
-  const navigation = useNavigation();
+  const [iconName, setIconName] = useState('storefront');
+  const [emptyText, setEmptyText] = useState('Não há Produtos para mostrar.');
+  const [headerText, setHeaderText] = useState('Produtos em');
 
-  // eslint-disable-next-line no-shadow
-  function handleOpenDescription(productId, product, isInfo) {
-    navigation.navigate('description', { productId, product, isInfo });
+  const [showFilter, setShowFilter] = useState(true);
+
+  function handleOpenDescription(productId, productEntity, isInfo) {
+    navigation.navigate('description', { productId, productEntity, isInfo });
   }
   const getNewProducts = () => {
     if (keepFetching) {
       setFetchingProducts(true);
-
       setTimeout(() => {
         getProducts();
       }, 100);
@@ -48,9 +49,9 @@ export function Home() {
   };
 
   const handleRefresh = () => {
+    setIsLoading(true);
     setProducts([]);
     setPage(1);
-    setIsLoading(true);
     setZone(null);
     setRefreshing(true);
     setFindingByName(false);
@@ -71,6 +72,9 @@ export function Home() {
     product
       .getAllProducts(refresh ? 1 : page, limit, sort)
       .then(({ data }) => {
+        if (!data) {
+          return;
+        }
         if (refresh) {
           setProducts(data);
           setPage(2);
@@ -87,22 +91,26 @@ export function Home() {
           setKeepFetching(true);
         }
       })
-      .catch((error) => {
-        console.log(error);
+      .catch(() => {
         setProducts([]);
         setPage(1);
         setIsLoading(false);
         setRefreshing(false);
         setIconName('sync-problem');
-        setEmptyText(":'(\n Ocorreu um erro,tente novamente");
+        setEmptyText('Ocorreu um erro, tente novamente');
       });
   };
 
   const getCities = async () => {
-    product.getCities().then(async ({ data }) => {
-      setCities(data.resultado);
-      await AsyncStorage.setItem('allCities', JSON.stringify(data.resultado));
-    });
+    product
+      .getCities()
+      .then(async ({ data }) => {
+        setCities(data.resultado);
+        await AsyncStorage.setItem('allCities', JSON.stringify(data.resultado));
+      })
+      .catch(() => {
+        setCities([]);
+      });
   };
 
   const getProductsByName = (name) => {

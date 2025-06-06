@@ -1,6 +1,10 @@
-import { extendTheme } from 'native-base'
+import { extendTheme } from 'native-base';
 
 export const THEME = extendTheme({
+  config: {
+    initialColorMode: 'light',
+    useSystemColorMode: false,
+  },
   colors: {
     blue: {
       950: '#0000FF',
@@ -49,4 +53,13 @@ export const THEME = extendTheme({
   sizes: {
     14: 56,
   },
-})
+  components: {
+    Input: {
+      baseStyle: {
+        _input: {
+          selectionColor: '#66BFFF',
+        },
+      },
+    },
+  },
+});

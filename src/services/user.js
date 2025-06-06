@@ -14,7 +14,23 @@ export class User {
       email,
       senha: password,
     };
-    return await apiFeiraKit.post('/users/login', JSON.stringify(credentials));
+
+    const result = await apiFeiraKit
+      .post('/users/login', JSON.stringify(credentials))
+      .then(({ data }) => {
+        if (!data) {
+          return null;
+        }
+        return data;
+      })
+      .catch((error) => {
+        if (error.response && error.response.data) {
+          return error.response.data;
+        }
+        return null;
+      });
+
+    return result;
   }
 
   async getUserByEmail(email, jwtToken) {

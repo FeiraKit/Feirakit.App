@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Button, Text, VStack, Icon, Input, useTheme } from 'native-base';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Image, Alert, TouchableOpacity } from 'react-native';
@@ -13,46 +13,54 @@ export function Login() {
   const [password, setPassword] = useState('');
   const [inputType, setInputType] = useState('password');
   const [isLoading, setIsLoading] = useState(false);
+  const emailImputRef = useRef(null);
+  const passwordImputRef = useRef(null);
 
   const submit = async () => {
     setIsLoading(true);
-    if (email === '' || password === '') {
+    if (email === '') {
       setIsLoading(false);
-      return Alert.alert('Erro', 'por favor preencha todos os campos');
+      emailImputRef.current.focus();
+      return Alert.alert('Oops', 'por favor informe o seu email');
     }
-    try {
-      await user
-        .checkPassword(email, password)
-        .then(({ data }) => {
-          if (!data.resultado) {
-            setIsLoading(false);
-            return Alert.alert('Erro', 'Usuário ou senha inválidos');
-          }
-          const jwtToken = data.token;
-          setIsLoading(false);
-          user.getUserByEmail(email, jwtToken);
-        })
-        .catch((error) => {
-          setIsLoading(false);
-          if (!error.response.data.resultado) {
-            return Alert.alert('Erro', 'Usuário ou senha inválidos');
-          }
-          return Alert.alert('Erro', 'Um erro inesperado aconteceu,tente novamente');
-        });
-    } catch (error) {
+    if (password === '') {
+      setIsLoading(false);
+      passwordImputRef.current.focus();
+      return Alert.alert('Oops', 'por favor informe a sua senha');
+    }
+
+    const data = await user.checkPassword(email, password);
+
+    if (!data) {
+      setIsLoading(false);
       return Alert.alert(
         'Erro',
-        'Um erro inesperado aconteceu,por favor feche o aplicativo e tente novamente'
+        'Encontramos um problema temporário. Agradecemos sua paciência, tente novamente em alguns instantes.'
       );
     }
+
+    if (!data.resultado && data.mensagem === 'Senha inválida') {
+      setIsLoading(false);
+      passwordImputRef.current.focus();
+      return Alert.alert('Ops!', 'Senha incorreta');
+    }
+
+    if (!data.resultado && data.mensagem === 'Email não cadastrado') {
+      setIsLoading(false);
+      emailImputRef.current.focus();
+      return Alert.alert(
+        'Usuário não encontrado',
+        'Verifique se digitou o e-mail corretamente ou cadastre-se para continuar.'
+      );
+    }
+
+    const jwtToken = data.token;
+    setIsLoading(false);
+    user.getUserByEmail(email, jwtToken);
   };
 
-  function handleVisibilityPassword() {
-    if (inputType === 'password') {
-      setInputType('text');
-    } else {
-      setInputType('password');
-    }
+  function toggleVisibilityPassword() {
+    setInputType((prevType) => (prevType === 'password' ? 'text' : 'password'));
   }
 
   return (
@@ -67,6 +75,7 @@ export function Login() {
           Bem Vindo
         </Text>
         <Input
+          ref={emailImputRef}
           onChangeText={setEmail}
           mt={4}
           height={54}
@@ -86,6 +95,7 @@ export function Login() {
           autoCapitalize="none"
         />
         <Input
+          ref={passwordImputRef}
           type={inputType}
           onChangeText={setPassword}
           mt={4}
@@ -98,7 +108,7 @@ export function Login() {
             <Icon color={colors.blue[700]} as={<MaterialIcons name="lock" />} size={6} ml={2} />
           }
           rightElement={
-            <TouchableOpacity onPress={() => handleVisibilityPassword}>
+            <TouchableOpacity onPress={() => toggleVisibilityPassword()}>
               <Icon
                 color={colors.blue[700]}
                 as={<MaterialIcons name={inputType === 'text' ? 'visibility-off' : 'visibility'} />}
