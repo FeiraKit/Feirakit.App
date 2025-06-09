@@ -62,7 +62,7 @@ export function ChangePassword() {
       return;
     }
     const result = await user.checkPassword(data.email, data.senha);
-    console.log(result);
+
     if (!result) {
       setIsLoading(false);
       return Alert.alert('Erro', 'Um erro inesperado aconteceu,por favor tente novamente');
