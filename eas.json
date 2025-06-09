@@ -1,6 +1,6 @@
 {
   "cli": {
-    "version": ">= 7.2.0",
+    "version": ">= 16.9.0",
     "appVersionSource": "remote"
   },
   "build": {
@@ -8,18 +8,26 @@
       "developmentClient": true,
       "distribution": "internal",
       "channel": "development",
-      "autoIncrement": true
+      "autoIncrement": true,
+      "env": {
+        "APP_VARIANT": "development"
+      },
+      "android": {
+        "buildType": "apk"
+      }
     },
     "preview": {
       "distribution": "internal",
       "channel": "preview",
       "autoIncrement": true,
+      "env": {
+        "APP_VARIANT": "preview"
+      },
       "android": {
         "buildType": "apk"
       }
     },
     "production": {
-      "channel": "production",
       "autoIncrement": true
     }
   },

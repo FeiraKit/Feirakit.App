@@ -11,7 +11,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.feirakitapp.feirakitfrontend"
@@ -21,8 +23,10 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-
-      "package": "com.feirakitapp.feirakitfrontend"
+      "package": "com.feirakitapp.feirakitfrontend",
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -40,12 +44,11 @@
     },
     "extra": {
       "eas": {
-        "projectId": "e12c9d36-24f8-4235-a12d-ac2d1b198c8b"
+        "projectId": "69e0c7ba-f8fd-459d-bd61-0c9b9c7c3a45"
       }
     },
     "updates": {
-      "checkAutomatically": "WIFI_ONLY",
-      "url": "https://u.expo.dev/e12c9d36-24f8-4235-a12d-ac2d1b198c8b"
+      "checkAutomatically": "WIFI_ONLY"
     }
   }
 }
