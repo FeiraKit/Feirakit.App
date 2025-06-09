@@ -96,6 +96,7 @@ export function Home() {
         setPage(1);
         setIsLoading(false);
         setRefreshing(false);
+        setKeepFetching(false);
         setIconName('sync-problem');
         setEmptyText('Ocorreu um erro, tente novamente');
       });
