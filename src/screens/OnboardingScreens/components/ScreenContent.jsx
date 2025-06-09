@@ -23,12 +23,18 @@ export function ScreenContent({
 
   return (
     <VStack flex={1} justifyContent="center" alignItems="center" w="full">
-      <VStack w="full" h="4/6" alignSelf="center" justifyContent="center">
-        <Image source={urlImage} resizeMode="contain" alt={TextDescription} alignSelf="center" />
+      <VStack w="full" h="4/6" alignSelf="center" justifyContent="center" p="2">
+        <Image
+          m="10"
+          source={urlImage}
+          resizeMode="contain"
+          alt={TextDescription}
+          alignSelf="center"
+        />
         <OnboardTitle title={ScreenTitle} />
         <Text
-          fontSize={RFValue(12)}
-          mx="2%"
+          fontSize={RFValue(16)}
+          mx="4%"
           mt={4}
           color={colors.gray[450]}
           mb={2}
@@ -52,7 +58,7 @@ export function ScreenContent({
             navigation.navigate(NextPage);
           }}
         >
-          <Text color={colors.gray[100]} fontWeight="semibold">
+          <Text color={colors.gray[100]} fontWeight="bold">
             {BtnText}
           </Text>
         </Button>

@@ -1,35 +1,35 @@
-import React, { useState } from 'react'
-import { VStack, HStack, useTheme, Text, Button, Icon } from 'native-base'
-import { Alert, Image, TouchableOpacity, ScrollView } from 'react-native'
-import { ButtonBack } from '../components/ButtonBack'
-import { LogoFeira } from '../components/LogoFeira'
-import { MaterialIcons } from '@expo/vector-icons'
-import { useNavigation } from '@react-navigation/native'
-import { useForm } from 'react-hook-form'
-import ViaCep from '../services/ViaCep'
-import { useSelector, useDispatch } from 'react-redux'
-import { Logout } from '../store/actions'
-import { showMessage } from 'react-native-flash-message'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { User } from '../services/user'
-import { ControlledInput } from '../components/FormComponents/controlledInput'
-import { InputLabel } from '../components/FormComponents/InputLabel'
-import { EditUserSchema } from '../validationsSchemes/userValidations'
-import { RFValue } from 'react-native-responsive-fontsize'
-import { ControlledSelect } from '../components/FormComponents/ControlledSelect'
-import { removeNumberMask } from '../utils/removeMasks'
-import { styles } from './styles/MyAccountStyles'
+import React, { useState } from 'react';
+import { VStack, HStack, useTheme, Text, Button, Icon } from 'native-base';
+import { Alert, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { showMessage } from 'react-native-flash-message';
+import { MaterialIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import { useForm } from 'react-hook-form';
+import { useSelector, useDispatch } from 'react-redux';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { ButtonBack } from '../components/ButtonBack';
+import { LogoFeira } from '../components/LogoFeira';
+import ViaCep from '../services/ViaCep';
+import { Logout } from '../store/actions';
+import { User } from '../services/user';
+import { ControlledInput } from '../components/FormComponents/controlledInput';
+import { InputLabel } from '../components/FormComponents/InputLabel';
+import { EditUserSchema } from '../validationsSchemes/userValidations';
+import { ControlledSelect } from '../components/FormComponents/ControlledSelect';
+import { removeNumberMask } from '../utils/removeMasks';
+import { styles } from './styles/MyAccountStyles';
 
 export function MyAccount() {
-  const userInstance = new User()
-  const navigation = useNavigation()
-  const user = useSelector((state) => state.AuthReducers.userData.userData)
-  const [IsLoading, setIsLoading] = useState(false)
-  const [isEdictionMode, setIsEdictionMode] = useState(false)
-  const [deleteIsLoading, setDeleteIsLoading] = useState(false)
-  const { colors } = useTheme()
+  const userInstance = new User();
+  const navigation = useNavigation();
+  const user = useSelector((state) => state.AuthReducers.userData.userData);
+  const [IsLoading, setIsLoading] = useState(false);
+  const [isEdictionMode, setIsEdictionMode] = useState(false);
+  const [deleteIsLoading, setDeleteIsLoading] = useState(false);
+  const { colors } = useTheme();
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const {
     control,
@@ -51,32 +51,31 @@ export function MyAccount() {
       cidade: user.endereco.cidade,
       estado: user.endereco.estado,
     },
-  })
+  });
 
   const editTexts = {
     title: 'Atualizar',
     description: 'Deseja realmente atualizar os seus dados?',
     optionNo: 'Não',
     optionYes: 'Sim',
-  }
+  };
 
   const handleEditUser = (data) => {
-    setIsLoading(true)
-    setIsEdictionMode(false)
+    setIsLoading(true);
+    setIsEdictionMode(false);
     Alert.alert(editTexts.title, editTexts.description, [
       {
         text: editTexts.optionNo,
         onPress: () => {
-          setIsLoading(false)
-          return
+          setIsLoading(false);
         },
       },
       {
         text: editTexts.optionYes,
         onPress: async () => {
-          setIsLoading(true)
-          let telefone = await removeNumberMask(data.telefone)
-          let objUser = {
+          setIsLoading(true);
+          const telefone = await removeNumberMask(data.telefone);
+          const objUser = {
             email: data.email,
             nome: data.nome,
             senha: user.senha,
@@ -91,85 +90,84 @@ export function MyAccount() {
             },
             telefone,
             id: user.id,
-          }
-          setIsLoading(false)
+          };
+          setIsLoading(false);
           userInstance
             .editUser(JSON.stringify(objUser))
-            .then((response) => {
+            .then(() => {
               showMessage({
                 message: 'Dados alterados com sucesso',
                 type: 'success',
-              })
-              logout(objUser.nome)
+              });
+              logout(objUser.nome);
             })
             .catch((err) => {
-              reset()
+              reset();
               showMessage({
                 message: 'Erro ao realizar alterações',
                 type: 'danger',
-              })
-              console.log(err)
-              setIsLoading(false)
-            })
+              });
+              console.log(err);
+              setIsLoading(false);
+            });
         },
       },
-    ])
-  }
+    ]);
+  };
 
   const getAddressData = async (cep) => {
     await ViaCep.get(`${cep}/json/`)
       .then(({ data }) => {
-        setValue('estado', data.uf)
-        setValue('cidade', data.localidade)
-        setValue('bairro', data.bairro)
-        setValue('rua', data.logradouro)
+        setValue('estado', data.uf);
+        setValue('cidade', data.localidade);
+        setValue('bairro', data.bairro);
+        setValue('rua', data.logradouro);
       })
-      .catch((err) => console.log(err))
-  }
+      .catch((err) => console.log(err));
+  };
 
   const deleteTexts = {
     title: 'Excluir',
     description: 'Deseja realmente excluir a sua conta?',
     optionNo: 'Não',
     optionYes: 'Sim',
-  }
+  };
   const deleteUser = () => {
-    setDeleteIsLoading(true)
+    setDeleteIsLoading(true);
     Alert.alert(deleteTexts.title, deleteTexts.description, [
       {
         text: deleteTexts.optionNo,
         onPress: () => {
-          setDeleteIsLoading(false)
-          return
+          setDeleteIsLoading(false);
         },
       },
       {
         text: deleteTexts.optionYes,
         onPress: () => {
-          let objUserId = { id: user.id }
+          const objUserId = { id: user.id };
           userInstance
             .deleteUser(objUserId)
             .then(() => {
-              dispatch(Logout())
+              dispatch(Logout());
             })
             .catch((error) => {
-              console.log(error.response.data)
+              console.log(error.response.data);
               showMessage({
                 message: 'Erro ao excluir a conta',
                 type: 'danger',
-              })
-              setDeleteIsLoading(false)
-            })
+              });
+              setDeleteIsLoading(false);
+            });
         },
       },
-    ])
-  }
+    ]);
+  };
   const changedUserText = {
     title: 'Dados Alterados',
     description:
       'os seus dados foram alterados com sucesso, por segurança será necessário realizar login novamente.',
     optionYes: 'ok',
-  }
+  };
 
   const logout = (nome) => {
     Alert.alert(
@@ -179,12 +177,12 @@ export function MyAccount() {
         {
           text: changedUserText.optionYes,
           onPress: () => {
-            dispatch(Logout())
+            dispatch(Logout());
           },
         },
       ]
-    )
-  }
+    );
+  };
 
   return (
     <ScrollView
@@ -196,56 +194,32 @@ export function MyAccount() {
         paddingBottom: 10,
       }}
     >
-      <VStack
-        flex={1}
-        w='full'
-      >
+      <VStack flex={1} w="full">
         <ButtonBack />
         <LogoFeira />
         <TouchableOpacity>
-          <Image
-            style={styles.userImage}
-            source={require('../assets/user.png')}
-          />
+          <Image style={styles.userImage} source={require('../assets/user.png')} />
         </TouchableOpacity>
-        <Text
-          fontFamily={'Montserrat_400Regular'}
-          mt={5}
-          fontSize={25}
-          alignSelf='center'
-        >
+        <Text fontFamily="Montserrat_400Regular" mt={5} fontSize={25} alignSelf="center">
           {user.nome}
         </Text>
 
-        <HStack
-          justifyContent='space-between'
-          display={'flex'}
-          w={'96%'}
-          mt={6}
-          mb={4}
-        >
-          <Text
-            style={styles.txt}
-            alignSelf='flex-start'
-            ml={4}
-            mt={2}
-          >
+        <HStack justifyContent="space-between" display="flex" w="96%" mt={6} mb={4}>
+          <Text style={styles.txt} alignSelf="flex-start" ml={4} mt={2}>
             {isEdictionMode ? 'Editar dados' : 'Meus dados'}
           </Text>
           <TouchableOpacity
             style={[
               styles.btn,
               {
-                borderColor: isEdictionMode
-                  ? colors.red[500]
-                  : colors.blue[400],
+                borderColor: isEdictionMode ? colors.red[500] : colors.blue[400],
               },
             ]}
             onPress={() => {
               if (isEdictionMode) {
-                reset()
+                reset();
               }
-              setIsEdictionMode(!isEdictionMode)
+              setIsEdictionMode(!isEdictionMode);
             }}
           >
             <Icon
@@ -260,105 +234,102 @@ export function MyAccount() {
         <ControlledInput
           control={control}
           editable={isEdictionMode}
-          name='nome'
-          iconName='person'
-          placeholder='Nome Completo'
+          name="nome"
+          iconName="person"
+          placeholder="Nome Completo"
           error={errors.nome}
         />
 
         <ControlledInput
           control={control}
           editable={isEdictionMode}
-          name='email'
-          keyboardType='email-address'
-          iconName='email'
-          placeholder='E-mail'
+          name="email"
+          keyboardType="email-address"
+          iconName="email"
+          placeholder="E-mail"
           error={errors.email}
         />
 
         <ControlledInput
           isMasked
           control={control}
-          name='telefone'
+          name="telefone"
           error={errors.telefone}
-          type={'cel-phone'}
-          placeholder={'(00) 0000-0000'}
-          iconName={'whatsapp'}
+          type="cel-phone"
+          placeholder="(00) 0000-0000"
+          iconName="whatsapp"
           options={{
             maskType: 'BRL',
             withDDD: true,
             dddMask: '(99) ',
           }}
           editable={isEdictionMode}
-          keyboardType='numeric'
+          keyboardType="numeric"
         />
 
-        <InputLabel
-          title='Endereço'
-          mt={RFValue(1)}
-        />
+        <InputLabel title="Endereço" mt={RFValue(1)} />
 
         <ControlledInput
           isMasked
           control={control}
-          name='cep'
-          type={'custom'}
+          name="cep"
+          type="custom"
           options={{
             mask: '99999-999',
           }}
-          placeholder='CEP'
+          placeholder="CEP"
           editable={isEdictionMode}
           action={getAddressData}
           error={errors.cep}
-          keyboardType='numeric'
+          keyboardType="numeric"
         />
 
         <ControlledInput
           control={control}
           editable={isEdictionMode}
-          name='rua'
-          placeholder='Rua'
+          name="rua"
+          placeholder="Rua"
           error={errors.rua}
         />
 
         <ControlledInput
           control={control}
           editable={isEdictionMode}
-          name='numero'
-          placeholder='Número'
+          name="numero"
+          placeholder="Número"
           error={errors.numero}
         />
 
         <ControlledInput
           control={control}
           editable={isEdictionMode}
-          name='complemento'
-          placeholder='Complemento'
+          name="complemento"
+          placeholder="Complemento"
           error={errors.complemento}
         />
 
         <ControlledInput
           control={control}
           editable={isEdictionMode}
-          name='bairro'
-          placeholder='Bairro'
+          name="bairro"
+          placeholder="Bairro"
           error={errors.bairro}
         />
 
         <ControlledInput
           control={control}
           editable={isEdictionMode}
-          name='cidade'
-          placeholder='Cidade'
+          name="cidade"
+          placeholder="Cidade"
           error={errors.cidade}
         />
 
         <ControlledSelect
           control={control}
           isSelectState
-          name='estado'
+          name="estado"
           isDisabled={!isEdictionMode}
-          isSelectionInput={true}
+          isSelectionInput
           error={errors.estado}
         />
 
@@ -370,17 +341,14 @@ export function MyAccount() {
             height={54}
             mt={10}
             isLoading={IsLoading}
-            w='90%'
+            w="90%"
             borderRadius={15}
-            alignSelf='center'
-            alignContent='center'
-            alignItems='center'
+            alignSelf="center"
+            alignContent="center"
+            alignItems="center"
             onPress={handleSubmit(handleEditUser)}
           >
-            <Text
-              style={styles.txt}
-              color={colors.gray[200]}
-            >
+            <Text style={styles.txt} color={colors.gray[200]}>
               Confirmar alterações
             </Text>
           </Button>
@@ -391,17 +359,14 @@ export function MyAccount() {
           _pressed={{ bgColor: colors.blue[700] }}
           mt={4}
           borderRadius={15}
-          alignContent='center'
-          alignItems='center'
+          alignContent="center"
+          alignItems="center"
           onPress={() => navigation.navigate('ChangePassword')}
           height={54}
-          alignSelf='center'
-          w='90%'
+          alignSelf="center"
+          w="90%"
         >
-          <Text
-            style={styles.txt}
-            color={colors.gray[200]}
-          >
+          <Text style={styles.txt} color={colors.gray[200]}>
             Alterar Senha
           </Text>
         </Button>
@@ -414,20 +379,17 @@ export function MyAccount() {
           mt={4}
           margin={10}
           borderRadius={15}
-          alignContent='center'
-          alignItems='center'
+          alignContent="center"
+          alignItems="center"
           onPress={deleteUser}
-          alignSelf='center'
-          w='90%'
+          alignSelf="center"
+          w="90%"
         >
-          <Text
-            style={styles.txt}
-            color={colors.gray[200]}
-          >
+          <Text style={styles.txt} color={colors.gray[200]}>
             Excluir Conta
           </Text>
         </Button>
       </VStack>
     </ScrollView>
-  )
+  );
 }

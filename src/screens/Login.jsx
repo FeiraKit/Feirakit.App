@@ -1,8 +1,9 @@
 import { useRef, useState } from 'react';
-import { Button, Text, VStack, Icon, Input, useTheme } from 'native-base';
+import { Button, Text, VStack, Icon, Input, useTheme, KeyboardAvoidingView } from 'native-base';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Image, Alert, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { RFValue } from 'react-native-responsive-fontsize';
 import { User } from '../services/user';
 
 export function Login() {
@@ -64,14 +65,23 @@ export function Login() {
   }
 
   return (
-    <VStack h="full" w="full" justifyContent="space-evenly">
+    <KeyboardAvoidingView
+      behavior="height"
+      style={{ flex: 1, height: '100%', width: '100%', justifyContent: 'center' }}
+    >
       <VStack alignItems="center" w="full" mb={10}>
         <Image
           source={require('../assets/logo.png')}
           style={{ width: 187, height: 170 }}
           resizeMode="contain"
         />
-        <Text alignSelf="flex-start" color={colors.blue[600]} ml={4} fontFamily="heading">
+        <Text
+          alignSelf="flex-start"
+          color={colors.blue[600]}
+          ml={4}
+          fontFamily="heading"
+          fontSize={RFValue(18)}
+        >
           Bem Vindo
         </Text>
         <Input
@@ -124,6 +134,11 @@ export function Login() {
           borderRadius={8}
           autoCapitalize="none"
         />
+        <VStack w="94%" alignItems="flex-start" mt={2} mb={4}>
+          <TouchableOpacity mt={6} onPress={() => navigation.navigate('PasswordRecovery')}>
+            <Text>Esqueci minha senha</Text>
+          </TouchableOpacity>
+        </VStack>
         <Button
           bgColor={colors.blue[600]}
           _pressed={{ bgColor: colors.blue[700] }}
@@ -145,18 +160,8 @@ export function Login() {
         >
           Cadastre-se
         </Button>
-        <Button
-          bgColor={colors.gray[200]}
-          _text={{ color: colors.blue[600], fontSize: 'md' }}
-          height={54}
-          mt={4}
-          w="90%"
-          borderRadius={15}
-          onPress={() => navigation.navigate('PasswordRecovery')}
-        >
-          Esqueci minha senha
-        </Button>
       </VStack>
+
       <VStack w="full" alignItems="center">
         <Button
           bgColor={colors.gray[200]}
@@ -173,6 +178,6 @@ export function Login() {
         </Button>
         <Text color={colors.gray[400]}>Feira-Kit © 2023</Text>
       </VStack>
-    </VStack>
+    </KeyboardAvoidingView>
   );
 }

@@ -1,11 +1,19 @@
-import React, { useState } from 'react';
-import { Button, Text, VStack, useTheme, HStack } from 'native-base';
-import { Keyboard, TouchableWithoutFeedback } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  Button,
+  Text,
+  VStack,
+  useTheme,
+  HStack,
+  KeyboardAvoidingView,
+  ScrollView,
+} from 'native-base';
+import { Keyboard, Platform, TouchableWithoutFeedback } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
 import { ButtonBack } from '../../components/ButtonBack';
 import ViaCep from '../../services/ViaCep';
 import { LogoFeira } from '../../components/LogoFeira';
@@ -62,28 +70,33 @@ export function UserAdress() {
       .catch((err) => console.log(err));
   };
 
+  useEffect(() => {
+    if (errors) {
+      Keyboard.dismiss();
+    }
+  }, [errors]);
+
   return (
     <TouchableWithoutFeedback touchSoundDisabled onPress={() => Keyboard.dismiss()}>
-      <KeyboardAwareScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          width: '100%',
-          justifyContent: 'space-evenly',
-          paddingBottom: 10,
-        }}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={{ flex: 1, height: '100%', width: '100%' }}
+        mt="2"
       >
-        <VStack w="full">
-          <ButtonBack />
-          <LogoFeira />
-          <StepIndicator quantitySteps={3} active={2} mt={-5} />
-        </VStack>
-
-        <VStack w="full">
-          <Text fontFamily="body" fontSize={RFValue(22)} alignSelf="center">
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1, paddingBottom: 30 }}
+          keyboardShouldPersistTaps="handled"
+        >
+          <VStack w="full">
+            <ButtonBack />
+            <LogoFeira />
+            <StepIndicator quantitySteps={3} active={2} mt={-5} />
+          </VStack>
+          <Text fontFamily="body" fontSize={RFValue(18)} alignSelf="center">
             Cadastre-se no FeiraKit
           </Text>
 
-          <InputLabel title="CEP" />
+          <InputLabel title="CEP" mt={RFValue(3)} />
           <ControlledInput
             isMasked
             mt={RFValue(0)}
@@ -98,6 +111,7 @@ export function UserAdress() {
             error={errors.cep}
             keyboardType="numeric"
           />
+
           <HStack w="full" pl={RFValue(1)}>
             <VStack w="65%">
               <InputLabel title="Rua" />
@@ -120,6 +134,7 @@ export function UserAdress() {
               />
             </VStack>
           </HStack>
+
           <InputLabel title="Complemento" />
           <ControlledInput
             control={control}
@@ -154,8 +169,8 @@ export function UserAdress() {
             isSelectionInput
             error={errors.estado}
           />
-        </VStack>
-        <VStack w="full">
+        </ScrollView>
+        <VStack px="4" pb={Platform.OS === 'ios' ? 10 : 8}>
           <Button
             bgColor={colors.blue[600]}
             height={54}
@@ -176,7 +191,7 @@ export function UserAdress() {
             </Text>
           )}
         </VStack>
-      </KeyboardAwareScrollView>
+      </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
 }
