@@ -43,7 +43,6 @@ export function UserContact() {
   });
   const Login = async (email, password) => {
     const result = await await user.checkPassword(email, password);
-    console.log(result);
 
     if (!result) {
       setIsLoading(false);
