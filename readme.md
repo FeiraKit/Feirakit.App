@@ -57,7 +57,7 @@ O aplicativo FEIRA-KIT é um projeto social incentivado pelo Fundo Social Vale d
 ## SERVIÇOS DE HOSPEDAGEM
 
 - Banco de dados -MongoDB Atlas
-- API -[[Render-https://feirakit-api.onrender.com](https://feirakit-api.onrender.com)
+- API-[RENDER](https://feirakit-api.onrender.com)
 - Upload de imagens -Firebase Storage
 
 
