@@ -12,6 +12,7 @@ import { HeaderHome } from '../components/HeaderHome';
 
 export function Home() {
   // screen variables
+
   const product = new Product();
   const { colors } = useTheme();
   const navigation = useNavigation();
