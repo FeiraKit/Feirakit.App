@@ -16,15 +16,16 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.feirakitapp.feirakitfrontend"
+      "bundleIdentifier": "com.fsvj.feirakit"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.feirakitapp.feirakitfrontend",
+      "package": "com.fsvj.feirakit",
       "permissions": [
+        "android.permission.RECORD_AUDIO",
         "android.permission.RECORD_AUDIO"
       ]
     },
@@ -48,7 +49,8 @@
       }
     },
     "updates": {
-      "checkAutomatically": "WIFI_ONLY"
+      "checkAutomatically": "WIFI_ONLY",
+      "url": "https://u.expo.dev/69e0c7ba-f8fd-459d-bd61-0c9b9c7c3a45"
     }
   }
 }
