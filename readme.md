@@ -57,12 +57,12 @@ O aplicativo FEIRA-KIT é um projeto social incentivado pelo Fundo Social Vale d
 ## SERVIÇOS DE HOSPEDAGEM
 
 - Banco de dados -MongoDB Atlas
-- API -[Heroku](https://feira-kit.herokuapp.com/swagger)
+- API -[Render](https://feirakit-api.onrender.com)
 - Upload de imagens -Firebase Storage
 
 ## Deploy front-end
 
-- [EXPO EAS](https://docs.expo.dev/eas-update/getting-started/)
+- [Teste o aplicativo -  Android](https://expo.dev/accounts/feirakitapp/projects/feirakit-app/builds/668e4fe8-8769-4415-9357-d566f985d99f)
 
 ## LIBS FRONT-END
 
