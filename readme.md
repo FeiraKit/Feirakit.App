@@ -45,9 +45,9 @@ O aplicativo FEIRA-KIT é um projeto social incentivado pelo Fundo Social Vale d
 - REACT NATIVE
 - EXPO
 
-## Download
+## Teste o aplicativo
 
-- Preview [FEIRA-KIT 1.0](https://expo.dev/accounts/feirakitapp/projects/feirakit-app/builds/d142de55-6f82-4d95-8199-c6fb55f58a70)
+[Download -  Android](https://expo.dev/accounts/feirakitapp/projects/feirakit-app/builds/668e4fe8-8769-4415-9357-d566f985d99f)
 
 ## Repositórios de desenvolvimento
 
@@ -57,16 +57,14 @@ O aplicativo FEIRA-KIT é um projeto social incentivado pelo Fundo Social Vale d
 ## SERVIÇOS DE HOSPEDAGEM
 
 - Banco de dados -MongoDB Atlas
-- API -[Render](https://feirakit-api.onrender.com)
+- API -[[Render-https://feirakit-api.onrender.com](https://feirakit-api.onrender.com)
 - Upload de imagens -Firebase Storage
 
-## Deploy front-end
 
-- [Teste o aplicativo -  Android](https://expo.dev/accounts/feirakitapp/projects/feirakit-app/builds/668e4fe8-8769-4415-9357-d566f985d99f)
 
 ## LIBS FRONT-END
 
-- EXPO "^47.0.0"
+- EXPO "^49.0.0"
 - REACT "18.0.0"
 
 ## FERRAMENTAS PARA A CRIAÇÃO DAS INTERFACES
